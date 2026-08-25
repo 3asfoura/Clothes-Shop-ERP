@@ -197,7 +197,7 @@
     <Compile Include="modlestore\Sales\Return\FrmReturnEdit.Designer.cs">
       <DependentUpon>FrmReturnEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Frmstocktransferedit.cs" />
+    <Compile Include="modlestore\Inventory\Brach Transfer\Frmstocktransferedit.cs" />
     <Compile Include="modlestore\Settings\UcUsers_Roles\UcUsers_Roles.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -330,15 +330,6 @@
     <Compile Include="modlestore\Sales\POS\UcPointOfSale.CS.Designer.cs">
       <DependentUpon>UcPointOfSale.CS.cs</DependentUpon>
     </Compile>
-    <Compile Include="UcProfitReport.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UcProfitReport.Designer.cs">
-      <DependentUpon>UcProfitReport.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UcProfitReport2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="modlestore\Purchases\UcPurchaseInvoices.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -356,6 +347,12 @@
     </Compile>
     <Compile Include="modlestore\Sales\UcSalesInvoices.Designer.cs">
       <DependentUpon>UcSalesInvoices.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UcProfitReport.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcProfitReport.Designer.cs">
+      <DependentUpon>UcProfitReport.cs</DependentUpon>
     </Compile>
     <Compile Include="UcSalesReport.cs">
       <SubType>UserControl</SubType>
@@ -458,9 +455,6 @@
     <EmbeddedResource Include="modlestore\Settings\Payment\UcPaymentMethods.resx">
       <DependentUpon>UcPaymentMethods.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UcProfitReport.resx">
-      <DependentUpon>UcProfitReport.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="modlestore\Purchases\UcPurchaseInvoices.resx">
       <DependentUpon>UcPurchaseInvoices.cs</DependentUpon>
     </EmbeddedResource>
@@ -469,6 +463,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="modlestore\Sales\UcSalesInvoices.resx">
       <DependentUpon>UcSalesInvoices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcProfitReport.resx">
+      <DependentUpon>UcProfitReport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UcSalesReport.resx">
       <DependentUpon>UcSalesReport.cs</DependentUpon>
@@ -499,9 +496,7 @@
   <ItemGroup>
     <Content Include="Resources\ChatGPT Image Aug 23, 2026, 12_46_22 AM.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="modlestore\NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

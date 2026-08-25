@@ -38,12 +38,12 @@
             this.LblSummary = new DevExpress.XtraLayout.SimpleLabelItem();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
             this.btnRun = new DevExpress.XtraEditors.SimpleButton();
+            this.DtFrom = new DevExpress.XtraEditors.DateEdit();
+            this.DtTo = new DevExpress.XtraEditors.DateEdit();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.lblTo = new DevExpress.XtraLayout.LayoutControlItem();
             this.lblFrom = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.DtFrom = new DevExpress.XtraEditors.DateEdit();
-            this.DtTo = new DevExpress.XtraEditors.DateEdit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl3)).BeginInit();
             this.layoutControl3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridResult)).BeginInit();
@@ -55,14 +55,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.LblSummary)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lblTo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lblFrom)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DtFrom.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DtFrom.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DtTo.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DtTo.Properties.CalendarTimeProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lblTo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lblFrom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutControl3
@@ -169,6 +169,44 @@
             this.btnRun.Text = "Generate Report";
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
+            // DtFrom
+            // 
+            this.DtFrom.EditValue = null;
+            this.DtFrom.Location = new System.Drawing.Point(12, 43);
+            this.DtFrom.Name = "DtFrom";
+            this.DtFrom.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.DtFrom.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.DtFrom.Properties.DisplayFormat.FormatString = "";
+            this.DtFrom.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+            this.DtFrom.Properties.EditFormat.FormatString = "";
+            this.DtFrom.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+            this.DtFrom.Properties.MaskSettings.Set("mask", "");
+            this.DtFrom.Size = new System.Drawing.Size(281, 20);
+            this.DtFrom.StyleController = this.layoutControl1;
+            this.DtFrom.TabIndex = 4;
+            // 
+            // DtTo
+            // 
+            this.DtTo.EditValue = null;
+            this.DtTo.Location = new System.Drawing.Point(297, 43);
+            this.DtTo.Name = "DtTo";
+            this.DtTo.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.DtTo.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.DtTo.Properties.DisplayFormat.FormatString = "";
+            this.DtTo.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+            this.DtTo.Properties.EditFormat.FormatString = "";
+            this.DtTo.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+            this.DtTo.Properties.Mask.EditMask = "";
+            this.DtTo.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.None;
+            this.DtTo.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.DtTo.Size = new System.Drawing.Size(453, 20);
+            this.DtTo.StyleController = this.layoutControl1;
+            this.DtTo.TabIndex = 5;
+            // 
             // Root
             // 
             this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -213,41 +251,6 @@
             this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
             // 
-            // DtFrom
-            // 
-            this.DtFrom.EditValue = null;
-            this.DtFrom.Location = new System.Drawing.Point(12, 44);
-            this.DtFrom.Name = "DtFrom";
-            this.DtFrom.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.DtFrom.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.DtFrom.Properties.DisplayFormat.FormatString = "";
-            this.DtFrom.Properties.EditFormat.FormatString = "";
-            this.DtFrom.Properties.Mask.EditMask = "";
-            this.DtFrom.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.None;
-            this.DtFrom.Size = new System.Drawing.Size(281, 22);
-            this.DtFrom.StyleController = this.layoutControl1;
-            this.DtFrom.TabIndex = 4;
-            // 
-            // DtTo
-            // 
-            this.DtTo.EditValue = null;
-            this.DtTo.Location = new System.Drawing.Point(297, 44);
-            this.DtTo.Name = "DtTo";
-            this.DtTo.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.DtTo.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.DtTo.Properties.DisplayFormat.FormatString = "";
-            this.DtTo.Properties.EditFormat.FormatString = "";
-            this.DtTo.Properties.Mask.EditMask = "";
-            this.DtTo.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.None;
-            this.DtTo.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.DtTo.Size = new System.Drawing.Size(453, 22);
-            this.DtTo.StyleController = this.layoutControl1;
-            this.DtTo.TabIndex = 5;
-            // 
             // UcSalesReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -268,14 +271,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.LblSummary)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
             this.layoutControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lblTo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lblFrom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DtFrom.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DtFrom.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DtTo.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DtTo.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lblTo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lblFrom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             this.ResumeLayout(false);
 
         }

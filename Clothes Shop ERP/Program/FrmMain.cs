@@ -182,14 +182,14 @@ namespace Clothes_Shop_ERP
 
         private void ElementProfitReport_Click(object sender, EventArgs e)
         {
-            UcProfitReport2 frm = new UcProfitReport2();
+            UcProfitReport frm = new UcProfitReport();
             setTabPage(frm, ElementProfitReport.Text, ElementProfitReport.ImageOptions.SvgImage);
         }
 
         private void ElementSalesReport1_Click(object sender, EventArgs e)
         {
-            UcSalesReport frm = new UcSalesReport();
-            setTabPage(frm, ElementSalesReport1.Text, ElementSalesReport1.ImageOptions.SvgImage);
+           UcSalesReport frm = new UcSalesReport();
+           setTabPage(frm, ElementSalesReport1.Text, ElementSalesReport1.ImageOptions.SvgImage);
 
         }
     }
