@@ -1,0 +1,101 @@
+﻿using Clothes_Shop_ERP.DAL;
+using DevExpress.XtraEditors;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+
+namespace Clothes_Shop_ERP
+{
+    public partial class FrmLogin : DevExpress.XtraEditors.XtraForm
+    {
+        public static int CurrentUserId;
+        public static string CurrentUserFullName;
+        public static int CurrentBranchId;
+        public FrmLogin()
+        {
+            InitializeComponent();
+        }
+       
+        private void textEdit2_EditValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FrmLogin_Load(object sender, EventArgs e)
+        {
+            using (var db = new ClothesShopDBContext())
+            {
+                TXT_Branch.Properties.DataSource = db.Branches.ToList();
+                TXT_Branch.EditValue = TXT_Branch.Properties.GetKeyValue(0);
+            }
+        }
+
+       
+        private void BTN_Login_Click(object sender, EventArgs e)
+        {
+            string username = TXT_Username.Text.Trim();
+            string password = TXT_Password.Text;
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                Sett.MsgRed("Warning", "Please enter your username and password");
+                return;
+            }
+
+            if (TXT_Branch.EditValue == null)
+            {
+                Sett.MsgRed("Warning", "Please select a branch");
+                return;
+            }
+
+            using (var db = new ClothesShopDBContext())
+            {
+                var user = db.Users.FirstOrDefault(u => u.Username == username && u.IsActive == true);
+
+                if (user == null)
+                {
+                    Sett.MsgRed("Login Failed", "Username not found");
+                    return;
+                }
+
+                bool passwordCorrect = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+
+                if (!passwordCorrect)
+                {
+                    Sett.MsgRed("Login Failed", "Incorrect password");
+                    return;
+                }
+
+                CurrentUserId = user.Id;
+                CurrentUserFullName = user.FullName;
+                CurrentBranchId = (int)TXT_Branch.EditValue;
+
+                 Sett.MsgGreen("Welcome", $"Welcome, {user.FullName}");
+                this.Hide();
+            }
+
+        }
+
+        private void TXT_Password_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        {
+            TXT_Password.Properties.UseSystemPasswordChar = !TXT_Password.Properties.UseSystemPasswordChar;
+        }
+
+        private void TXT_Password_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                BTN_Login_Click(sender, e);
+            }
+        }
+    }
+}
+

@@ -1,0 +1,142 @@
+﻿using Clothes_Shop_ERP.DAL;
+using DevExpress.XtraEditors;
+using System;
+using System.Linq;
+using System.Windows.Forms;
+using CategoryEntity = Clothes_Shop_ERP.DAL.Categories;
+
+namespace Clothes_Shop_ERP.modlestore
+{
+    public partial class UcCategories : DevExpress.XtraEditors.XtraUserControl
+    {
+        public UcCategories()
+        {
+            InitializeComponent();
+
+        }
+
+
+
+        public void GetData()
+        {
+            using (var db = new ClothesShopDBContext())
+            {
+                gridView1.GridControl.DataSource = db.Categories
+                    .Select(x => new { x.Id, x.Name, x.IsActive })
+                    .ToList();
+            }
+        }
+
+        private void gridView1_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
+        {
+           
+        }
+
+        private void AddNew()
+        {
+            string name = XtraInputBox.Show("Category name:", "New Category", "");
+            if (string.IsNullOrWhiteSpace(name)) return;
+
+            using (var db = new ClothesShopDBContext())
+            {
+                db.Categories.Add(new CategoryEntity { Name = name, IsActive = true });
+                db.SaveChanges();
+            }
+            Sett.MsgBlue("Success", "Category added");
+            GetData();
+        }
+
+        private void EditSelected()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+            string currentName = gridView1.GetFocusedRowCellValue("Name").ToString();
+
+            string newName = XtraInputBox.Show("Enter new category name:", $"Editing Category: {currentName}", currentName);
+            if (string.IsNullOrWhiteSpace(newName)) return;
+
+            using (var db = new ClothesShopDBContext())
+            {
+                var category = db.Categories.Where(x => x.Id == id).FirstOrDefault();
+                if (category == null) { Sett.MsgBlue("Error", $"No category found with Id = {id}"); return; }
+                category.Name = newName;
+                db.SaveChanges();
+            }
+            Sett.MsgBlue("Success", "Category updated");
+            GetData();
+        }
+
+        private void ToggleActive()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+            string name = gridView1.GetFocusedRowCellValue("Name").ToString();
+            bool currentStatus = Convert.ToBoolean(gridView1.GetFocusedRowCellValue("IsActive"));
+            string action = currentStatus ? "Deactivate" : "Activate";
+
+            if (XtraMessageBox.Show($"{action} '{name}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            using (var db = new ClothesShopDBContext())
+            {
+                var category = db.Categories.Where(x => x.Id == id).FirstOrDefault();
+                if (category == null) return;
+                category.IsActive = !currentStatus;
+                db.SaveChanges();
+            }
+            Sett.MsgBlue("Success", $"Category {action.ToLower()}d");
+            GetData();
+        }
+
+        private void DeleteSelected()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+            string name = gridView1.GetFocusedRowCellValue("Name").ToString();
+
+            if (XtraMessageBox.Show($"Delete '{name}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            try
+            {
+                using (var db = new ClothesShopDBContext())
+                {
+                    var category = db.Categories.Where(x => x.Id == id).FirstOrDefault();
+                    if (category == null) { Sett.MsgBlue("Error", $"No category found with Id = {id}"); return; }
+                    db.Categories.Remove(category);
+                    db.SaveChanges();
+                }
+                Sett.MsgBlue("Success", "Category deleted");
+                GetData();
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+            {
+                Sett.MsgBlue("Cannot Delete", "This category has products or sub-categories linked to it. Remove those first.");
+            }
+        }
+
+        private void UcCategories_Load(object sender, EventArgs e)
+        {
+            GetData();
+        }
+
+        private void gridControl1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            var hit = gridView1.CalcHitInfo(e.Location);
+            if (hit.InRow)
+                gridView1.FocusedRowHandle = hit.RowHandle;
+
+            var menu = new ContextMenuStrip();
+            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Show(gridControl1, e.Location);
+
+            if (hit.InRow)
+            {
+                menu.Items.Add("Edit", null, (s, ev) => EditSelected());
+                menu.Items.Add("Activate/Deactivate", null, (s, ev) => ToggleActive());
+                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
+            }
+        }
+    }
+}

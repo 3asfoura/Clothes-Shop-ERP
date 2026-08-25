@@ -1,0 +1,219 @@
+﻿using Clothes_Shop_ERP.DAL;
+using DevExpress.XtraEditors;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
+using TransferEntity = Clothes_Shop_ERP.DAL.StockTransfers;
+using TransferDetailEntity = Clothes_Shop_ERP.DAL.StockTransferDetails;
+using StockMovementEntity = Clothes_Shop_ERP.DAL.StockMovements;
+namespace Clothes_Shop_ERP.modlestore
+{
+    public partial class UcBranchTransfer : DevExpress.XtraEditors.XtraUserControl
+    {
+        public UcBranchTransfer()
+        {
+            InitializeComponent();
+        }
+
+        public void GetData()
+        {
+            using (var db = new ClothesShopDBContext())
+            {
+                gridView1.GridControl.DataSource = db.StockTransfers
+                    .Include(x => x.FromBranch)
+                    .Include(x => x.ToBranch)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Select(x => new
+                    {
+                        x.Id,
+                        From = x.FromBranch.Name,
+                        To = x.ToBranch.Name,
+                        x.Status,
+                        x.CreatedAt
+                    })
+                    .ToList();
+            }
+        }
+
+        private void gridView1_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
+        {
+           
+        }
+
+
+        private void AddNew()
+        {
+            var form = new FrmStockTransferEdit("New Stock Transfer");
+            if (form.ShowDialog() != DialogResult.OK) return;
+
+            using (var db = new ClothesShopDBContext())
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var transfer = new TransferEntity
+                    {
+                        FromBranchId = form.FromBranchId,
+                        ToBranchId = form.ToBranchId,
+                        Status = "Pending",
+                        CreatedAt = DateTime.Now,
+                        CreatedByUserId = FrmLogin.CurrentUserId
+                    };
+                    db.StockTransfers.Add(transfer);
+                    db.SaveChanges();   // generates transfer.Id for the lines below
+
+                    foreach (var line in form.Lines)
+                    {
+                        db.StockTransferDetails.Add(new TransferDetailEntity
+                        {
+                            StockTransferId = transfer.Id,
+                            ProductVariantId = line.ProductVariantId,
+                            Quantity = line.Quantity
+                        });
+                    }
+
+                    db.SaveChanges();
+                    transaction.Commit();
+
+                    Sett.MsgBlue("Success", "Transfer created as Pending. Mark it Completed once the stock has actually moved.");
+                    GetData();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    Sett.MsgBlue("Error", "Could not create the transfer. " + ex.Message);
+                }
+            }
+        }
+
+        private void SetStatus(string newStatus)
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+
+            using (var db = new ClothesShopDBContext())
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var transfer = db.StockTransfers.Where(x => x.Id == id).FirstOrDefault();
+                    if (transfer == null || transfer.Status != "Pending")
+                    {
+                        Sett.MsgBlue("Error", "This transfer can no longer be changed.");
+                        return;
+                    }
+
+                    if (newStatus == "Completed")
+                    {
+                        var lines = db.StockTransferDetails.Where(d => d.StockTransferId == id).ToList();
+
+                        foreach (var line in lines)
+                        {
+                            // Safely take stock out of the source branch — fails cleanly if
+                            // it no longer has enough (someone may have sold it meanwhile).
+                            int rowsAffected = db.Database.ExecuteSqlCommand(
+                                "UPDATE BranchStock SET Quantity = Quantity - {0} WHERE ProductVariantId = {1} AND BranchId = {2} AND Quantity >= {0}",
+                                line.Quantity, line.ProductVariantId, transfer.FromBranchId);
+
+                            if (rowsAffected == 0)
+                            {
+                                transaction.Rollback();
+                                Sett.MsgBlue("Error", $"Not enough stock at the source branch for one of the items. Transfer not completed.");
+                                return;
+                            }
+
+                            db.StockMovements.Add(new StockMovementEntity
+                            {
+                                ProductVariantId = line.ProductVariantId,
+                                BranchId = transfer.FromBranchId,
+                                MovementType = "TransferOut",
+                                Quantity = -line.Quantity,
+                                RefType = "StockTransfer",
+                                RefId = transfer.Id,
+                                CreatedAt = DateTime.Now,
+                                CreatedByUserId = FrmLogin.CurrentUserId
+                            });
+
+                            // Add stock into the destination branch
+                            var destStock = db.BranchStock.FirstOrDefault(s =>
+                                s.ProductVariantId == line.ProductVariantId && s.BranchId == transfer.ToBranchId);
+
+                            if (destStock == null)
+                            {
+                                db.BranchStock.Add(new Clothes_Shop_ERP.DAL.BranchStock
+                                {
+                                    ProductVariantId = line.ProductVariantId,
+                                    BranchId = transfer.ToBranchId,
+                                    Quantity = line.Quantity,
+                                    MinQuantity = 0
+                                });
+                            }
+                            else
+                            {
+                                destStock.Quantity += line.Quantity;
+                            }
+
+                            db.StockMovements.Add(new StockMovementEntity
+                            {
+                                ProductVariantId = line.ProductVariantId,
+                                BranchId = transfer.ToBranchId,
+                                MovementType = "TransferIn",
+                                Quantity = line.Quantity,
+                                RefType = "StockTransfer",
+                                RefId = transfer.Id,
+                                CreatedAt = DateTime.Now,
+                                CreatedByUserId = FrmLogin.CurrentUserId
+                            });
+                        }
+                    }
+
+                    transfer.Status = newStatus;
+                    db.SaveChanges();
+                    transaction.Commit();
+
+                    Sett.MsgGreen("Success", $"Transfer marked as {newStatus}");
+                    GetData();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    Sett.MsgBlue("Error", "Could not update the transfer. " + ex.Message);
+                }
+            }
+        }
+
+        private void UcBranchTransfer_Load(object sender, EventArgs e)
+        {
+            GetData();
+        }
+
+        private void gridControl1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+
+            var hit = gridView1.CalcHitInfo(e.Location);
+            var menu = new ContextMenuStrip();
+            menu.Items.Add("New Transfer", null, (s, ev) => AddNew());
+
+            if (hit.InRow)
+            {
+                gridView1.FocusedRowHandle = hit.RowHandle;
+                string status = gridView1.GetFocusedRowCellValue("Status")?.ToString();
+                if (status == "Pending")
+                {
+                    menu.Items.Add("Mark Completed (moves the stock)", null, (s, ev) => SetStatus("Completed"));
+                    menu.Items.Add("Cancel Transfer", null, (s, ev) => SetStatus("Cancelled"));
+                }
+            }
+
+            menu.Show(gridControl1, e.Location);
+        }
+    }
+}
