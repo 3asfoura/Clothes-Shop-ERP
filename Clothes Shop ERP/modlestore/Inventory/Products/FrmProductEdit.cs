@@ -43,7 +43,12 @@ namespace Clothes_Shop_ERP
             this.MinimizeBox = false;
 
             var lblCode = new LabelControl { Text = "Code:", Location = new System.Drawing.Point(20, 20) };
-            TxtCode = new TextEdit { Text = code, Location = new System.Drawing.Point(20, 40), Width = 320 };
+            TxtCode = new TextEdit
+            {
+                Text = string.IsNullOrEmpty(code) ? GenerateNextCode() : code,
+                Location = new System.Drawing.Point(20, 40),
+                Width = 320
+            };
 
             var lblName = new LabelControl { Text = "Name:", Location = new System.Drawing.Point(20, 75) };
             TxtName = new TextEdit { Text = name, Location = new System.Drawing.Point(20, 95), Width = 320 };
@@ -106,6 +111,27 @@ namespace Clothes_Shop_ERP
 
             this.AcceptButton = btnSave;
             this.CancelButton = btnCancel;
+        }
+        private string GenerateNextCode()
+        {
+            using (var db = new ClothesShopDBContext())
+            {
+                try
+                {
+                    var maxCode = db.Products
+                        .Select(p => p.Code)
+                        .AsEnumerable()
+                        .Select(c => int.TryParse(c, out int n) ? n : 0)
+                        .DefaultIfEmpty(0)
+                        .Max();
+
+                    return maxCode == 0 ? "10001" : (maxCode + 1).ToString();
+                }
+                catch
+                {
+                    return "10001";
+                }
+            }
         }
     }
 }

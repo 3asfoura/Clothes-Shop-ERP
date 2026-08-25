@@ -17,6 +17,10 @@ namespace Clothes_Shop_ERP.modlestore
             DtFrom.DateTime = DateTime.Today.AddDays(-30);
             DtTo.DateTime = DateTime.Today;
             RunReport();
+            GridViewResult.OptionsView.ShowGroupPanel = false;
+            GridViewResult.OptionsCustomization.AllowSort = false;
+
+
         }
         private void RunReport()
         {

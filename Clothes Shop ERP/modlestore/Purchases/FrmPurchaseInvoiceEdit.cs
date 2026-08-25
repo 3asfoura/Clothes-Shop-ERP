@@ -104,7 +104,12 @@ namespace Clothes_Shop_ERP
                     CmbBranch.Properties.Items.Add(b.Name);
                     _branchIds.Add(b.Id);
                 }
-                foreach (var v in db.ProductVariants.Include(x => x.Product).Where(x => x.IsActive == true).ToList())
+                foreach (var v in db.ProductVariants
+     .Include(x => x.Product).ThenInclude(p => p.Category)
+     .Where(x => x.IsActive == true
+              && x.Product.IsActive == true
+              && x.Product.Category.IsActive == true)   
+     .ToList())
                 {
                     CmbVariant.Properties.Items.Add($"{v.Product.Name} - {v.Barcode}");
                     _variantIds.Add(v.Id);

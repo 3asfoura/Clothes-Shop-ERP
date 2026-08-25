@@ -21,6 +21,10 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             InitializeComponent();
             GetDataUsers();
             GetDataRoles();
+            gridView2.OptionsView.ShowGroupPanel = false;
+            gridView2.OptionsCustomization.AllowSort = false;
+            dgv_RolesList.OptionsView.ShowGroupPanel = false;
+            dgv_RolesList.OptionsCustomization.AllowSort = false;
         }
         public void GetDataRoles()
         {
@@ -240,6 +244,8 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
 
             var hit = gridView2.CalcHitInfo(e.Location);
             if (hit.InRow) gridView2.FocusedRowHandle = hit.RowHandle;
+            if (hit.InColumnPanel || hit.InColumn)
+                return;
 
             var menu = new ContextMenuStrip();
             menu.Items.Add("New", null, (s, ev) => AddNewUsers());
@@ -260,7 +266,8 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             var hit = dgv_RolesList.CalcHitInfo(e.Location);
             if (hit.InRow)
                 dgv_RolesList.FocusedRowHandle = hit.RowHandle;
-
+            if (hit.InColumnPanel || hit.InColumn)
+                return;
             var menu = new ContextMenuStrip();
             menu.Items.Add("New", null, (s, ev) => AddNewRoles());
             menu.Show(dgv_Roles, e.Location);

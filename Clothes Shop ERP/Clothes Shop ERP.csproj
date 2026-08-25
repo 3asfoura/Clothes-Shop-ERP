@@ -47,6 +47,7 @@
       <HintPath>C:\Users\3asfoura\Downloads\Msg\Msg\DevComponents.DotNetBar2.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.BonusSkins.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Charts.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Data.Desktop.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Data.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Drawing.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -54,7 +55,11 @@
     <Reference Include="DevExpress.RichEdit.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Sparkline.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Utils.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v22.2.UI, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraBars.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraCharts.v22.2.UI, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v22.2.Wizard, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraEditors.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraGrid.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraLayout.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -165,6 +170,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArabicGridLocalizer.cs" />
     <Compile Include="DAL\AuditLogs.cs" />
     <Compile Include="DAL\Branches.cs" />
     <Compile Include="DAL\BranchStock.cs" />
@@ -190,6 +196,7 @@
     <Compile Include="DAL\Suppliers.cs" />
     <Compile Include="DAL\TreasuryTransactions.cs" />
     <Compile Include="DAL\Users.cs" />
+    <Compile Include="FileName.cs" />
     <Compile Include="modlestore\Purchases\FrmPurchaseInvoiceEdit.cs" />
     <Compile Include="modlestore\Sales\Return\FrmReturnEdit.cs">
       <SubType>Form</SubType>
@@ -197,7 +204,7 @@
     <Compile Include="modlestore\Sales\Return\FrmReturnEdit.Designer.cs">
       <DependentUpon>FrmReturnEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Brach Transfer\Frmstocktransferedit.cs" />
+    <Compile Include="modlestore\Inventory\Brach Transfer\FrmStockTransferEdit.cs" />
     <Compile Include="modlestore\Settings\UcUsers_Roles\UcUsers_Roles.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -473,6 +480,7 @@
     <EmbeddedResource Include="UcStockReport.resx">
       <DependentUpon>UcStockReport.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="App.config" />
     <None Include="Program\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -494,6 +502,7 @@
     <None Include="Resources\icons8-warehouse-48[1].png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Version.txt" />
     <Content Include="Resources\ChatGPT Image Aug 23, 2026, 12_46_22 AM.ico" />
   </ItemGroup>
   <ItemGroup />

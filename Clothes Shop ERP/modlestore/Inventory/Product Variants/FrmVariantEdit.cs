@@ -1,5 +1,6 @@
 ﻿using Clothes_Shop_ERP.DAL;
 using DevExpress.XtraEditors;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -83,7 +84,10 @@ namespace Clothes_Shop_ERP
 
             using (var db = new ClothesShopDBContext())
             {
-                foreach (var p in db.Products.ToList())
+                foreach (var p in db.Products
+    .Include(x => x.Category)
+    .Where(x => x.IsActive == true && x.Category.IsActive == true)   
+    .ToList())
                 {
                     CmbProduct.Properties.Items.Add($"{p.Code} - {p.Name}");
                     _productIds.Add(p.Id);

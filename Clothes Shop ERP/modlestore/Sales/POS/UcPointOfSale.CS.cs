@@ -31,11 +31,13 @@ namespace Clothes_Shop_ERP
         private BindingList<CartLine> _cart = new BindingList<CartLine>();
         public UcPointOfSale()
         {
-            
+
             InitializeComponent();
             BuildUi();
             LoadLookups();
             TxtBarcode.Focus();
+            GridViewCart.OptionsView.ShowGroupPanel = false;
+            GridViewCart.OptionsCustomization.AllowSort = false;
         }
         private void LoadLookups()
         {
@@ -44,12 +46,14 @@ namespace Clothes_Shop_ERP
                 int branchId = FrmLogin.CurrentBranchId;
 
                 var availableVariants = db.BranchStock
-                    .Include(x => x.ProductVariant).ThenInclude(v => v.Product)
+                    .Include(x => x.ProductVariant).ThenInclude(v => v.Product).ThenInclude(p => p.Category)
                     .Include(x => x.ProductVariant).ThenInclude(v => v.Color)
                     .Include(x => x.ProductVariant).ThenInclude(v => v.Size)
                     .Where(x => x.BranchId == branchId
-                             && x.Quantity > 0
-                             && x.ProductVariant.IsActive == true)
+                     && x.Quantity > 0
+                     && x.ProductVariant.IsActive == true
+                     && x.ProductVariant.Product.IsActive == true
+                     && x.ProductVariant.Product.Category.IsActive == true)
                     .ToList();
 
                 foreach (var stock in availableVariants)
@@ -88,8 +92,12 @@ namespace Clothes_Shop_ERP
 
             using (var db = new ClothesShopDBContext())
             {
-                var variant = db.ProductVariants.Include(x => x.Product)
-                    .FirstOrDefault(v => v.Barcode == code && v.IsActive == true);
+                var variant = db.ProductVariants
+      .Include(x => x.Product).ThenInclude(p => p.Category)
+      .FirstOrDefault(v => v.Barcode == code
+                         && v.IsActive == true
+                         && v.Product.IsActive == true
+                         && v.Product.Category.IsActive == true);   
 
                 if (variant == null)
                 {
@@ -150,7 +158,7 @@ namespace Clothes_Shop_ERP
             {
                 try
                 {
-                   
+
                     // Safely decrement stock for every line first — if any line fails
                     // because stock ran out, roll back everything and stop.
                     foreach (var line in _cart)
@@ -242,7 +250,7 @@ namespace Clothes_Shop_ERP
 
         private void UcPointOfSale_Load(object sender, EventArgs e)
         {
-          
+
         }
 
         private void btnAddManual_Click(object sender, EventArgs e)
@@ -270,7 +278,7 @@ namespace Clothes_Shop_ERP
         }
         private void Loop_Tick(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

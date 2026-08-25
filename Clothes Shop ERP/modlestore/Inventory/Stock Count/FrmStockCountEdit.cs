@@ -48,7 +48,12 @@ namespace Clothes_Shop_ERP
 
             using (var db = new ClothesShopDBContext())
             {
-                foreach (var v in db.ProductVariants.Include(x => x.Product).ToList())
+                foreach (var v in db.ProductVariants
+    .Include(x => x.Product).ThenInclude(p => p.Category)
+    .Where(x => x.IsActive == true
+             && x.Product.IsActive == true
+             && x.Product.Category.IsActive == true)   
+    .ToList())
                 {
                     CmbVariant.Properties.Items.Add($"{v.Product.Name} - {v.Barcode}");
                     _variantIds.Add(v.Id);

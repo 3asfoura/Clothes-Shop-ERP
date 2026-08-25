@@ -19,6 +19,8 @@ namespace Clothes_Shop_ERP.modlestore
         public UcTreasuryTransactions()
         {
             InitializeComponent();
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsCustomization.AllowSort = false;
         }
         public void GetData()
         {
@@ -46,16 +48,16 @@ namespace Clothes_Shop_ERP.modlestore
 
         private void gridView1_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
         {
-            if (e.MenuType != DevExpress.XtraGrid.Views.Grid.GridMenuType.Row) return;
-            if (e.HitInfo.InRow) gridView1.FocusedRowHandle = e.HitInfo.RowHandle;
+            //if (e.MenuType != DevExpress.XtraGrid.Views.Grid.GridMenuType.Row) return;
+            //if (e.HitInfo.InRow) gridView1.FocusedRowHandle = e.HitInfo.RowHandle;
 
-            e.Menu.Items.Clear();
-            e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("New", (s, ev) => AddNew()));
-            if (e.HitInfo.InRow)
-            {
-                e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Edit", (s, ev) => EditSelected()));
-                e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Delete", (s, ev) => DeleteSelected()));
-            }
+            //e.Menu.Items.Clear();
+            //e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("New", (s, ev) => AddNew()));
+            //if (e.HitInfo.InRow)
+            //{
+            //    e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Edit", (s, ev) => EditSelected()));
+            //    e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Delete", (s, ev) => DeleteSelected()));
+            //}
         }
         private void AddNew()
         {
@@ -125,6 +127,25 @@ namespace Clothes_Shop_ERP.modlestore
             }
             Sett.MsgBlue("Success", "Treasury entry deleted");
             GetData();
+        }
+
+        private void gridControl1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            var hit = gridView1.CalcHitInfo(e.Location);
+            if (hit.InRow)
+                gridView1.FocusedRowHandle = hit.RowHandle;
+            if (hit.InColumnPanel || hit.InColumn)
+                return;
+            var menu = new ContextMenuStrip();
+            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Show(gridControl1, e.Location);
+
+            if (hit.InRow)
+            {
+                menu.Items.Add("Edit", null, (s, ev) => EditSelected());
+                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
+            }
         }
     }
 }

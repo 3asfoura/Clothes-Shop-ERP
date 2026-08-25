@@ -18,6 +18,10 @@ namespace Clothes_Shop_ERP.modlestore
         public UcColorsSizes()
         {
             InitializeComponent();
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsCustomization.AllowSort = false;
+            gridView2.OptionsView.ShowGroupPanel = false;
+            gridView2.OptionsCustomization.AllowSort = false;
         }
         public void GetData()
         {
@@ -205,7 +209,8 @@ namespace Clothes_Shop_ERP.modlestore
             var hit = gridView2.CalcHitInfo(e.Location);
             if (hit.InRow)
                 gridView2.FocusedRowHandle = hit.RowHandle;
-
+            if (hit.InColumnPanel || hit.InColumn)
+                return;
             var menu = new ContextMenuStrip();
             menu.Items.Add("New", null, (s, ev) => AddNew_Size());
             menu.Show(gridControl2, e.Location);
@@ -223,7 +228,8 @@ namespace Clothes_Shop_ERP.modlestore
             var hit = gridView1.CalcHitInfo(e.Location);
             if (hit.InRow)
                 gridView1.FocusedRowHandle = hit.RowHandle;
-
+            if (hit.InColumnPanel || hit.InColumn)
+                return;
             var menu = new ContextMenuStrip();
             menu.Items.Add("New", null, (s, ev) => AddNew_Color());
             menu.Show(gridControl1, e.Location);

@@ -17,6 +17,8 @@ namespace Clothes_Shop_ERP.modlestore
         public UcSuppliers()
         {
             InitializeComponent();
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsCustomization.AllowSort = false;
         }
         public void GetData()
         {
@@ -115,7 +117,8 @@ namespace Clothes_Shop_ERP.modlestore
             var hit = gridView1.CalcHitInfo(e.Location);
             if (hit.InRow)
                 gridView1.FocusedRowHandle = hit.RowHandle;
-
+            if (hit.InColumnPanel || hit.InColumn)
+                return;
             var menu = new ContextMenuStrip();
             menu.Items.Add("New", null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);

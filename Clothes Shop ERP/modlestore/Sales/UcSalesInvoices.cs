@@ -19,6 +19,8 @@ namespace Clothes_Shop_ERP.modlestore
         {
             InitializeComponent();
             GetData();
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsCustomization.AllowSort = false;
         }
         public void GetData()
         {

@@ -20,6 +20,8 @@ namespace Clothes_Shop_ERP.modlestore
         public UcBranchTransfer()
         {
             InitializeComponent();
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsCustomization.AllowSort = false;
         }
 
         public void GetData()
@@ -199,6 +201,8 @@ namespace Clothes_Shop_ERP.modlestore
             if (e.Button != MouseButtons.Right) return;
 
             var hit = gridView1.CalcHitInfo(e.Location);
+            if (hit.InColumnPanel || hit.InColumn)
+                return;
             var menu = new ContextMenuStrip();
             menu.Items.Add("New Transfer", null, (s, ev) => AddNew());
 

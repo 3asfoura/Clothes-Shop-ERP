@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
+            DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
             this.fluentDesignFormContainer1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormContainer();
             this.TabsControls = new DevExpress.XtraTab.XtraTabControl();
             this.Home_Page = new DevExpress.XtraTab.XtraTabPage();
@@ -62,20 +63,23 @@
             this.ElementUsers_Roles = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementPaymentMethods = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.fluentDesignFormControl1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl();
+            this.ToggleDarkMode = new DevExpress.XtraBars.BarToggleSwitchItem();
             this.fluentDesignFormContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TabsControls)).BeginInit();
             this.TabsControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fluentDesignFormControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(repositoryItemProgressBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // fluentDesignFormContainer1
             // 
             this.fluentDesignFormContainer1.Controls.Add(this.TabsControls);
             this.fluentDesignFormContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fluentDesignFormContainer1.Location = new System.Drawing.Point(250, 29);
+            this.fluentDesignFormContainer1.Location = new System.Drawing.Point(256, 29);
+            this.fluentDesignFormContainer1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fluentDesignFormContainer1.Name = "fluentDesignFormContainer1";
-            this.fluentDesignFormContainer1.Size = new System.Drawing.Size(646, 567);
+            this.fluentDesignFormContainer1.Size = new System.Drawing.Size(858, 599);
             this.fluentDesignFormContainer1.TabIndex = 0;
             // 
             // TabsControls
@@ -84,9 +88,10 @@
             this.TabsControls.ClosePageButtonShowMode = DevExpress.XtraTab.ClosePageButtonShowMode.InActiveTabPageAndTabControlHeader;
             this.TabsControls.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabsControls.Location = new System.Drawing.Point(0, 0);
+            this.TabsControls.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TabsControls.Name = "TabsControls";
             this.TabsControls.SelectedTabPage = this.Home_Page;
-            this.TabsControls.Size = new System.Drawing.Size(646, 567);
+            this.TabsControls.Size = new System.Drawing.Size(858, 599);
             this.TabsControls.TabIndex = 1;
             this.TabsControls.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.Home_Page});
@@ -97,8 +102,9 @@
             this.Home_Page.Appearance.PageClient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
             this.Home_Page.Appearance.PageClient.Options.UseBackColor = true;
             this.Home_Page.ImageOptions.SvgImageSize = new System.Drawing.Size(8, 8);
+            this.Home_Page.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Home_Page.Name = "Home_Page";
-            this.Home_Page.Size = new System.Drawing.Size(644, 543);
+            this.Home_Page.Size = new System.Drawing.Size(856, 572);
             this.Home_Page.Text = "Home";
             // 
             // accordionControl1
@@ -116,9 +122,10 @@
             this.ElementReports,
             this.ElementSettings});
             this.accordionControl1.Location = new System.Drawing.Point(0, 29);
+            this.accordionControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.accordionControl1.Name = "accordionControl1";
             this.accordionControl1.ScrollBarMode = DevExpress.XtraBars.Navigation.ScrollBarMode.Touch;
-            this.accordionControl1.Size = new System.Drawing.Size(250, 567);
+            this.accordionControl1.Size = new System.Drawing.Size(256, 599);
             this.accordionControl1.TabIndex = 1;
             this.accordionControl1.ViewType = DevExpress.XtraBars.Navigation.AccordionControlViewType.HamburgerMenu;
             // 
@@ -391,23 +398,38 @@
             // fluentDesignFormControl1
             // 
             this.fluentDesignFormControl1.FluentDesignForm = this;
+            this.fluentDesignFormControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.ToggleDarkMode});
             this.fluentDesignFormControl1.Location = new System.Drawing.Point(0, 0);
+            this.fluentDesignFormControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fluentDesignFormControl1.Name = "fluentDesignFormControl1";
-            this.fluentDesignFormControl1.Size = new System.Drawing.Size(896, 29);
+            this.fluentDesignFormControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            repositoryItemProgressBar1});
+            this.fluentDesignFormControl1.Size = new System.Drawing.Size(1114, 29);
             this.fluentDesignFormControl1.TabIndex = 2;
             this.fluentDesignFormControl1.TabStop = false;
+            this.fluentDesignFormControl1.TitleItemLinks.Add(this.ToggleDarkMode);
+            // 
+            // ToggleDarkMode
+            // 
+            this.ToggleDarkMode.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.ToggleDarkMode.Caption = "Dark Mode";
+            this.ToggleDarkMode.Id = 0;
+            this.ToggleDarkMode.Name = "ToggleDarkMode";
+            this.ToggleDarkMode.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.ToggleDarkMode_CheckedChanged);
             // 
             // FrmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(896, 596);
+            this.ClientSize = new System.Drawing.Size(1114, 628);
             this.ControlContainer = this.fluentDesignFormContainer1;
             this.Controls.Add(this.fluentDesignFormContainer1);
             this.Controls.Add(this.accordionControl1);
             this.Controls.Add(this.fluentDesignFormControl1);
             this.FluentDesignFormControl = this.fluentDesignFormControl1;
             this.IconOptions.Image = ((System.Drawing.Image)(resources.GetObject("FrmMain.IconOptions.Image")));
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FrmMain";
             this.NavigationControl = this.accordionControl1;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -418,6 +440,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.TabsControls)).EndInit();
             this.TabsControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(repositoryItemProgressBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fluentDesignFormControl1)).EndInit();
             this.ResumeLayout(false);
 
@@ -457,5 +480,6 @@
         private DevExpress.XtraTab.XtraTabControl TabsControls;
         private DevExpress.XtraTab.XtraTabPage Home_Page;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementProductVariants;
+        private DevExpress.XtraBars.BarToggleSwitchItem ToggleDarkMode;
     }
 }

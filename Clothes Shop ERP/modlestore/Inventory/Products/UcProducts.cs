@@ -18,6 +18,8 @@ namespace Clothes_Shop_ERP.modlestore
         public UcProducts()
         {
             InitializeComponent();
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsCustomization.AllowSort = false;
         }
         public void GetData()
         {
@@ -119,13 +121,37 @@ namespace Clothes_Shop_ERP.modlestore
             }
         }
 
+        private void ToggleActive()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+            string name = gridView1.GetFocusedRowCellValue("Name").ToString();
+            bool currentStatus = Convert.ToBoolean(gridView1.GetFocusedRowCellValue("IsActive"));
+            string action = currentStatus ? "Deactivate" : "Activate";
+
+            if (XtraMessageBox.Show($"{action} '{name}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            using (var db = new ClothesShopDBContext())
+            {
+                var product = db.Products.Where(x => x.Id == id).FirstOrDefault();
+                if (product == null) return;
+                product.IsActive = !currentStatus;
+                db.SaveChanges();
+            }
+
+            Sett.MsgBlue("Success", $"Product {action.ToLower()}d");
+            GetData();
+        }
         private void gridControl1_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right) return;
             var hit = gridView1.CalcHitInfo(e.Location);
             if (hit.InRow)
                 gridView1.FocusedRowHandle = hit.RowHandle;
-
+            if (hit.InColumnPanel || hit.InColumn)
+                return;
             var menu = new ContextMenuStrip();
             menu.Items.Add("New", null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
@@ -133,6 +159,7 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InRow)
             {
                 menu.Items.Add("Edit", null, (s, ev) => EditSelected());
+                menu.Items.Add("Activate/Deactivate", null, (s, ev) => ToggleActive());
                 menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
             }
         }

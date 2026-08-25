@@ -153,11 +153,13 @@ namespace Clothes_Shop_ERP
             using (var db = new ClothesShopDBContext())
             {
                 var available = db.BranchStock
-                    .Include(x => x.ProductVariant).ThenInclude(v => v.Product)
-                    .Where(x => x.BranchId == fromBranchId
-                             && x.Quantity > 0
-                             && x.ProductVariant.IsActive == true)
-                    .ToList();
+    .Include(x => x.ProductVariant).ThenInclude(v => v.Product).ThenInclude(p => p.Category)
+    .Where(x => x.BranchId == fromBranchId
+             && x.Quantity > 0
+             && x.ProductVariant.IsActive == true
+             && x.ProductVariant.Product.IsActive == true
+             && x.ProductVariant.Product.Category.IsActive == true)  
+    .ToList();
 
                 foreach (var stock in available)
                 {

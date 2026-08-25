@@ -50,35 +50,35 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject15 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject16 = new DevExpress.Utils.SerializableAppearanceObject();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
+            this.TXT_Branch = new DevExpress.XtraEditors.GridLookUpEdit();
+            this.gridLookUpEdit1View = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.TXT_Password = new DevExpress.XtraEditors.ButtonEdit();
+            this.TXT_Username = new DevExpress.XtraEditors.ButtonEdit();
             this.BTN_Login = new DevExpress.XtraEditors.SimpleButton();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
             this.LB_Welcome = new DevExpress.XtraLayout.SimpleLabelItem();
             this.LB_plsSignIn = new DevExpress.XtraLayout.SimpleLabelItem();
             this.simpleSeparator1 = new DevExpress.XtraLayout.SimpleSeparator();
-            this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.TXT_Branch = new DevExpress.XtraEditors.GridLookUpEdit();
-            this.gridLookUpEdit1View = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.COL_Id = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.COL_Name = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.TXT_Password = new DevExpress.XtraEditors.ButtonEdit();
-            this.TXT_Username = new DevExpress.XtraEditors.ButtonEdit();
             this.layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.COL_Id = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.COL_Name = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LB_Welcome)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LB_plsSignIn)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.simpleSeparator1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TXT_Branch.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridLookUpEdit1View)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TXT_Password.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TXT_Username.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LB_Welcome)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LB_plsSignIn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.simpleSeparator1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutControl1
@@ -96,6 +96,72 @@
             this.layoutControl1.Size = new System.Drawing.Size(506, 389);
             this.layoutControl1.TabIndex = 0;
             this.layoutControl1.Text = "layoutControl1";
+            // 
+            // TXT_Branch
+            // 
+            this.TXT_Branch.EditValue = "12";
+            this.TXT_Branch.Location = new System.Drawing.Point(12, 297);
+            this.TXT_Branch.Name = "TXT_Branch";
+            this.TXT_Branch.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.TXT_Branch.Properties.Appearance.Options.UseFont = true;
+            editorButtonImageOptions1.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            editorButtonImageOptions1.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions1.SvgImage")));
+            this.TXT_Branch.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            this.TXT_Branch.Properties.DisplayMember = "Name";
+            this.TXT_Branch.Properties.NullText = "";
+            this.TXT_Branch.Properties.PopupView = this.gridLookUpEdit1View;
+            this.TXT_Branch.Properties.ValueMember = "Id";
+            this.TXT_Branch.Size = new System.Drawing.Size(482, 32);
+            this.TXT_Branch.StyleController = this.layoutControl1;
+            this.TXT_Branch.TabIndex = 6;
+            // 
+            // gridLookUpEdit1View
+            // 
+            this.gridLookUpEdit1View.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.COL_Id,
+            this.COL_Name});
+            this.gridLookUpEdit1View.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
+            this.gridLookUpEdit1View.Name = "gridLookUpEdit1View";
+            this.gridLookUpEdit1View.OptionsSelection.EnableAppearanceFocusedCell = false;
+            this.gridLookUpEdit1View.OptionsView.ShowGroupPanel = false;
+            // 
+            // TXT_Password
+            // 
+            this.TXT_Password.EditValue = "123";
+            this.TXT_Password.Location = new System.Drawing.Point(12, 236);
+            this.TXT_Password.Name = "TXT_Password";
+            this.TXT_Password.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.TXT_Password.Properties.Appearance.Options.UseFont = true;
+            editorButtonImageOptions2.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            editorButtonImageOptions2.Image = ((System.Drawing.Image)(resources.GetObject("editorButtonImageOptions2.Image")));
+            editorButtonImageOptions3.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions3.SvgImage")));
+            this.TXT_Password.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            this.TXT_Password.Properties.NullValuePrompt = "Enter your password...";
+            this.TXT_Password.Properties.UseSystemPasswordChar = true;
+            this.TXT_Password.Size = new System.Drawing.Size(482, 32);
+            this.TXT_Password.StyleController = this.layoutControl1;
+            this.TXT_Password.TabIndex = 6;
+            this.TXT_Password.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.TXT_Password_ButtonClick);
+            this.TXT_Password.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TXT_Password_KeyDown);
+            // 
+            // TXT_Username
+            // 
+            this.TXT_Username.EditValue = "3asfoura";
+            this.TXT_Username.Location = new System.Drawing.Point(12, 175);
+            this.TXT_Username.Name = "TXT_Username";
+            this.TXT_Username.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.TXT_Username.Properties.Appearance.Options.UseFont = true;
+            editorButtonImageOptions4.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            editorButtonImageOptions4.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions4.SvgImage")));
+            this.TXT_Username.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            this.TXT_Username.Properties.NullValuePrompt = "Enter your username...";
+            this.TXT_Username.Size = new System.Drawing.Size(482, 32);
+            this.TXT_Username.StyleController = this.layoutControl1;
+            this.TXT_Username.TabIndex = 6;
             // 
             // BTN_Login
             // 
@@ -167,96 +233,6 @@
             this.simpleSeparator1.Size = new System.Drawing.Size(486, 27);
             this.simpleSeparator1.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 13, 13);
             // 
-            // layoutControlItem3
-            // 
-            this.layoutControlItem3.Control = this.BTN_Login;
-            this.layoutControlItem3.Location = new System.Drawing.Point(0, 321);
-            this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(486, 48);
-            this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem3.TextVisible = false;
-            // 
-            // TXT_Branch
-            // 
-            this.TXT_Branch.EditValue = "12";
-            this.TXT_Branch.Location = new System.Drawing.Point(12, 297);
-            this.TXT_Branch.Name = "TXT_Branch";
-            this.TXT_Branch.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.TXT_Branch.Properties.Appearance.Options.UseFont = true;
-            editorButtonImageOptions1.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions1.SvgImage")));
-            this.TXT_Branch.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
-            this.TXT_Branch.Properties.DisplayMember = "Name";
-            this.TXT_Branch.Properties.NullText = "";
-            this.TXT_Branch.Properties.PopupView = this.gridLookUpEdit1View;
-            this.TXT_Branch.Properties.ValueMember = "Id";
-            this.TXT_Branch.Size = new System.Drawing.Size(482, 32);
-            this.TXT_Branch.StyleController = this.layoutControl1;
-            this.TXT_Branch.TabIndex = 6;
-            // 
-            // gridLookUpEdit1View
-            // 
-            this.gridLookUpEdit1View.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
-            this.COL_Id,
-            this.COL_Name});
-            this.gridLookUpEdit1View.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
-            this.gridLookUpEdit1View.Name = "gridLookUpEdit1View";
-            this.gridLookUpEdit1View.OptionsSelection.EnableAppearanceFocusedCell = false;
-            this.gridLookUpEdit1View.OptionsView.ShowGroupPanel = false;
-            // 
-            // COL_Id
-            // 
-            this.COL_Id.Caption = "ID";
-            this.COL_Id.FieldName = "Id";
-            this.COL_Id.Name = "COL_Id";
-            this.COL_Id.Visible = true;
-            this.COL_Id.VisibleIndex = 0;
-            this.COL_Id.Width = 195;
-            // 
-            // COL_Name
-            // 
-            this.COL_Name.Caption = "Name";
-            this.COL_Name.FieldName = "Name";
-            this.COL_Name.Name = "COL_Name";
-            this.COL_Name.Visible = true;
-            this.COL_Name.VisibleIndex = 1;
-            this.COL_Name.Width = 1419;
-            // 
-            // TXT_Password
-            // 
-            this.TXT_Password.EditValue = "123";
-            this.TXT_Password.Location = new System.Drawing.Point(12, 236);
-            this.TXT_Password.Name = "TXT_Password";
-            this.TXT_Password.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.TXT_Password.Properties.Appearance.Options.UseFont = true;
-            editorButtonImageOptions2.Image = ((System.Drawing.Image)(resources.GetObject("editorButtonImageOptions2.Image")));
-            editorButtonImageOptions3.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions3.SvgImage")));
-            this.TXT_Password.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
-            this.TXT_Password.Properties.NullValuePrompt = "Enter your password...";
-            this.TXT_Password.Properties.UseSystemPasswordChar = true;
-            this.TXT_Password.Size = new System.Drawing.Size(482, 32);
-            this.TXT_Password.StyleController = this.layoutControl1;
-            this.TXT_Password.TabIndex = 6;
-            this.TXT_Password.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.TXT_Password_ButtonClick);
-            this.TXT_Password.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TXT_Password_KeyDown);
-            // 
-            // TXT_Username
-            // 
-            this.TXT_Username.EditValue = "3asfoura";
-            this.TXT_Username.Location = new System.Drawing.Point(12, 175);
-            this.TXT_Username.Name = "TXT_Username";
-            this.TXT_Username.Properties.Appearance.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.TXT_Username.Properties.Appearance.Options.UseFont = true;
-            editorButtonImageOptions4.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions4.SvgImage")));
-            this.TXT_Username.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
-            this.TXT_Username.Properties.NullValuePrompt = "Enter your username...";
-            this.TXT_Username.Size = new System.Drawing.Size(482, 32);
-            this.TXT_Username.StyleController = this.layoutControl1;
-            this.TXT_Username.TabIndex = 6;
-            // 
             // layoutControlItem5
             // 
             this.layoutControlItem5.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
@@ -297,6 +273,33 @@
             this.layoutControlItem2.TextLocation = DevExpress.Utils.Locations.Top;
             this.layoutControlItem2.TextSize = new System.Drawing.Size(202, 21);
             // 
+            // layoutControlItem3
+            // 
+            this.layoutControlItem3.Control = this.BTN_Login;
+            this.layoutControlItem3.Location = new System.Drawing.Point(0, 321);
+            this.layoutControlItem3.Name = "layoutControlItem3";
+            this.layoutControlItem3.Size = new System.Drawing.Size(486, 48);
+            this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem3.TextVisible = false;
+            // 
+            // COL_Id
+            // 
+            this.COL_Id.Caption = "ID";
+            this.COL_Id.FieldName = "Id";
+            this.COL_Id.Name = "COL_Id";
+            this.COL_Id.Visible = true;
+            this.COL_Id.VisibleIndex = 0;
+            this.COL_Id.Width = 195;
+            // 
+            // COL_Name
+            // 
+            this.COL_Name.Caption = "Name";
+            this.COL_Name.FieldName = "Name";
+            this.COL_Name.Name = "COL_Name";
+            this.COL_Name.Visible = true;
+            this.COL_Name.VisibleIndex = 1;
+            this.COL_Name.Width = 1419;
+            // 
             // FrmLogin
             // 
             this.Appearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
@@ -315,18 +318,18 @@
             this.Load += new System.EventHandler(this.FrmLogin_Load);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
             this.layoutControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LB_Welcome)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LB_plsSignIn)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.simpleSeparator1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TXT_Branch.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridLookUpEdit1View)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TXT_Password.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TXT_Username.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LB_Welcome)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LB_plsSignIn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.simpleSeparator1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             this.ResumeLayout(false);
 
         }

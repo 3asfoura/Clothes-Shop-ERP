@@ -38,6 +38,8 @@ namespace Clothes_Shop_ERP.modlestore
         public UcStockMovements()
         {
             InitializeComponent();
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsCustomization.AllowSort = false;
         }
 
         private void UcStockMovements_Load(object sender, EventArgs e)

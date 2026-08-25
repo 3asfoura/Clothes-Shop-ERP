@@ -1,6 +1,7 @@
 ﻿using Clothes_Shop_ERP.DAL;
 using Clothes_Shop_ERP.modlestore;
 using Clothes_Shop_ERP.modlestore.Settings.Users;
+using DevExpress.LookAndFeel;
 using DevExpress.Utils.Svg;
 using DevExpress.XtraEditors;
 using System;
@@ -20,6 +21,7 @@ namespace Clothes_Shop_ERP
         public FrmMain()
         {
             InitializeComponent();
+
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
@@ -191,6 +193,22 @@ namespace Clothes_Shop_ERP
            UcSalesReport frm = new UcSalesReport();
            setTabPage(frm, ElementSalesReport1.Text, ElementSalesReport1.ImageOptions.SvgImage);
 
+        }
+
+        private void ToggleDarkMode_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (ToggleDarkMode.Checked)
+            {
+                UserLookAndFeel.Default.SetSkinStyle(
+                    SkinSvgPalette.WXICompact.Darkness
+                );
+            }
+            else
+            {
+                UserLookAndFeel.Default.SetSkinStyle(
+            SkinSvgPalette.WXICompact.Default
+        );
+            }
         }
     }
 }
