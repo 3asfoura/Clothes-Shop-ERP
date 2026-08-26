@@ -362,6 +362,9 @@
     <Compile Include="modlestore\Sales\UcSalesInvoices.Designer.cs">
       <DependentUpon>UcSalesInvoices.cs</DependentUpon>
     </Compile>
+    <Compile Include="UcDashboard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UcProfitReport.cs">
       <SubType>UserControl</SubType>
     </Compile>

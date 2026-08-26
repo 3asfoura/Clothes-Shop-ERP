@@ -1,10 +1,14 @@
 #Version 1.0.1
 
 
-- hide group and edit no click on column header to see New - edit - delete  Btns 
+- Hide group and edit no click on column header to see New - edit - delete  Btns 
 
 #Version 1.0.2 
 
-- Add Dark Mode 
-- Add New - Edit - Delete Btns no click on Column Header 
-- Edit and Add Some Data and checks to make sure data is valid and not empty
+- Added Dark Mode 
+- Added New - Edit - Delete Btns no click on Column Header 
+- Edit and Added Some Data and checks to make sure data is valid and not empty
+
+#Version 1.0.3
+
+- Add Dashboard with some charts and data

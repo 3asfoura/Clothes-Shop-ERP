@@ -27,6 +27,8 @@ namespace Clothes_Shop_ERP
         private void FrmMain_Load(object sender, EventArgs e)
         {
             new FrmLogin().ShowDialog();
+            UcDashboard dash = new UcDashboard();
+            setTabPage(dash, "Dashboard", null);
         }
         void setTabPage(UserControl formObject, string FrmText, SvgImage image)
         {

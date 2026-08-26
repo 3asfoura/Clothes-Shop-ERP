@@ -33,7 +33,6 @@
             this.repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
             this.fluentDesignFormContainer1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormContainer();
             this.TabsControls = new DevExpress.XtraTab.XtraTabControl();
-            this.Home_Page = new DevExpress.XtraTab.XtraTabPage();
             this.accordionControl1 = new DevExpress.XtraBars.Navigation.AccordionControl();
             this.ElementInventory = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementProducts = new DevExpress.XtraBars.Navigation.AccordionControlElement();
@@ -69,7 +68,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             this.fluentDesignFormContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TabsControls)).BeginInit();
-            this.TabsControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fluentDesignFormControl1)).BeginInit();
             this.SuspendLayout();
@@ -96,22 +94,9 @@
             this.TabsControls.Location = new System.Drawing.Point(0, 0);
             this.TabsControls.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TabsControls.Name = "TabsControls";
-            this.TabsControls.SelectedTabPage = this.Home_Page;
             this.TabsControls.Size = new System.Drawing.Size(858, 599);
             this.TabsControls.TabIndex = 1;
-            this.TabsControls.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
-            this.Home_Page});
             this.TabsControls.CloseButtonClick += new System.EventHandler(this.TabsControls_CloseButtonClick);
-            // 
-            // Home_Page
-            // 
-            this.Home_Page.Appearance.PageClient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
-            this.Home_Page.Appearance.PageClient.Options.UseBackColor = true;
-            this.Home_Page.ImageOptions.SvgImageSize = new System.Drawing.Size(8, 8);
-            this.Home_Page.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Home_Page.Name = "Home_Page";
-            this.Home_Page.Size = new System.Drawing.Size(856, 572);
-            this.Home_Page.Text = "Home";
             // 
             // accordionControl1
             // 
@@ -463,7 +448,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).EndInit();
             this.fluentDesignFormContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.TabsControls)).EndInit();
-            this.TabsControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fluentDesignFormControl1)).EndInit();
             this.ResumeLayout(false);
@@ -502,7 +486,6 @@
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementUsers_Roles;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementPaymentMethods;
         private DevExpress.XtraTab.XtraTabControl TabsControls;
-        private DevExpress.XtraTab.XtraTabPage Home_Page;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementProductVariants;
         private DevExpress.XtraBars.BarToggleSwitchItem ToggleDarkMode;
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
