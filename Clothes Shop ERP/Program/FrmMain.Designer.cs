@@ -64,6 +64,8 @@
             this.ElementPaymentMethods = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.fluentDesignFormControl1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl();
             this.ToggleDarkMode = new DevExpress.XtraBars.BarToggleSwitchItem();
+            this.ElementAuditLogs = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            this.ElementTreasuryBalance = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             this.fluentDesignFormContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TabsControls)).BeginInit();
@@ -308,7 +310,8 @@
             // _ElementTreasury
             // 
             this._ElementTreasury.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] {
-            this.ElementTreasury});
+            this.ElementTreasury,
+            this.ElementTreasuryBalance});
             this._ElementTreasury.Expanded = true;
             this._ElementTreasury.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this._ElementTreasury.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("_ElementTreasury.ImageOptions.SvgImage")));
@@ -330,7 +333,6 @@
             this.ElementSalesReport1,
             this.ElementStockReport,
             this.ElementProfitReport});
-            this.ElementReports.Expanded = true;
             this.ElementReports.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this.ElementReports.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("ElementReports.ImageOptions.SvgImage")));
             this.ElementReports.Name = "ElementReports";
@@ -368,7 +370,8 @@
             this.ElementSettings.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] {
             this.ElementBranches,
             this.ElementUsers_Roles,
-            this.ElementPaymentMethods});
+            this.ElementPaymentMethods,
+            this.ElementAuditLogs});
             this.ElementSettings.Expanded = true;
             this.ElementSettings.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this.ElementSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("ElementSettings.ImageOptions.SvgImage")));
@@ -424,6 +427,20 @@
             this.ToggleDarkMode.Id = 0;
             this.ToggleDarkMode.Name = "ToggleDarkMode";
             this.ToggleDarkMode.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.ToggleDarkMode_CheckedChanged);
+            // 
+            // ElementAuditLogs
+            // 
+            this.ElementAuditLogs.Name = "ElementAuditLogs";
+            this.ElementAuditLogs.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementAuditLogs.Text = "AuditLogs";
+            this.ElementAuditLogs.Click += new System.EventHandler(this.ElementAuditLogs_Click);
+            // 
+            // ElementTreasuryBalance
+            // 
+            this.ElementTreasuryBalance.Name = "ElementTreasuryBalance";
+            this.ElementTreasuryBalance.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementTreasuryBalance.Text = "TreasuryBalance";
+            this.ElementTreasuryBalance.Click += new System.EventHandler(this.ElementTreasuryBalance_Click);
             // 
             // FrmMain
             // 
@@ -489,5 +506,7 @@
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementProductVariants;
         private DevExpress.XtraBars.BarToggleSwitchItem ToggleDarkMode;
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement ElementAuditLogs;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement ElementTreasuryBalance;
     }
 }

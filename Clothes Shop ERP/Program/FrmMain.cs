@@ -142,7 +142,7 @@ namespace Clothes_Shop_ERP
 
         private void ElementTreasury_Click(object sender, EventArgs e)
         {
-            UcAuditLogs frm = new UcAuditLogs();
+            UcTreasuryTransactions frm = new UcTreasuryTransactions();
             setTabPage(frm, ElementTreasury.Text, ElementTreasury.ImageOptions.SvgImage);
         }
 
@@ -209,6 +209,19 @@ namespace Clothes_Shop_ERP
             SkinSvgPalette.WXICompact.Default
         );
             }
+        }
+
+        private void ElementTreasuryBalance_Click(object sender, EventArgs e)
+        {
+            UcTreasuryBalance frm = new UcTreasuryBalance();
+            setTabPage(frm, ElementTreasuryBalance.Text, ElementTreasuryBalance.ImageOptions.SvgImage);
+        }
+
+        private void ElementAuditLogs_Click(object sender, EventArgs e)
+        {
+            UcAuditLogs frm = new UcAuditLogs();
+            setTabPage(frm, ElementAuditLogs.Text, ElementAuditLogs.ImageOptions.SvgImage);
+
         }
     }
 }
