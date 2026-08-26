@@ -142,7 +142,7 @@ namespace Clothes_Shop_ERP
 
         private void ElementTreasury_Click(object sender, EventArgs e)
         {
-            UcTreasuryTransactions frm = new UcTreasuryTransactions();
+            UcAuditLogs frm = new UcAuditLogs();
             setTabPage(frm, ElementTreasury.Text, ElementTreasury.ImageOptions.SvgImage);
         }
 

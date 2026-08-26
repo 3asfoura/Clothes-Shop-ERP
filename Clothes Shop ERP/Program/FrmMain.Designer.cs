@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
+            this.repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
             this.fluentDesignFormContainer1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormContainer();
             this.TabsControls = new DevExpress.XtraTab.XtraTabControl();
             this.Home_Page = new DevExpress.XtraTab.XtraTabPage();
@@ -64,13 +64,17 @@
             this.ElementPaymentMethods = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.fluentDesignFormControl1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl();
             this.ToggleDarkMode = new DevExpress.XtraBars.BarToggleSwitchItem();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             this.fluentDesignFormContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TabsControls)).BeginInit();
             this.TabsControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fluentDesignFormControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(repositoryItemProgressBar1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // repositoryItemProgressBar1
+            // 
+            this.repositoryItemProgressBar1.Name = "repositoryItemProgressBar1";
             // 
             // fluentDesignFormContainer1
             // 
@@ -140,6 +144,7 @@
             this.ElementStock_Count,
             this.ElementStock_Movements,
             this.ElementBranch_Transfer});
+            this.ElementInventory.Expanded = true;
             this.ElementInventory.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this.ElementInventory.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("ElementInventory.ImageOptions.SvgImage")));
             this.ElementInventory.Name = "ElementInventory";
@@ -304,6 +309,7 @@
             // 
             this._ElementTreasury.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] {
             this.ElementTreasury});
+            this._ElementTreasury.Expanded = true;
             this._ElementTreasury.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this._ElementTreasury.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("_ElementTreasury.ImageOptions.SvgImage")));
             this._ElementTreasury.Name = "_ElementTreasury";
@@ -363,6 +369,7 @@
             this.ElementBranches,
             this.ElementUsers_Roles,
             this.ElementPaymentMethods});
+            this.ElementSettings.Expanded = true;
             this.ElementSettings.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this.ElementSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("ElementSettings.ImageOptions.SvgImage")));
             this.ElementSettings.Name = "ElementSettings";
@@ -404,7 +411,7 @@
             this.fluentDesignFormControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fluentDesignFormControl1.Name = "fluentDesignFormControl1";
             this.fluentDesignFormControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            repositoryItemProgressBar1});
+            this.repositoryItemProgressBar1});
             this.fluentDesignFormControl1.Size = new System.Drawing.Size(1114, 29);
             this.fluentDesignFormControl1.TabIndex = 2;
             this.fluentDesignFormControl1.TabStop = false;
@@ -436,11 +443,11 @@
             this.Text = "FrmMain";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmMain_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).EndInit();
             this.fluentDesignFormContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.TabsControls)).EndInit();
             this.TabsControls.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(repositoryItemProgressBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fluentDesignFormControl1)).EndInit();
             this.ResumeLayout(false);
 
@@ -481,5 +488,6 @@
         private DevExpress.XtraTab.XtraTabPage Home_Page;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementProductVariants;
         private DevExpress.XtraBars.BarToggleSwitchItem ToggleDarkMode;
+        private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
     }
 }

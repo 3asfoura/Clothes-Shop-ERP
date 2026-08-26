@@ -124,6 +124,11 @@ namespace Clothes_Shop_ERP
             GridViewLines = new GridView(GridLines);
             GridLines.MainView = GridViewLines;
             GridLines.DataSource = _lines;
+            if (GridViewLines.Columns["Quantity"] != null)
+            {
+                GridViewLines.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                GridViewLines.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+            }
             GridViewLines.OptionsBehavior.Editable = false;
 
             var btnRemoveLine = new SimpleButton { Text = "Remove Selected Line", Location = new System.Drawing.Point(20, 355), Width = 180 };

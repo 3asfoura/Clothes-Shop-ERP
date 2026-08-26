@@ -67,6 +67,18 @@ namespace Clothes_Shop_ERP
 
                 GridResult.DataSource = stock;
 
+                if (GridViewResult.Columns["Quantity"] != null)
+                {
+                    GridViewResult.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                    GridViewResult.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+                }
+                if (GridViewResult.Columns["MinQuantity"] != null)
+                {
+                    GridViewResult.Columns["MinQuantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                    GridViewResult.Columns["MinQuantity"].DisplayFormat.FormatString = "0.###";
+                }
+
+
                 decimal totalValue = stock.Sum(x => x.Value);
                 int lowStockCount = stock.Count(x => x.Quantity <= x.MinQuantity);
                 LblSummary.Text = $"Total Inventory Value: {totalValue:n2}   |   Low Stock Items: {lowStockCount}";

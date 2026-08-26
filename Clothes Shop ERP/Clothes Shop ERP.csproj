@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArabicGridLocalizer.cs" />
+    <Compile Include="Clothesshopdbcontext.extensions.cs" />
     <Compile Include="DAL\AuditLogs.cs" />
     <Compile Include="DAL\Branches.cs" />
     <Compile Include="DAL\BranchStock.cs" />
@@ -205,11 +206,17 @@
       <DependentUpon>FrmReturnEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="modlestore\Inventory\Brach Transfer\FrmStockTransferEdit.cs" />
+    <Compile Include="modlestore\Settings\AuditLogs\UcAuditLogs.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="modlestore\Settings\UcUsers_Roles\UcUsers_Roles.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="modlestore\Settings\UcUsers_Roles\UcUsers_Roles.Designer.cs">
       <DependentUpon>UcUsers_Roles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="modlestore\Treasury\Balance\UcTreasuryBalance.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="modlestore\Treasury\FrmTreasuryEdit.cs">
       <SubType>Form</SubType>

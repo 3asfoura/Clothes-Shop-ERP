@@ -20,6 +20,8 @@ namespace Clothes_Shop_ERP.modlestore
             InitializeComponent();
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
+            ColQuantity.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            ColQuantity.DisplayFormat.FormatString = "0.###";
         }
         public void GetData()
         {
@@ -37,6 +39,16 @@ namespace Clothes_Shop_ERP.modlestore
                         x.MinQuantity
                     })
                     .ToList();
+            }
+            if (gridView1.Columns["Quantity"] != null)
+            {
+                gridView1.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                gridView1.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+            }
+            if (gridView1.Columns["MinQuantity"] != null)
+            {
+                gridView1.Columns["MinQuantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                gridView1.Columns["MinQuantity"].DisplayFormat.FormatString = "0.###";
             }
         }
 

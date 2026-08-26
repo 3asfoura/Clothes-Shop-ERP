@@ -34,6 +34,11 @@ namespace Clothes_Shop_ERP.modlestore
                     })
                     .ToList();
             }
+            if (gridView1.Columns["Quantity"] != null)
+            {
+                gridView1.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                gridView1.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+            }
         }
         public UcStockMovements()
         {

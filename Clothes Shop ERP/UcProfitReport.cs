@@ -50,7 +50,11 @@ namespace Clothes_Shop_ERP.modlestore
                     .ToList();
 
                 GridResult.DataSource = grouped;
-
+                if (GridViewResult.Columns["Quantity"] != null)
+                {
+                    GridViewResult.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                    GridViewResult.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+                }
                 decimal totalRevenue = grouped.Sum(x => x.Revenue);
                 decimal totalCost = grouped.Sum(x => x.Cost);
                 decimal totalProfit = totalRevenue - totalCost;

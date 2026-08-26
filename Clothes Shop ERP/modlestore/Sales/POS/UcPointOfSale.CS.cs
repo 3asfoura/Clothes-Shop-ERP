@@ -269,6 +269,11 @@ namespace Clothes_Shop_ERP
         {
 
             GridCart.DataSource = _cart;
+            if (GridViewCart.Columns["Quantity"] != null)
+            {
+                GridViewCart.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+                GridViewCart.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+            }
             GridViewCart.OptionsBehavior.Editable = false;
 
             RefreshTotal();
