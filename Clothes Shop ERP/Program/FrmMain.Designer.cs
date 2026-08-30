@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
+            this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
             this.fluentDesignFormContainer1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormContainer();
             this.TabsControls = new DevExpress.XtraTab.XtraTabControl();
@@ -53,6 +54,7 @@
             this.ElementSuppliers = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this._ElementTreasury = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementTreasury = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            this.ElementTreasuryBalance = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementReports = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementSalesReport1 = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementStockReport = new DevExpress.XtraBars.Navigation.AccordionControlElement();
@@ -61,16 +63,27 @@
             this.ElementBranches = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementUsers_Roles = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementPaymentMethods = new DevExpress.XtraBars.Navigation.AccordionControlElement();
-            this.fluentDesignFormControl1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl();
-            this.ToggleDarkMode = new DevExpress.XtraBars.BarToggleSwitchItem();
             this.ElementAuditLogs = new DevExpress.XtraBars.Navigation.AccordionControlElement();
-            this.ElementTreasuryBalance = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            this.fluentDesignFormControl1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl();
+            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
+            this.barEditItem1 = new DevExpress.XtraBars.BarEditItem();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             this.fluentDesignFormContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TabsControls)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fluentDesignFormControl1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // repositoryItemImageComboBox1
+            // 
+            this.repositoryItemImageComboBox1.AutoHeight = false;
+            this.repositoryItemImageComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemImageComboBox1.Items.AddRange(new DevExpress.XtraEditors.Controls.ImageComboBoxItem[] {
+            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("English", "<Null>", -1),
+            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("المصري", "23123", -1)});
+            this.repositoryItemImageComboBox1.Name = "repositoryItemImageComboBox1";
             // 
             // repositoryItemProgressBar1
             // 
@@ -83,7 +96,7 @@
             this.fluentDesignFormContainer1.Location = new System.Drawing.Point(256, 29);
             this.fluentDesignFormContainer1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fluentDesignFormContainer1.Name = "fluentDesignFormContainer1";
-            this.fluentDesignFormContainer1.Size = new System.Drawing.Size(858, 599);
+            this.fluentDesignFormContainer1.Size = new System.Drawing.Size(878, 777);
             this.fluentDesignFormContainer1.TabIndex = 0;
             // 
             // TabsControls
@@ -94,7 +107,7 @@
             this.TabsControls.Location = new System.Drawing.Point(0, 0);
             this.TabsControls.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TabsControls.Name = "TabsControls";
-            this.TabsControls.Size = new System.Drawing.Size(858, 599);
+            this.TabsControls.Size = new System.Drawing.Size(878, 777);
             this.TabsControls.TabIndex = 1;
             this.TabsControls.CloseButtonClick += new System.EventHandler(this.TabsControls_CloseButtonClick);
             // 
@@ -116,7 +129,7 @@
             this.accordionControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.accordionControl1.Name = "accordionControl1";
             this.accordionControl1.ScrollBarMode = DevExpress.XtraBars.Navigation.ScrollBarMode.Touch;
-            this.accordionControl1.Size = new System.Drawing.Size(256, 599);
+            this.accordionControl1.Size = new System.Drawing.Size(256, 777);
             this.accordionControl1.TabIndex = 1;
             this.accordionControl1.ViewType = DevExpress.XtraBars.Navigation.AccordionControlViewType.HamburgerMenu;
             // 
@@ -312,6 +325,13 @@
             this.ElementTreasury.Text = "Treasury Transactions";
             this.ElementTreasury.Click += new System.EventHandler(this.ElementTreasury_Click);
             // 
+            // ElementTreasuryBalance
+            // 
+            this.ElementTreasuryBalance.Name = "ElementTreasuryBalance";
+            this.ElementTreasuryBalance.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementTreasuryBalance.Text = "TreasuryBalance";
+            this.ElementTreasuryBalance.Click += new System.EventHandler(this.ElementTreasuryBalance_Click);
+            // 
             // ElementReports
             // 
             this.ElementReports.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] {
@@ -390,29 +410,6 @@
             this.ElementPaymentMethods.Text = "Payment Methods";
             this.ElementPaymentMethods.Click += new System.EventHandler(this.ElementPaymentMethods_Click);
             // 
-            // fluentDesignFormControl1
-            // 
-            this.fluentDesignFormControl1.FluentDesignForm = this;
-            this.fluentDesignFormControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.ToggleDarkMode});
-            this.fluentDesignFormControl1.Location = new System.Drawing.Point(0, 0);
-            this.fluentDesignFormControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.fluentDesignFormControl1.Name = "fluentDesignFormControl1";
-            this.fluentDesignFormControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemProgressBar1});
-            this.fluentDesignFormControl1.Size = new System.Drawing.Size(1114, 29);
-            this.fluentDesignFormControl1.TabIndex = 2;
-            this.fluentDesignFormControl1.TabStop = false;
-            this.fluentDesignFormControl1.TitleItemLinks.Add(this.ToggleDarkMode);
-            // 
-            // ToggleDarkMode
-            // 
-            this.ToggleDarkMode.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
-            this.ToggleDarkMode.Caption = "Dark Mode";
-            this.ToggleDarkMode.Id = 0;
-            this.ToggleDarkMode.Name = "ToggleDarkMode";
-            this.ToggleDarkMode.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.ToggleDarkMode_CheckedChanged);
-            // 
             // ElementAuditLogs
             // 
             this.ElementAuditLogs.Name = "ElementAuditLogs";
@@ -420,18 +417,48 @@
             this.ElementAuditLogs.Text = "AuditLogs";
             this.ElementAuditLogs.Click += new System.EventHandler(this.ElementAuditLogs_Click);
             // 
-            // ElementTreasuryBalance
+            // fluentDesignFormControl1
             // 
-            this.ElementTreasuryBalance.Name = "ElementTreasuryBalance";
-            this.ElementTreasuryBalance.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
-            this.ElementTreasuryBalance.Text = "TreasuryBalance";
-            this.ElementTreasuryBalance.Click += new System.EventHandler(this.ElementTreasuryBalance_Click);
+            this.fluentDesignFormControl1.FluentDesignForm = this;
+            this.fluentDesignFormControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.barButtonItem1,
+            this.barEditItem1});
+            this.fluentDesignFormControl1.Location = new System.Drawing.Point(0, 0);
+            this.fluentDesignFormControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.fluentDesignFormControl1.Name = "fluentDesignFormControl1";
+            this.fluentDesignFormControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemProgressBar1,
+            this.repositoryItemImageComboBox1});
+            this.fluentDesignFormControl1.Size = new System.Drawing.Size(1134, 29);
+            this.fluentDesignFormControl1.TabIndex = 2;
+            this.fluentDesignFormControl1.TabStop = false;
+            this.fluentDesignFormControl1.TitleItemLinks.Add(this.barButtonItem1);
+            this.fluentDesignFormControl1.TitleItemLinks.Add(this.barEditItem1);
+            // 
+            // barButtonItem1
+            // 
+            this.barButtonItem1.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.barButtonItem1.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check;
+            this.barButtonItem1.Caption = "barButtonItem1";
+            this.barButtonItem1.Id = 0;
+            this.barButtonItem1.ImageOptions.SvgImage = global::Clothes_Shop_ERP.Properties.Resources.icons8_dark_mode_50;
+            this.barButtonItem1.Name = "barButtonItem1";
+            this.barButtonItem1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
+            // 
+            // barEditItem1
+            // 
+            this.barEditItem1.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.barEditItem1.Caption = "barEditItem1";
+            this.barEditItem1.Edit = this.repositoryItemImageComboBox1;
+            this.barEditItem1.Id = 2;
+            this.barEditItem1.Name = "barEditItem1";
+            this.barEditItem1.Size = new System.Drawing.Size(110, 0);
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1114, 628);
+            this.ClientSize = new System.Drawing.Size(1134, 806);
             this.ControlContainer = this.fluentDesignFormContainer1;
             this.Controls.Add(this.fluentDesignFormContainer1);
             this.Controls.Add(this.accordionControl1);
@@ -445,6 +472,7 @@
             this.Text = "FrmMain";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FrmMain_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).EndInit();
             this.fluentDesignFormContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.TabsControls)).EndInit();
@@ -487,9 +515,11 @@
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementPaymentMethods;
         private DevExpress.XtraTab.XtraTabControl TabsControls;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementProductVariants;
-        private DevExpress.XtraBars.BarToggleSwitchItem ToggleDarkMode;
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementAuditLogs;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementTreasuryBalance;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
+        private DevExpress.XtraBars.BarEditItem barEditItem1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
     }
 }

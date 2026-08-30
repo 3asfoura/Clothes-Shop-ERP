@@ -198,6 +198,9 @@
     <Compile Include="DAL\TreasuryTransactions.cs" />
     <Compile Include="DAL\Users.cs" />
     <Compile Include="FileName.cs" />
+    <Compile Include="Lang.english.cs" />
+    <Compile Include="Lang.egyptian.cs" />
+    <Compile Include="LocalizationManager.cs" />
     <Compile Include="modlestore\Purchases\FrmPurchaseInvoiceEdit.cs" />
     <Compile Include="modlestore\Sales\Return\FrmReturnEdit.cs">
       <SubType>Form</SubType>
@@ -512,6 +515,10 @@
     <None Include="Resources\icons8-warehouse-48[1].png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\icons8-sun-50.svg" />
+    <None Include="Resources\icons8-dark-mode-50.svg" />
+    <None Include="Resources\icons8-egypt-48.svg" />
+    <None Include="Resources\icons8-usa-48.svg" />
     <Content Include="Version.txt" />
     <Content Include="Resources\ChatGPT Image Aug 23, 2026, 12_46_22 AM.ico" />
   </ItemGroup>

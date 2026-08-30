@@ -19,7 +19,7 @@ namespace Clothes_Shop_ERP.modlestore
         private ChartControl _lineChart;
         private ChartControl _pieChart;
 
-        // --- Date Range Picker (زي اللي في الصورة) ---
+     
         private PopupContainerEdit _rangeEdit;
         private PopupContainerControl _rangePopup;
         private RadioGroup _rangeRadioGroup;
@@ -38,7 +38,7 @@ namespace Clothes_Shop_ERP.modlestore
             this.Dock = DockStyle.Fill;
             BuildUi();
             LoadCardsAndSideData();
-            ApplySelectedRange(); // بيحسب "آخر 28 يوم" الافتراضية ويحمل الـ Line Chart
+            ApplySelectedRange(); 
         }
 
         private void BuildUi()
@@ -55,13 +55,13 @@ namespace Clothes_Shop_ERP.modlestore
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 45));
             this.Controls.Add(root);
 
-            // ---- صف الكروت فوق ----
+         
             _cardsPanel = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 2 };
             for (int i = 0; i < 4; i++) _cardsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
             for (int i = 0; i < 2; i++) _cardsPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
             root.Controls.Add(_cardsPanel, 0, 0);
 
-            // ---- الصف الأوسط: Line Chart (يسار) + نواقص المخزون وPie Chart (يمين) ----
+        
             var middle = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1 };
             middle.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65));
             middle.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35));
@@ -103,7 +103,7 @@ namespace Clothes_Shop_ERP.modlestore
             pieGroup.Controls.Add(_pieChart);
             rightSide.Controls.Add(pieGroup, 0, 1);
 
-            // ---- الصف السفلي: أحدث الفواتير (تابات) ----
+        
             var recentTabs = new XtraTabControl { Dock = DockStyle.Fill };
 
             var tabSales = new XtraTabPage { Text = "أحدث فواتير البيع" };

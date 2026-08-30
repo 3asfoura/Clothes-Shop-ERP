@@ -21,14 +21,16 @@ namespace Clothes_Shop_ERP
         public FrmMain()
         {
             InitializeComponent();
-
+            DarkModeToggle();
         }
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
             new FrmLogin().ShowDialog();
+           
             UcDashboard dash = new UcDashboard();
             setTabPage(dash, "Dashboard", null);
+
         }
         void setTabPage(UserControl formObject, string FrmText, SvgImage image)
         {
@@ -192,25 +194,14 @@ namespace Clothes_Shop_ERP
 
         private void ElementSalesReport1_Click(object sender, EventArgs e)
         {
-           UcSalesReport frm = new UcSalesReport();
-           setTabPage(frm, ElementSalesReport1.Text, ElementSalesReport1.ImageOptions.SvgImage);
+            UcSalesReport frm = new UcSalesReport();
+            setTabPage(frm, ElementSalesReport1.Text, ElementSalesReport1.ImageOptions.SvgImage);
 
         }
-
+        bool DarkMode = false;
         private void ToggleDarkMode_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (ToggleDarkMode.Checked)
-            {
-                UserLookAndFeel.Default.SetSkinStyle(
-                    SkinSvgPalette.WXICompact.Darkness
-                );
-            }
-            else
-            {
-                UserLookAndFeel.Default.SetSkinStyle(
-            SkinSvgPalette.WXICompact.Default
-        );
-            }
+
         }
 
         private void ElementTreasuryBalance_Click(object sender, EventArgs e)
@@ -224,6 +215,27 @@ namespace Clothes_Shop_ERP
             UcAuditLogs frm = new UcAuditLogs();
             setTabPage(frm, ElementAuditLogs.Text, ElementAuditLogs.ImageOptions.SvgImage);
 
+        }
+
+        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            DarkModeToggle();
+        }
+        void DarkModeToggle()
+        {
+
+            if (DarkMode)
+            {
+                UserLookAndFeel.Default.SetSkinStyle(SkinSvgPalette.WXICompact.Default);
+                barButtonItem1.ImageOptions.SvgImage = Properties.Resources.icons8_dark_mode_50;
+                DarkMode = false;
+            }
+            else
+            {
+                UserLookAndFeel.Default.SetSkinStyle(SkinSvgPalette.WXICompact.Darkness);
+                barButtonItem1.ImageOptions.SvgImage = Properties.Resources.icons8_sun_50;
+                DarkMode = true;
+            }
         }
     }
 }
