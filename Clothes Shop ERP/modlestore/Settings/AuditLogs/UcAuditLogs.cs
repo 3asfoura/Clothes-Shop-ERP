@@ -10,7 +10,6 @@ using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP.modlestore
 {
-    // شاشة قراءة فقط لجدول AuditLogs (مفيش Add/Edit/Delete هنا، بس عرض وفلترة)
     public class UcAuditLogs : DevExpress.XtraEditors.XtraUserControl
     {
         private DateEdit DtFrom, DtTo;
@@ -53,6 +52,7 @@ namespace Clothes_Shop_ERP.modlestore
             GridViewResult.OptionsBehavior.Editable = false;
             GridViewResult.OptionsView.ShowGroupPanel = false;
             GridViewResult.RowCellStyle += GridViewResult_RowCellStyle;
+            GridViewResult.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
 
             this.Controls.Add(lblFrom); this.Controls.Add(DtFrom);
             this.Controls.Add(lblTo); this.Controls.Add(DtTo);
@@ -85,7 +85,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                 var data = query.ToList();
 
-                // فلتر اسم الجدول (لو المستخدم اختار جدول معين من الكومبو)
+              
                 if (CmbTable.SelectedIndex > 0)
                 {
                     string selectedTable = CmbTable.Text;
@@ -94,7 +94,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                 GridResult.DataSource = data;
 
-                // تعبئة الكومبو بأسماء الجداول الموجودة فعليًا (مرة واحدة بس لو فاضي)
+           
                 if (CmbTable.Properties.Items.Count == 0)
                 {
                     CmbTable.Properties.Items.Add("الكل");

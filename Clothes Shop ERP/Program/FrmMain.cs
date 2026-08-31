@@ -1,8 +1,10 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using Clothes_Shop_ERP.modlestore;
 using Clothes_Shop_ERP.modlestore.Settings.Users;
 using DevExpress.LookAndFeel;
 using DevExpress.Utils.Svg;
+using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -20,10 +22,45 @@ namespace Clothes_Shop_ERP
     {
         public FrmMain()
         {
+           
             InitializeComponent();
             DarkModeToggle();
-        }
+            ComboLanguage.EditValue = LocalizationManager.CurrentLanguage.ToString();
+            ApplyLanguage();
 
+        }
+        public void ApplyLanguage()
+        {
+            ElementInventory.Text = LocalizationManager.T("Main_Inventory");
+            ElementProducts.Text = LocalizationManager.T("Main_Products");
+            ElementProductVariants.Text = LocalizationManager.T("Main_ProductVariants");
+            ElementCategories.Text = LocalizationManager.T("Main_Categories");
+            ElementBrands.Text = LocalizationManager.T("Main_Brands");
+            ElementColors_Sizes.Text = LocalizationManager.T("Main_ColorsSizes");
+            ElementStock_Count.Text = LocalizationManager.T("Main_StockCount");
+            ElementStock_Movements.Text = LocalizationManager.T("Main_StockMovements");
+            ElementBranch_Transfer.Text = LocalizationManager.T("Main_BranchTransfer");
+            ElementBranch_Sales.Text = LocalizationManager.T("Main_Sales");
+            ElementPoint_of_Sale.Text = LocalizationManager.T("Main_PointOfSale");
+            ElementSales_Invoices.Text = LocalizationManager.T("Main_SalesInvoices");
+            ElementReturns.Text = LocalizationManager.T("Main_Returns");
+            ElementCustomers.Text = LocalizationManager.T("Main_Customers");
+            ElementPurchasing.Text = LocalizationManager.T("Main_Purchasing");
+            ElementPurchase.Text = LocalizationManager.T("Main_PurchaseInvoices");
+            ElementSuppliers.Text = LocalizationManager.T("Main_Suppliers");
+            _ElementTreasury.Text = LocalizationManager.T("Main_Treasury");
+            ElementTreasury.Text = LocalizationManager.T("Main_TreasuryTransactions");
+            ElementTreasuryBalance.Text = LocalizationManager.T("Main_TreasuryBalance");
+            ElementReports.Text = LocalizationManager.T("Main_Reports");
+            ElementSalesReport1.Text = LocalizationManager.T("Main_SalesReport");
+            ElementStockReport.Text = LocalizationManager.T("Main_StockReport");
+            ElementProfitReport.Text = LocalizationManager.T("Main_ProfitReport");
+            ElementSettings.Text = LocalizationManager.T("Main_Settings");
+            ElementBranches.Text = LocalizationManager.T("Main_Branches");
+            ElementUsers_Roles.Text = LocalizationManager.T("Main_UsersRoles");
+            ElementPaymentMethods.Text = LocalizationManager.T("Main_PaymentMethods");
+            ElementAuditLogs.Text = LocalizationManager.T("Main_AuditLogs");
+        }
         private void FrmMain_Load(object sender, EventArgs e)
         {
             new FrmLogin().ShowDialog();
@@ -235,6 +272,41 @@ namespace Clothes_Shop_ERP
                 UserLookAndFeel.Default.SetSkinStyle(SkinSvgPalette.WXICompact.Darkness);
                 barButtonItem1.ImageOptions.SvgImage = Properties.Resources.icons8_sun_50;
                 DarkMode = true;
+            }
+        }
+
+        
+
+        private void ComboLanguage_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+        }
+
+        private void ComboLanguage_EditValueChanged_1(object sender, EventArgs e)
+        {
+            string selected = ComboLanguage.EditValue as string;
+
+            AppLanguage newLanguage = selected == "English"
+                ? AppLanguage.English
+                : AppLanguage.Egyptian;
+
+            if (newLanguage == LocalizationManager.CurrentLanguage)
+                return;
+
+            LocalizationManager.CurrentLanguage = newLanguage;
+            LocalizationManager.SaveLanguagePreference();
+
+            string title = LocalizationManager.T("Common_ConfirmTitle");
+            string message = newLanguage == AppLanguage.English
+                ? "The app needs to restart to apply the new language. Restart now?"
+                : "لازم نعيد تشغيل البرنامج عشان اللغة الجديدة تتطبق. هل عاوز اعاده تشغيل دلوقتي؟";
+
+            var result = XtraMessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+
+            if (result == DialogResult.Yes)
+            {
+                Application.Restart();
             }
         }
     }

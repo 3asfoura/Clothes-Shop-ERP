@@ -22,6 +22,8 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsCustomization.AllowSort = false;
             gridView2.OptionsView.ShowGroupPanel = false;
             gridView2.OptionsCustomization.AllowSort = false;
+            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            gridView2.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
         }
         public void GetData()
         {

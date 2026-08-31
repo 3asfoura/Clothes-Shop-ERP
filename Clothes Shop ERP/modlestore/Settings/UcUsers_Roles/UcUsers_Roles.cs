@@ -25,6 +25,8 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             gridView2.OptionsCustomization.AllowSort = false;
             dgv_RolesList.OptionsView.ShowGroupPanel = false;
             dgv_RolesList.OptionsCustomization.AllowSort = false;
+            gridView2.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            dgv_RolesList.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
         }
         public void GetDataRoles()
         {

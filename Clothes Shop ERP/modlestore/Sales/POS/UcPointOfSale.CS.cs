@@ -38,6 +38,7 @@ namespace Clothes_Shop_ERP
             TxtBarcode.Focus();
             GridViewCart.OptionsView.ShowGroupPanel = false;
             GridViewCart.OptionsCustomization.AllowSort = false;
+            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
         }
         private void LoadLookups()
         {

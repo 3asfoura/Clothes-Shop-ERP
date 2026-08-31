@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,15 @@ namespace Clothes_Shop_ERP.modlestore
             InitializeComponent();
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
+            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            Col.Caption = LocalizationManager.T("Customers_ColName");
+            ColPhone.Caption = LocalizationManager.T("Customers_ColPhone");
+            ColAddress.Caption = LocalizationManager.T("Customers_ColAddress");
+            ColIsActive.Caption = LocalizationManager.T("Customers_ColIsActive");
         }
         public void GetData()
         {

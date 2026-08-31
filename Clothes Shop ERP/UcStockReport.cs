@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
@@ -14,12 +15,17 @@ namespace Clothes_Shop_ERP
         private GridControl GridResult;
         private GridView GridViewResult;
         private LabelControl LblSummary;
-
+        public void ApplyLanguage()
+        {
+            LblSummary.Text = LocalizationManager.T("Reports_Summary");
+          
+        }
         public UcStockReport()
         {
             this.Dock = DockStyle.Fill;
             BuildUi();
             RunReport();
+            ApplyLanguage();
         }
 
         private void BuildUi()

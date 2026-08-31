@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,21 @@ namespace Clothes_Shop_ERP
         public FrmLogin()
         {
             InitializeComponent();
+            ApplyLanguage();
         }
-       
+      
+        public void ApplyLanguage()
+        {
+            this.Text = LocalizationManager.T("Login_Title");
+            BTN_Login.Text = LocalizationManager.T("Login_BtnLogin");
+            LB_Welcome.Text = LocalizationManager.T("Login_WelcomeBack");
+            LB_plsSignIn.Text = LocalizationManager.T("Login_PleaseSignIn");
+            layoutControlItem5.Text = LocalizationManager.T("Login_Branch");
+            layoutControlItem1.Text = LocalizationManager.T("Login_Username");
+            layoutControlItem2.Text = LocalizationManager.T("Login_Password");
+            COL_Id.Caption = LocalizationManager.T("Login_ColId");
+            COL_Name.Caption = LocalizationManager.T("Login_ColName");
+        }
         private void textEdit2_EditValueChanged(object sender, EventArgs e)
         {
 

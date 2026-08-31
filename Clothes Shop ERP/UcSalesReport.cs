@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
@@ -11,12 +12,20 @@ namespace Clothes_Shop_ERP.modlestore
 {
     public partial class UcSalesReport : DevExpress.XtraEditors.XtraUserControl
     {
+        public void ApplyLanguage()
+        {
+            LblSummary.Text = LocalizationManager.T("Reports_Summary");
+            btnRun.Text = LocalizationManager.T("Reports_GenerateReport");
+            lblTo.Text = LocalizationManager.T("Reports_To");
+            lblFrom.Text = LocalizationManager.T("Reports_From");
+        }
         public UcSalesReport()
         {
             InitializeComponent();
             DtFrom.DateTime = DateTime.Today.AddDays(-30);
             DtTo.DateTime = DateTime.Today;
             RunReport();
+            ApplyLanguage();
             GridViewResult.OptionsView.ShowGroupPanel = false;
             GridViewResult.OptionsCustomization.AllowSort = false;
 

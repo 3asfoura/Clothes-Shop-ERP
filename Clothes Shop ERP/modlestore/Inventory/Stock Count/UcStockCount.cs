@@ -22,6 +22,7 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsCustomization.AllowSort = false;
             ColQuantity.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             ColQuantity.DisplayFormat.FormatString = "0.###";
+            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
         }
         public void GetData()
         {

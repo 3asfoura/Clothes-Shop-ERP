@@ -19,7 +19,6 @@ namespace Clothes_Shop_ERP.modlestore
         private ChartControl _lineChart;
         private ChartControl _pieChart;
 
-     
         private PopupContainerEdit _rangeEdit;
         private PopupContainerControl _rangePopup;
         private RadioGroup _rangeRadioGroup;
@@ -38,7 +37,7 @@ namespace Clothes_Shop_ERP.modlestore
             this.Dock = DockStyle.Fill;
             BuildUi();
             LoadCardsAndSideData();
-            ApplySelectedRange(); 
+            ApplySelectedRange();
         }
 
         private void BuildUi()
@@ -55,19 +54,17 @@ namespace Clothes_Shop_ERP.modlestore
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 45));
             this.Controls.Add(root);
 
-         
             _cardsPanel = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 2 };
             for (int i = 0; i < 4; i++) _cardsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25));
             for (int i = 0; i < 2; i++) _cardsPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
             root.Controls.Add(_cardsPanel, 0, 0);
 
-        
             var middle = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1 };
             middle.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65));
             middle.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35));
             root.Controls.Add(middle, 0, 1);
 
-            var lineGroup = new GroupControl { Text = "الدخل مقابل المصروفات", Dock = DockStyle.Fill };
+            var lineGroup = new GroupControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_IncomeVsExpenses"), Dock = DockStyle.Fill };
             var lineLayout = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2 };
             lineLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
             lineLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
@@ -89,7 +86,7 @@ namespace Clothes_Shop_ERP.modlestore
             rightSide.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
             middle.Controls.Add(rightSide, 1, 0);
 
-            var lowStockGroup = new GroupControl { Text = "نواقص المخزون", Dock = DockStyle.Fill };
+            var lowStockGroup = new GroupControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_LowStock"), Dock = DockStyle.Fill };
             _lowStockGrid = new GridControl { Dock = DockStyle.Fill };
             _lowStockView = new GridView(_lowStockGrid);
             _lowStockGrid.MainView = _lowStockView;
@@ -98,15 +95,14 @@ namespace Clothes_Shop_ERP.modlestore
             lowStockGroup.Controls.Add(_lowStockGrid);
             rightSide.Controls.Add(lowStockGroup, 0, 0);
 
-            var pieGroup = new GroupControl { Text = "نظرة عامة", Dock = DockStyle.Fill };
+            var pieGroup = new GroupControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Overview"), Dock = DockStyle.Fill };
             _pieChart = new ChartControl { Dock = DockStyle.Fill };
             pieGroup.Controls.Add(_pieChart);
             rightSide.Controls.Add(pieGroup, 0, 1);
 
-        
             var recentTabs = new XtraTabControl { Dock = DockStyle.Fill };
 
-            var tabSales = new XtraTabPage { Text = "أحدث فواتير البيع" };
+            var tabSales = new XtraTabPage { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_LatestSalesInvoices") };
             _recentSalesGrid = new GridControl { Dock = DockStyle.Fill };
             _recentSalesView = new GridView(_recentSalesGrid);
             _recentSalesGrid.MainView = _recentSalesView;
@@ -114,7 +110,7 @@ namespace Clothes_Shop_ERP.modlestore
             _recentSalesView.OptionsView.ShowGroupPanel = false;
             tabSales.Controls.Add(_recentSalesGrid);
 
-            var tabPurchase = new XtraTabPage { Text = "أحدث فواتير الشراء" };
+            var tabPurchase = new XtraTabPage { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_LatestPurchaseInvoices") };
             _recentPurchaseGrid = new GridControl { Dock = DockStyle.Fill };
             _recentPurchaseView = new GridView(_recentPurchaseGrid);
             _recentPurchaseGrid.MainView = _recentPurchaseView;
@@ -127,9 +123,6 @@ namespace Clothes_Shop_ERP.modlestore
             root.Controls.Add(recentTabs, 0, 2);
         }
 
-        // ============================================================
-        //  Date Range Picker (زي الصورة: Today / Last 7 days / ... / Custom)
-        // ============================================================
         private void BuildRangePicker()
         {
             _rangePopup = new PopupContainerControl { Size = new Size(260, 260) };
@@ -142,26 +135,26 @@ namespace Clothes_Shop_ERP.modlestore
             };
             _rangeRadioGroup.Properties.Items.AddRange(new RadioGroupItem[]
             {
-                new RadioGroupItem(0, "اليوم"),
-                new RadioGroupItem(1, "آخر 7 أيام"),
-                new RadioGroupItem(2, "آخر 14 يوم"),
-                new RadioGroupItem(3, "آخر 28 يوم"),
-                new RadioGroupItem(4, "آخر 60 يوم"),
-                new RadioGroupItem(5, "آخر 90 يوم"),
-                new RadioGroupItem(6, "مخصص"),
+                new RadioGroupItem(0, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Today")),
+                new RadioGroupItem(1, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last7Days")),
+                new RadioGroupItem(2, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last14Days")),
+                new RadioGroupItem(3, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last28Days")),
+                new RadioGroupItem(4, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last60Days")),
+                new RadioGroupItem(5, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last90Days")),
+                new RadioGroupItem(6, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Custom")),
             });
-            _rangeRadioGroup.SelectedIndex = 3; // آخر 28 يوم افتراضيًا
+            _rangeRadioGroup.SelectedIndex = 3;
             _rangeRadioGroup.SelectedIndexChanged += RangeRadioGroup_SelectedIndexChanged;
 
-            var lblFrom = new LabelControl { Text = "من:", Location = new Point(10, 200) };
+            var lblFrom = new LabelControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_From"), Location = new Point(10, 200) };
             _customFrom = new DateEdit { Location = new Point(40, 197), Width = 95, Enabled = false };
             _customFrom.DateTime = DateTime.Today;
 
-            var lblTo = new LabelControl { Text = "إلى:", Location = new Point(145, 200) };
+            var lblTo = new LabelControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_To"), Location = new Point(145, 200) };
             _customTo = new DateEdit { Location = new Point(175, 197), Width = 95, Enabled = false };
             _customTo.DateTime = DateTime.Today;
 
-            var btnApply = new SimpleButton { Text = "تطبيق", Location = new Point(150, 225), Width = 100 };
+            var btnApply = new SimpleButton { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Apply"), Location = new Point(150, 225), Width = 100 };
             btnApply.Click += (s, e) => { ApplySelectedRange(); _rangeEdit.ClosePopup(); };
 
             _rangePopup.Controls.Add(_rangeRadioGroup);
@@ -182,8 +175,6 @@ namespace Clothes_Shop_ERP.modlestore
             _customFrom.Enabled = isCustom;
             _customTo.Enabled = isCustom;
 
-            // الاختيارات الجاهزة (مش مخصص) بتتطبق فورًا وتقفل الـ Popup،
-            // "مخصص" بس محتاج تدوس "تطبيق" بعد ما تختار التاريخين
             if (!isCustom)
             {
                 ApplySelectedRange();
@@ -213,8 +204,6 @@ namespace Clothes_Shop_ERP.modlestore
 
             LoadLineChart();
         }
-
-        // ============================================================
 
         private PanelControl MakeCard(string title, string value, Color accentColor)
         {
@@ -246,7 +235,6 @@ namespace Clothes_Shop_ERP.modlestore
             return card;
         }
 
-        // الكروت + نواقص المخزون + الـ Pie + أحدث الفواتير (كل حاجة عدا الـ Line Chart)
         private void LoadCardsAndSideData()
         {
             _cardsPanel.Controls.Clear();
@@ -264,15 +252,15 @@ namespace Clothes_Shop_ERP.modlestore
                 decimal salesReturns = db.SalesReturns.Where(x => x.ReturnDate >= monthStart).Sum(x => (decimal?)x.TotalAmount) ?? 0;
                 int lowStockCount = db.BranchStock.Count(x => x.Quantity <= x.MinQuantity);
 
-                _cardsPanel.Controls.Add(MakeCard("إجمالي المبيعات (الشهر)", totalSales.ToString("n0"), Color.MediumPurple), 0, 0);
-                _cardsPanel.Controls.Add(MakeCard("إجمالي المشتريات (الشهر)", totalPurchases.ToString("n0"), Color.DarkOrange), 1, 0);
-                _cardsPanel.Controls.Add(MakeCard("إجمالي الدخل (الشهر)", totalIncome.ToString("n0"), Color.SeaGreen), 2, 0);
-                _cardsPanel.Controls.Add(MakeCard("إجمالي المصروفات (الشهر)", totalExpense.ToString("n0"), Color.Crimson), 3, 0);
+                _cardsPanel.Controls.Add(MakeCard(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_TotalSalesMonth"), totalSales.ToString("n0"), Color.MediumPurple), 0, 0);
+                _cardsPanel.Controls.Add(MakeCard(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_TotalPurchasesMonth"), totalPurchases.ToString("n0"), Color.DarkOrange), 1, 0);
+                _cardsPanel.Controls.Add(MakeCard(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_TotalIncomeMonth"), totalIncome.ToString("n0"), Color.SeaGreen), 2, 0);
+                _cardsPanel.Controls.Add(MakeCard(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_TotalExpensesMonth"), totalExpense.ToString("n0"), Color.Crimson), 3, 0);
 
-                _cardsPanel.Controls.Add(MakeCard("عدد العملاء", totalCustomers.ToString(), Color.SteelBlue), 0, 1);
-                _cardsPanel.Controls.Add(MakeCard("عدد الموردين", totalSuppliers.ToString(), Color.DarkGreen), 1, 1);
-                _cardsPanel.Controls.Add(MakeCard("مرتجعات البيع (الشهر)", salesReturns.ToString("n0"), Color.DeepPink), 2, 1);
-                _cardsPanel.Controls.Add(MakeCard("نواقص المخزون", lowStockCount.ToString(), Color.Firebrick), 3, 1);
+                _cardsPanel.Controls.Add(MakeCard(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_CustomersCount"), totalCustomers.ToString(), Color.SteelBlue), 0, 1);
+                _cardsPanel.Controls.Add(MakeCard(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_SuppliersCount"), totalSuppliers.ToString(), Color.DarkGreen), 1, 1);
+                _cardsPanel.Controls.Add(MakeCard(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_SalesReturnsMonth"), salesReturns.ToString("n0"), Color.DeepPink), 2, 1);
+                _cardsPanel.Controls.Add(MakeCard(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_LowStock"), lowStockCount.ToString(), Color.Firebrick), 3, 1);
 
                 var lowStockItems = (from bs in db.BranchStock
                                      where bs.Quantity <= bs.MinQuantity
@@ -291,11 +279,11 @@ namespace Clothes_Shop_ERP.modlestore
                 decimal allIncome = db.TreasuryTransactions.Where(x => x.TransactionType == "In").Sum(x => (decimal?)x.Amount) ?? 0;
                 decimal allExpense = db.TreasuryTransactions.Where(x => x.TransactionType == "Out").Sum(x => (decimal?)x.Amount) ?? 0;
 
-                var pieSeries = new Series("نظرة عامة", ViewType.Pie);
-                pieSeries.Points.Add(new SeriesPoint("مبيعات", (double)allSales));
-                pieSeries.Points.Add(new SeriesPoint("مشتريات", (double)allPurchases));
-                pieSeries.Points.Add(new SeriesPoint("دخل", (double)allIncome));
-                pieSeries.Points.Add(new SeriesPoint("مصروفات", (double)allExpense));
+                var pieSeries = new Series(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Overview"), ViewType.Pie);
+                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Sales"), (double)allSales));
+                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Purchases"), (double)allPurchases));
+                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Income"), (double)allIncome));
+                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Expenses"), (double)allExpense));
                 pieSeries.LegendPointOptions.Pattern = "{A}: {VP:P0}";
                 pieSeries.Label.TextPattern = "{A}\n{VP:P0}";
 
@@ -311,7 +299,7 @@ namespace Clothes_Shop_ERP.modlestore
                     {
                         x.InvoiceDate,
                         x.InvoiceNumber,
-                        Customer = x.Customer != null ? x.Customer.Name : "عميل نقدي",
+                        Customer = x.Customer != null ? x.Customer.Name : Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_CashCustomer"),
                         x.NetAmount,
                         x.PaidAmount,
                         Due = x.NetAmount - x.PaidAmount
@@ -334,13 +322,12 @@ namespace Clothes_Shop_ERP.modlestore
             }
         }
 
-        // مسؤولة بس عن الـ Line Chart، بتتنفذ من جديد كل ما تغيّر النطاق
         private void LoadLineChart()
         {
             using (var db = new ClothesShopDBContext())
             {
-                var incomeSeries = new Series("الدخل", ViewType.Line);
-                var expenseSeries = new Series("المصروفات", ViewType.Line);
+                var incomeSeries = new Series(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Income"), ViewType.Line);
+                var expenseSeries = new Series(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Expenses"), ViewType.Line);
 
                 DateTime rangeEndExclusive = _selectedTo.AddDays(1);
 
