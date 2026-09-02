@@ -1,5 +1,7 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +10,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using System.Windows.Forms;
 using TreasuryEntity = Clothes_Shop_ERP.DAL.TreasuryTransactions;
 
@@ -22,6 +23,15 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
             gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            ColBranch.Caption = LocalizationManager.T("Treasury_ColBranch");
+            ColTransactionType.Caption = LocalizationManager.T("Treasury_ColTransactionType");
+            ColAmount.Caption = LocalizationManager.T("Treasury_ColAmount");
+            ColDescription.Caption = LocalizationManager.T("Treasury_ColDescription");
+            ColCreatedAt.Caption = LocalizationManager.T("Treasury_ColCreatedAt");
         }
         public void GetData()
         {

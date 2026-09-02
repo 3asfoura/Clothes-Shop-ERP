@@ -46,7 +46,7 @@ namespace Clothes_Shop_ERP.Localization
         {
             Dictionary<string, string> dict = CurrentLanguage == AppLanguage.English
                 ? Lang_English.Strings
-                : Lang_Egyptian.Strings;
+                : Lang_Arabic.Strings;
 
             if (dict.TryGetValue(key, out string value))
                 return value;

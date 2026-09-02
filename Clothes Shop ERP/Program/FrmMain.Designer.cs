@@ -483,7 +483,7 @@
             // 
             this.barButtonItem1.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
             this.barButtonItem1.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check;
-            this.barButtonItem1.Caption = "barButtonItem1";
+            this.barButtonItem1.Caption = "Dark Mode";
             this.barButtonItem1.Id = 0;
             this.barButtonItem1.ImageOptions.SvgImage = global::Clothes_Shop_ERP.Properties.Resources.icons8_dark_mode_50;
             this.barButtonItem1.Name = "barButtonItem1";

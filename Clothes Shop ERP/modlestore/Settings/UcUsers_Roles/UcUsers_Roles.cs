@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,17 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             dgv_RolesList.OptionsCustomization.AllowSort = false;
             gridView2.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             dgv_RolesList.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            groupControl3.Text = LocalizationManager.T("UsersRoles_Users");
+            groupControl1.Text = LocalizationManager.T("UsersRoles_Roles");
+            ColUsername.Caption = LocalizationManager.T("UsersRoles_ColUsername");
+            ColFullName.Caption = LocalizationManager.T("UsersRoles_ColFullName");
+            ColRoleName.Caption = LocalizationManager.T("UsersRoles_ColRoleName");
+            ColIsActive.Caption = LocalizationManager.T("UsersRoles_ColIsActive");
+            Col_Role.Caption = LocalizationManager.T("UsersRoles_ColRole_Name");
         }
         public void GetDataRoles()
         {

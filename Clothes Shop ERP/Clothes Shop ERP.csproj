@@ -410,6 +410,9 @@
     <Compile Include="UcStockReport.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UcStockReport.Designer.cs">
+      <DependentUpon>UcStockReport.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Program\FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>

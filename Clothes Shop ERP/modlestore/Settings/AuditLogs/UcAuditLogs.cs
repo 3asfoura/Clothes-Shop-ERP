@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
@@ -22,24 +23,26 @@ namespace Clothes_Shop_ERP.modlestore
             this.Dock = DockStyle.Fill;
             BuildUi();
             RunReport();
+        
         }
-
+      
         private void BuildUi()
         {
             var lblFrom = new LabelControl { Text = "من:", Location = new Point(20, 18) };
             DtFrom = new DateEdit { Location = new Point(20, 38), Width = 140 };
             DtFrom.DateTime = DateTime.Today.AddDays(-7);
-
+            lblFrom.Text = LocalizationManager.T("AuditLogs_From");
             var lblTo = new LabelControl { Text = "إلى:", Location = new Point(170, 18) };
             DtTo = new DateEdit { Location = new Point(170, 38), Width = 140 };
             DtTo.DateTime = DateTime.Today;
-
+            lblTo.Text = LocalizationManager.T("AuditLogs_To");
             var lblTable = new LabelControl { Text = "الجدول:", Location = new Point(320, 18) };
             CmbTable = new ComboBoxEdit { Location = new Point(320, 38), Width = 200 };
             CmbTable.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-
+            lblTable.Text = LocalizationManager.T("AuditLogs_Table");
             var btnRun = new SimpleButton { Text = "تحديث", Location = new Point(530, 37), Width = 100 };
             btnRun.Click += (s, e) => RunReport();
+            btnRun.Text = LocalizationManager.T("AuditLogs_Refresh");
 
             GridResult = new GridControl
             {
@@ -97,7 +100,7 @@ namespace Clothes_Shop_ERP.modlestore
            
                 if (CmbTable.Properties.Items.Count == 0)
                 {
-                    CmbTable.Properties.Items.Add("الكل");
+                    CmbTable.Properties.Items.Add(LocalizationManager.T("txtAll"));
                     foreach (var t in db.AuditLogs.Select(x => x.TableName).Distinct().OrderBy(x => x))
                         CmbTable.Properties.Items.Add(t);
                     CmbTable.SelectedIndex = 0;

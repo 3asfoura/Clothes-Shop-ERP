@@ -4,41 +4,59 @@ namespace Clothes_Shop_ERP.Localization
 {
     public static class Lang_English
     {
-        public static readonly Dictionary<string, string> Strings = new Dictionary<string, string>
+        public static readonly Dictionary<string, string> Strings =
+            new Dictionary<string, string>
         {
-            // ===== Common =====
+            // ==================================================
+            // ===== Shared / Repeated Strings ===================
+            // ==================================================
+
+            { "Shared_Refresh", "Refresh" },
+            { "Shared_From", "From:" },
+            { "Shared_To", "To:" },
+            { "Shared_Name", "Name" },
+            { "Shared_Phone", "Phone" },
+            { "Shared_Address", "Address" },
+            { "Shared_IsActive", "IsActive" },
+            { "Shared_Status", "Status" },
+            { "Shared_Branch", "Branch" },
+            { "Shared_CreatedAt", "CreatedAt" },
+            { "Shared_Description", "Description" },
+            { "Shared_Amount", "Amount" },
+            { "Shared_TotalAmount", "TotalAmount" },
+            { "Shared_Code", "Code" },
+            { "Shared_Color", "Color" },
+            { "Shared_Size", "Size" },
+
+
+            // ==================================================
+            // ===== Common =====================================
+            // ==================================================
+
             { "Common_ConfirmTitle", "Confirm" },
             { "Common_ConfirmDelete", "Delete '{0}'?" },
             { "Common_ConfirmAction", "{0} '{1}'?" },
-            { "Common_Refresh", "Refresh" },
-            { "Common_From", "From:" },
-            { "Common_To", "To:" },
-            { "Common_Name", "Name" },
-            { "Common_Phone", "Phone" },
-            { "Common_Address", "Address" },
-            { "Common_IsActive", "IsActive" },
-            { "Common_Status", "Status" },
-            { "Common_Branch", "Branch" },
-            { "Common_CreatedAt", "CreatedAt" },
-            { "Common_Description", "Description" },
-            { "Common_Amount", "Amount" },
-            { "Common_TotalAmount", "TotalAmount" },
-            { "Common_Code", "Code" },
-            { "Common_Color", "Color" },
-            { "Common_Size", "Size" },
 
-            // ===== Login =====
+
+            // ==================================================
+            // ===== Login ======================================
+            // ==================================================
+
             { "Login_Title", "NOVA ERP - Login" },
             { "Login_BtnLogin", "Login" },
             { "Login_WelcomeBack", "Welcome Back" },
             { "Login_PleaseSignIn", "Please sign in to continue" },
-            { "Login_Branch", "Branch" },
             { "Login_Username", "Username" },
             { "Login_Password", "Password" },
             { "Login_ColId", "ID" },
-            { "Login_ColName", "Name" },
+            { "Login_Branch", "Branch" },
+            { "Login_ColName", "Branch Name" },
 
-            // ===== Main =====
+
+            // ==================================================
+            // ===== Main =======================================
+            // ==================================================
+
             { "Main_Inventory", "Inventory" },
             { "Main_Products", "Products" },
             { "Main_ProductVariants", "Product Variants" },
@@ -70,7 +88,11 @@ namespace Clothes_Shop_ERP.Localization
             { "Main_AuditLogs", "AuditLogs" },
             { "Main_DarkMode", "Dark Mode" },
 
-            // ===== Dashboard =====
+
+            // ==================================================
+            // ===== Dashboard ==================================
+            // ==================================================
+
             { "Dashboard_Overview", "Overview" },
             { "Dashboard_Today", "Today" },
             { "Dashboard_Last7Days", "Last 7 days" },
@@ -79,8 +101,6 @@ namespace Clothes_Shop_ERP.Localization
             { "Dashboard_Last60Days", "Last 60 days" },
             { "Dashboard_Last90Days", "Last 90 days" },
             { "Dashboard_Custom", "Custom" },
-            { "Dashboard_From", "From:" },
-            { "Dashboard_To", "To:" },
             { "Dashboard_Apply", "Apply" },
             { "Dashboard_IncomeVsExpenses", "Income vs Expenses" },
             { "Dashboard_LowStock", "Low Stock Items" },
@@ -99,45 +119,45 @@ namespace Clothes_Shop_ERP.Localization
             { "Dashboard_Expenses", "Expenses" },
             { "Dashboard_CashCustomer", "Cash Customer" },
 
-            // ===== Products =====
-            { "Products_ColCode", "Code" },
-            { "Products_ColName", "Name" },
-            { "Products_ColBasePrice", "BasePrice" },
-            { "Products_ColIsActive", "IsActive" },
 
-            // ===== ProductVariants =====
+            // ==================================================
+            // ===== Products ===================================
+            // ==================================================
+
+            { "Products_ColBasePrice", "BasePrice" },
+
+
+            // ==================================================
+            // ===== Product Variants ===========================
+            // ==================================================
+
             { "ProductVariants_ColProductName", "ProductName" },
-            { "ProductVariants_ColColor", "Color" },
-            { "ProductVariants_ColSize", "Size" },
             { "ProductVariants_ColBarcode", "Barcode" },
             { "ProductVariants_ColSalePrice", "SalePrice" },
             { "ProductVariants_ColCostPrice", "CostPrice" },
-            { "ProductVariants_ColIsActive", "IsActive" },
 
-            // ===== Categories =====
-            { "Categories_ColName", "Name" },
-            { "Categories_ColIsActive", "IsActive" },
 
-            // ===== Brands =====
-            { "Brands_ColName", "Name" },
+            // ==================================================
+            // ===== Colors & Sizes ==============================
+            // ==================================================
 
-            // ===== ColorsSizes =====
             { "ColorsSizes_Colors", "Colors" },
             { "ColorsSizes_Sizes", "Sizes" },
 
-            // ===== StockCount =====
+
+            // ==================================================
+            // ===== Stock Count =================================
+            // ==================================================
+
             { "StockCount_ColProduct", "Product" },
-            { "StockCount_ColBranch", "Branch" },
             { "StockCount_ColQuantity", "Quantity" },
             { "StockCount_ColMinQuantity", "MinQuantity" },
 
-            // ===== BranchTransfer =====
-            { "BranchTransfer_ColFrom", "From" },
-            { "BranchTransfer_ColTo", "To" },
-            { "BranchTransfer_ColStatus", "Status" },
-            { "BranchTransfer_ColCreatedAt", "CreatedAt" },
 
-            // ===== POS =====
+            // ==================================================
+            // ===== POS ========================================
+            // ==================================================
+
             { "POS_BtnAddManual", "Add" },
             { "POS_PickManually", "Or pick manually:" },
             { "POS_ScanBarcode", "Scan barcode :" },
@@ -148,76 +168,72 @@ namespace Clothes_Shop_ERP.Localization
             { "POS_Discount", "Discount:" },
             { "POS_Total", "Total: 0.00" },
 
-            // ===== Returns =====
+
+            // ==================================================
+            // ===== Returns ====================================
+            // ==================================================
+
             { "Returns_ColInvoice", "Invoice" },
-            { "Returns_ColBranch", "Branch" },
             { "Returns_ColReturnDate", "ReturnDate" },
-            { "Returns_ColTotalAmount", "TotalAmount" },
 
-            // ===== Customers =====
-            { "Customers_ColName", "Name" },
-            { "Customers_ColPhone", "Phone" },
-            { "Customers_ColAddress", "Address" },
-            { "Customers_ColIsActive", "IsActive" },
 
-            // ===== Suppliers =====
-            { "Suppliers_ColName", "Name" },
-            { "Suppliers_ColPhone", "Phone" },
-            { "Suppliers_ColAddress", "Address" },
-            { "Suppliers_ColIsActive", "IsActive" },
+            // ==================================================
+            // ===== Purchases ==================================
+            // ==================================================
 
-            // ===== Purchases =====
             { "Purchases_ColSupplier", "Supplier" },
-            { "Purchases_ColBranch", "Branch" },
             { "Purchases_ColInvoiceDate", "InvoiceDate" },
-            { "Purchases_ColTotalAmount", "TotalAmount" },
             { "Purchases_ColPaidAmount", "PaidAmount" },
-            { "Purchases_ColStatus", "Status" },
 
-            // ===== PaymentMethods =====
-            { "PaymentMethods_ColName", "Name" },
 
-            // ===== UsersRoles =====
+            // ==================================================
+            // ===== Users & Roles ===============================
+            // ==================================================
+
             { "UsersRoles_Users", "Users" },
             { "UsersRoles_Roles", "Roles" },
             { "UsersRoles_ColUsername", "Username" },
             { "UsersRoles_ColFullName", "FullName" },
             { "UsersRoles_ColRoleName", "RoleName" },
-            { "UsersRoles_ColIsActive", "IsActive" },
-            { "UsersRoles_ColRole_Name", "Name" },
 
-            // ===== Branches =====
-            { "Branches_ColName", "Name" },
-            { "Branches_ColAddress", "Address" },
-            { "Branches_ColPhone", "Phone" },
-            { "Branches_ColIsActive", "IsActive" },
 
-            // ===== Treasury =====
-            { "Treasury_ColBranch", "Branch" },
+            // ==================================================
+            // ===== Treasury ===================================
+            // ==================================================
+
             { "Treasury_ColTransactionType", "TransactionType" },
-            { "Treasury_ColAmount", "Amount" },
-            { "Treasury_ColDescription", "Description" },
-            { "Treasury_ColCreatedAt", "CreatedAt" },
 
-            // ===== TreasuryBalance =====
-            { "TreasuryBalance_Refresh", "Refresh" },
+
+            // ==================================================
+            // ===== Treasury Balance ===========================
+            // ==================================================
+
             { "TreasuryBalance_CurrentBalance", "Current Balance: 0.00" },
             { "TreasuryBalance_InOutTotals", "Total In: 0.00   |   Total Out: 0.00" },
             { "TreasuryBalance_CurrentBalanceFmt", "Current Balance: {balance:n2}" },
             { "TreasuryBalance_InOutTotalsFmt", "Total In: {totalIn:n2}   |   Total Out: {totalOut:n2}" },
 
-            // ===== AuditLogs =====
-            { "AuditLogs_From", "From:" },
-            { "AuditLogs_To", "To:" },
-            { "AuditLogs_Table", "Table:" },
-            { "AuditLogs_Refresh", "Refresh" },
 
-            // ===== Reports =====
+            // ==================================================
+            // ===== Audit Logs =================================
+            // ==================================================
+
+            { "AuditLogs_Table", "Table:" },
+
+
+            // ==================================================
+            // ===== Reports ====================================
+            // ==================================================
+
             { "Reports_Summary", "Total: 0.00  |  Invoices: 0" },
             { "Reports_GenerateReport", "Generate Report" },
-            { "Reports_To", "To:" },
-            { "Reports_From", "From:" },
 
+
+            // ==================================================
+            // ===== Other ======================================
+            // ==================================================
+
+            { "txtAll", "All" }
         };
     }
 }
