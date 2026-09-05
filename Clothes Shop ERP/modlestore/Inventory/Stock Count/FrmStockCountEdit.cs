@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -38,11 +39,11 @@ namespace Clothes_Shop_ERP
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            var lblVariant = new LabelControl { Text = "Product Variant:", Location = new System.Drawing.Point(20, 20) };
+            var lblVariant = new LabelControl { Text = LocalizationManager.T("FrmStockCountEdit_ProductVariant"), Location = new System.Drawing.Point(20, 20) };
             CmbVariant = new ComboBoxEdit { Location = new System.Drawing.Point(20, 40), Width = 320, Enabled = !isEditMode };
             CmbVariant.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            var lblBranch = new LabelControl { Text = "Branch:", Location = new System.Drawing.Point(20, 75) };
+            var lblBranch = new LabelControl { Text = LocalizationManager.T("Shared_ColBranch"), Location = new System.Drawing.Point(20, 75) };
             CmbBranch = new ComboBoxEdit { Location = new System.Drawing.Point(20, 95), Width = 320, Enabled = !isEditMode };
             CmbBranch.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
@@ -69,16 +70,16 @@ namespace Clothes_Shop_ERP
             int bIdx = _branchIds.IndexOf(currentBranchId);
             CmbBranch.SelectedIndex = bIdx >= 0 ? bIdx : 0;
 
-            var lblQty = new LabelControl { Text = "Quantity:", Location = new System.Drawing.Point(20, 130) };
+            var lblQty = new LabelControl { Text = LocalizationManager.T("FrmStockCountEdit_Quantity"), Location = new System.Drawing.Point(20, 130) };
             SpinQuantity = new SpinEdit { Value = quantity, Location = new System.Drawing.Point(20, 150), Width = 320 };
             SpinQuantity.Properties.MaxValue = 999999;
 
-            var lblMinQty = new LabelControl { Text = "Minimum Quantity (reorder alert):", Location = new System.Drawing.Point(20, 185) };
+            var lblMinQty = new LabelControl { Text = LocalizationManager.T("FrmStockCountEdit_MinQuantityHint"), Location = new System.Drawing.Point(20, 185) };
             SpinMinQuantity = new SpinEdit { Value = minQuantity, Location = new System.Drawing.Point(20, 205), Width = 320 };
             SpinMinQuantity.Properties.MaxValue = 999999;
 
-            var btnSave = new SimpleButton { Text = "Save", Location = new System.Drawing.Point(160, 240), DialogResult = DialogResult.OK };
-            var btnCancel = new SimpleButton { Text = "Cancel", Location = new System.Drawing.Point(240, 240), DialogResult = DialogResult.Cancel };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("Shared_BtnSave"), Location = new System.Drawing.Point(160, 240), DialogResult = DialogResult.OK };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(240, 240), DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblVariant); this.Controls.Add(CmbVariant);
             this.Controls.Add(lblBranch); this.Controls.Add(CmbBranch);

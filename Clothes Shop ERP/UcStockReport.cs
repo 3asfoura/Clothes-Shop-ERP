@@ -22,7 +22,7 @@ namespace Clothes_Shop_ERP
         }
         public void ApplyLanguage()
         {
-            btnRun.Text = LocalizationManager.T("AuditLogs_Refresh");
+            btnRun.Text = LocalizationManager.T("Shared_Refresh");
         }
         private void RunReport()
         {
@@ -45,22 +45,30 @@ namespace Clothes_Shop_ERP
                     .ToList();
 
                 GridResult.DataSource = stock;
+                GridViewResult.PopulateColumns();
 
                 if (GridViewResult.Columns["Quantity"] != null)
                 {
                     GridViewResult.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                     GridViewResult.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+                    GridViewResult.Columns["Quantity"].Caption = LocalizationManager.T("StockCount_ColQuantity");
                 }
                 if (GridViewResult.Columns["MinQuantity"] != null)
                 {
                     GridViewResult.Columns["MinQuantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                     GridViewResult.Columns["MinQuantity"].DisplayFormat.FormatString = "0.###";
+                    GridViewResult.Columns["MinQuantity"].Caption = LocalizationManager.T("StockCount_ColMinQuantity");
                 }
+                if (GridViewResult.Columns["Product"] != null) GridViewResult.Columns["Product"].Caption = LocalizationManager.T("StockCount_ColProduct");
+                if (GridViewResult.Columns["Barcode"] != null) GridViewResult.Columns["Barcode"].Caption = LocalizationManager.T("ProductVariants_ColBarcode");
+                if (GridViewResult.Columns["Branch"] != null) GridViewResult.Columns["Branch"].Caption = LocalizationManager.T("Shared_Branch");
+                if (GridViewResult.Columns["CostPrice"] != null) GridViewResult.Columns["CostPrice"].Caption = LocalizationManager.T("ProductVariants_ColCostPrice");
+                if (GridViewResult.Columns["Value"] != null) GridViewResult.Columns["Value"].Caption = LocalizationManager.T("StockReport_ColValue");
 
 
                 decimal totalValue = stock.Sum(x => x.Value);
                 int lowStockCount = stock.Count(x => x.Quantity <= x.MinQuantity);
-                LblSummary.Text = $"Total Inventory Value: {totalValue:n2}   |   Low Stock Items: {lowStockCount}";
+                LblSummary.Text = string.Format(LocalizationManager.T("StockReport_TotalInventoryValueFmt"), totalValue, lowStockCount);
             }
         }
 

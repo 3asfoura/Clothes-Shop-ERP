@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using Clothes_Shop_ERP.Localization;
 
 namespace Clothes_Shop_ERP
 {
@@ -22,10 +23,10 @@ namespace Clothes_Shop_ERP
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            var lblName = new LabelControl { Text = "Name:", Location = new System.Drawing.Point(20, 20) };
+            var lblName = new LabelControl { Text = LocalizationManager.T("Shared_ColName"), Location = new System.Drawing.Point(20, 20) };
             TxtName = new TextEdit { Text = name, Location = new System.Drawing.Point(20, 40), Width = 280 };
 
-            var lblColor = new LabelControl { Text = "Pick a color:", Location = new System.Drawing.Point(20, 75) };
+            var lblColor = new LabelControl { Text = LocalizationManager.T("FrmColorEdit_PickColor"), Location = new System.Drawing.Point(20, 75) };
             ColorPicker = new ColorPickEdit
             {
                 Location = new System.Drawing.Point(20, 95),
@@ -33,17 +34,17 @@ namespace Clothes_Shop_ERP
                 Color = string.IsNullOrWhiteSpace(hex) ? Color.Black : ColorTranslator.FromHtml(hex)
             };
 
-            var btnSave = new SimpleButton { Text = "Save", Location = new System.Drawing.Point(140, 130), DialogResult = DialogResult.OK };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("Shared_BtnSave"), Location = new System.Drawing.Point(140, 130), DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(TxtName.Text))
                 {
-                    XtraMessageBox.Show("Please enter a color name.");
+                    XtraMessageBox.Show(LocalizationManager.T("ColorsSizes_ColorNameRequired"));
                     this.DialogResult = DialogResult.None;
                 }
             };
 
-            var btnCancel = new SimpleButton { Text = "Cancel", Location = new System.Drawing.Point(220, 130), DialogResult = DialogResult.Cancel };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(220, 130), DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblName);
             this.Controls.Add(TxtName);

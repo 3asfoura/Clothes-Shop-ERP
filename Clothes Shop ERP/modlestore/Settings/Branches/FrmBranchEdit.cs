@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraEditors;
+using Clothes_Shop_ERP.Localization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,18 +36,18 @@ namespace Clothes_Shop_ERP.Resources
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            var lblName = new LabelControl { Text = "Name:", Location = new System.Drawing.Point(20, 20) };
+            var lblName = new LabelControl { Text = LocalizationManager.T("Shared_ColName"), Location = new System.Drawing.Point(20, 20) };
             TxtName = new TextEdit { Text = name, Location = new System.Drawing.Point(20, 40), Width = 320 };
 
-            var lblAddress = new LabelControl { Text = "Address:", Location = new System.Drawing.Point(20, 75) };
+            var lblAddress = new LabelControl { Text = LocalizationManager.T("Shared_ColAddress"), Location = new System.Drawing.Point(20, 75) };
             TxtAddress = new TextEdit { Text = address, Location = new System.Drawing.Point(20, 95), Width = 320 };
 
-            var lblPhone = new LabelControl { Text = "Phone:", Location = new System.Drawing.Point(20, 130) };
+            var lblPhone = new LabelControl { Text = LocalizationManager.T("Shared_ColPhone"), Location = new System.Drawing.Point(20, 130) };
             TxtPhone = new TextEdit { Text = phone, Location = new System.Drawing.Point(20, 150), Width = 320 };
 
             var btnSave = new SimpleButton
             {
-                Text = "Save",
+                Text = LocalizationManager.T("Shared_BtnSave"),
                 Location = new System.Drawing.Point(180, 190),
                 DialogResult = DialogResult.OK
             };
@@ -54,14 +55,14 @@ namespace Clothes_Shop_ERP.Resources
             {
                 if (string.IsNullOrWhiteSpace(TxtName.Text))
                 {
-                    XtraMessageBox.Show("Please enter a branch name.");
+                    XtraMessageBox.Show(LocalizationManager.T("Branches_NameRequired"));
                     this.DialogResult = DialogResult.None;
                 }
             };
 
             var btnCancel = new SimpleButton
             {
-                Text = "Cancel",
+                Text = LocalizationManager.T("Shared_BtnCancel"),
                 Location = new System.Drawing.Point(260, 190),
                 DialogResult = DialogResult.Cancel
             };

@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -39,15 +40,15 @@ namespace Clothes_Shop_ERP
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            var lblInvoice = new LabelControl { Text = "Invoice:", Location = new System.Drawing.Point(20, 20) };
+            var lblInvoice = new LabelControl { Text = LocalizationManager.T("FrmReturnEdit_Invoice"), Location = new System.Drawing.Point(20, 20) };
             CmbInvoice = new ComboBoxEdit { Location = new System.Drawing.Point(20, 40), Width = 340 };
             CmbInvoice.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            var lblLine = new LabelControl { Text = "Item to return:", Location = new System.Drawing.Point(20, 75) };
+            var lblLine = new LabelControl { Text = LocalizationManager.T("FrmReturnEdit_ItemToReturn"), Location = new System.Drawing.Point(20, 75) };
             CmbLine = new ComboBoxEdit { Location = new System.Drawing.Point(20, 95), Width = 340 };
             CmbLine.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            var lblQty = new LabelControl { Text = "Quantity to return:", Location = new System.Drawing.Point(20, 130) };
+            var lblQty = new LabelControl { Text = LocalizationManager.T("FrmReturnEdit_QuantityToReturn"), Location = new System.Drawing.Point(20, 130) };
             SpinQuantity = new SpinEdit { Location = new System.Drawing.Point(20, 150), Width = 340, Value = 1 };
             SpinQuantity.Properties.MinValue = 1;
 
@@ -78,17 +79,17 @@ namespace Clothes_Shop_ERP
                 LoadInvoiceLines();
             }
 
-            var btnSave = new SimpleButton { Text = "Save Return", Location = new System.Drawing.Point(180, 185), DialogResult = DialogResult.OK };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("FrmReturnEdit_BtnSaveReturn"), Location = new System.Drawing.Point(180, 185), DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
                 if (CmbInvoice.SelectedIndex < 0 || CmbLine.SelectedIndex < 0)
                 {
-                    XtraMessageBox.Show("Please select an invoice and an item.");
+                    XtraMessageBox.Show(LocalizationManager.T("Returns_SelectInvoiceAndItem"));
                     this.DialogResult = DialogResult.None;
                 }
             };
 
-            var btnCancel = new SimpleButton { Text = "Cancel", Location = new System.Drawing.Point(280, 185), DialogResult = DialogResult.Cancel };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(280, 185), DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblInvoice); this.Controls.Add(CmbInvoice);
             this.Controls.Add(lblLine); this.Controls.Add(CmbLine);

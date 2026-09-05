@@ -27,11 +27,11 @@ namespace Clothes_Shop_ERP.modlestore
         }
         public void ApplyLanguage()
         {
-            ColBranch.Caption = LocalizationManager.T("Treasury_ColBranch");
+            ColBranch.Caption = LocalizationManager.T("Shared_Branch");
             ColTransactionType.Caption = LocalizationManager.T("Treasury_ColTransactionType");
-            ColAmount.Caption = LocalizationManager.T("Treasury_ColAmount");
-            ColDescription.Caption = LocalizationManager.T("Treasury_ColDescription");
-            ColCreatedAt.Caption = LocalizationManager.T("Treasury_ColCreatedAt");
+            ColAmount.Caption = LocalizationManager.T("Shared_Amount");
+            ColDescription.Caption = LocalizationManager.T("Shared_Description");
+            ColCreatedAt.Caption = LocalizationManager.T("Shared_CreatedAt");
         }
         public void GetData()
         {
@@ -72,7 +72,7 @@ namespace Clothes_Shop_ERP.modlestore
         }
         private void AddNew()
         {
-            var form = new FrmTreasuryEdit("New Treasury Entry");
+            var form = new FrmTreasuryEdit(LocalizationManager.T("Treasury_NewEntryTitle"));
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
@@ -89,7 +89,7 @@ namespace Clothes_Shop_ERP.modlestore
                 });
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Treasury entry added");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("Treasury_EntityName")));
             GetData();
         }
 
@@ -102,9 +102,9 @@ namespace Clothes_Shop_ERP.modlestore
             using (var db = new ClothesShopDBContext())
                 current = db.TreasuryTransactions.Where(x => x.Id == id).FirstOrDefault();
 
-            if (current == null) { Sett.MsgBlue("Error", $"No entry found with Id = {id}"); return; }
+            if (current == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("Treasury_EntityName"), id)); return; }
 
-            var form = new FrmTreasuryEdit("Editing Entry", current.TransactionType, current.Amount,
+            var form = new FrmTreasuryEdit(LocalizationManager.T("Treasury_EditingEntryTitle"), current.TransactionType, current.Amount,
                 current.Description, current.BranchId);
 
             if (form.ShowDialog() != DialogResult.OK) return;
@@ -118,7 +118,7 @@ namespace Clothes_Shop_ERP.modlestore
                 entry.Description = form.Description;
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Treasury entry updated");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("Treasury_EntityName")));
             GetData();
         }
 
@@ -127,7 +127,7 @@ namespace Clothes_Shop_ERP.modlestore
             if (gridView1.FocusedRowHandle < 0) return;
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
 
-            if (XtraMessageBox.Show("Delete this entry?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (XtraMessageBox.Show(LocalizationManager.T("Treasury_ConfirmDeleteEntry"), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
             using (var db = new ClothesShopDBContext())
@@ -136,7 +136,7 @@ namespace Clothes_Shop_ERP.modlestore
                 if (entry != null) db.TreasuryTransactions.Remove(entry);
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Treasury entry deleted");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("Treasury_EntityName")));
             GetData();
         }
 
@@ -149,13 +149,13 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelected());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
         }
     }

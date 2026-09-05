@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace Clothes_Shop_ERP
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            var lblCode = new LabelControl { Text = "Code:", Location = new System.Drawing.Point(20, 20) };
+            var lblCode = new LabelControl { Text = LocalizationManager.T("FrmProductEdit_Code"), Location = new System.Drawing.Point(20, 20) };
             TxtCode = new TextEdit
             {
                 Text = string.IsNullOrEmpty(code) ? GenerateNextCode() : code,
@@ -50,14 +51,14 @@ namespace Clothes_Shop_ERP
                 Width = 320
             };
 
-            var lblName = new LabelControl { Text = "Name:", Location = new System.Drawing.Point(20, 75) };
+            var lblName = new LabelControl { Text = LocalizationManager.T("Shared_ColName"), Location = new System.Drawing.Point(20, 75) };
             TxtName = new TextEdit { Text = name, Location = new System.Drawing.Point(20, 95), Width = 320 };
 
-            var lblCategory = new LabelControl { Text = "Category:", Location = new System.Drawing.Point(20, 130) };
+            var lblCategory = new LabelControl { Text = LocalizationManager.T("FrmProductEdit_Category"), Location = new System.Drawing.Point(20, 130) };
             CmbCategory = new ComboBoxEdit { Location = new System.Drawing.Point(20, 150), Width = 320 };
             CmbCategory.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            var lblBrand = new LabelControl { Text = "Brand (optional):", Location = new System.Drawing.Point(20, 185) };
+            var lblBrand = new LabelControl { Text = LocalizationManager.T("FrmProductEdit_BrandOptional"), Location = new System.Drawing.Point(20, 185) };
             CmbBrand = new ComboBoxEdit { Location = new System.Drawing.Point(20, 205), Width = 320 };
             CmbBrand.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
@@ -69,7 +70,7 @@ namespace Clothes_Shop_ERP
                     _categoryIds.Add(c.Id);
                 }
 
-                CmbBrand.Properties.Items.Add("(None)");
+                CmbBrand.Properties.Items.Add(LocalizationManager.T("FrmProductEdit_NoneOption"));
                 foreach (var b in db.Brands.ToList())
                 {
                     CmbBrand.Properties.Items.Add(b.Name);
@@ -82,24 +83,24 @@ namespace Clothes_Shop_ERP
             int brandIdx = currentBrandId.HasValue ? _brandIds.IndexOf(currentBrandId.Value) : -1;
             CmbBrand.SelectedIndex = brandIdx >= 0 ? brandIdx + 1 : 0;
 
-            var lblPrice = new LabelControl { Text = "Base Price:", Location = new System.Drawing.Point(20, 240) };
+            var lblPrice = new LabelControl { Text = LocalizationManager.T("FrmProductEdit_BasePrice"), Location = new System.Drawing.Point(20, 240) };
             SpinBasePrice = new SpinEdit { Value = basePrice, Location = new System.Drawing.Point(20, 260), Width = 320 };
             SpinBasePrice.Properties.MaxValue = 999999;
             SpinBasePrice.Properties.DisplayFormat.FormatString = "n2";
 
-            ChkIsActive = new CheckEdit { Text = "Active", Checked = isActive, Location = new System.Drawing.Point(20, 295) };
+            ChkIsActive = new CheckEdit { Text = LocalizationManager.T("Shared_Active"), Checked = isActive, Location = new System.Drawing.Point(20, 295) };
 
-            var btnSave = new SimpleButton { Text = "Save", Location = new System.Drawing.Point(160, 320), DialogResult = DialogResult.OK };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("Shared_BtnSave"), Location = new System.Drawing.Point(160, 320), DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(TxtCode.Text) || string.IsNullOrWhiteSpace(TxtName.Text))
                 {
-                    XtraMessageBox.Show("Please fill in the code and name.");
+                    XtraMessageBox.Show(LocalizationManager.T("Products_CodeNameRequired"));
                     this.DialogResult = DialogResult.None;
                 }
             };
 
-            var btnCancel = new SimpleButton { Text = "Cancel", Location = new System.Drawing.Point(240, 320), DialogResult = DialogResult.Cancel };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(240, 320), DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblCode); this.Controls.Add(TxtCode);
             this.Controls.Add(lblName); this.Controls.Add(TxtName);

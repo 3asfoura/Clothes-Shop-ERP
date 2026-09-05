@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using Clothes_Shop_ERP.Resources;
 using DevExpress.XtraEditors;
 using System;
@@ -22,6 +23,14 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
             gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            ColName.Caption = LocalizationManager.T("Shared_Name");
+            ColAddress.Caption = LocalizationManager.T("Shared_Address");
+            ColPhone.Caption = LocalizationManager.T("Shared_Phone");
+            ColIsActive.Caption = LocalizationManager.T("Shared_IsActive");
         }
         public void GetData()
         {
@@ -39,7 +48,7 @@ namespace Clothes_Shop_ERP.modlestore
         }
         private void AddNew()
         {
-            var form = new FrmBranchEdit("New Branch");
+            var form = new FrmBranchEdit(LocalizationManager.T("Branches_NewTitle"));
 
             if (form.ShowDialog() == DialogResult.OK)
             {
@@ -55,7 +64,7 @@ namespace Clothes_Shop_ERP.modlestore
                     db.SaveChanges();
                 }
 
-                Sett.MsgGreen("Success", "Branch added");
+                Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("Branches_EntityName")));
                 GetData();
             }
         }
@@ -67,9 +76,9 @@ namespace Clothes_Shop_ERP.modlestore
             string name = gridView1.GetFocusedRowCellValue("Name").ToString();
             bool currentStatus = Convert.ToBoolean(gridView1.GetFocusedRowCellValue("IsActive"));
 
-            string action = currentStatus ? "Deactivate" : "Activate";
+            string action = currentStatus ? LocalizationManager.T("Shared_Deactivate") : LocalizationManager.T("Shared_Activate");
 
-            if (XtraMessageBox.Show($"{action} '{name}'?", "Confirm",
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmAction"), action, name), LocalizationManager.T("Common_ConfirmTitle"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
@@ -82,7 +91,7 @@ namespace Clothes_Shop_ERP.modlestore
                 db.SaveChanges();
             }
 
-            Sett.MsgBlue("Success", $"Branch {action.ToLower()}d");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XActionedPastTense"), LocalizationManager.T("Branches_EntityName"), action.ToLower()));
             GetData();
         }
         private void EditSelected()
@@ -94,7 +103,7 @@ namespace Clothes_Shop_ERP.modlestore
             string currentAddress = gridView1.GetFocusedRowCellValue("Address")?.ToString() ?? "";
             string currentPhone = gridView1.GetFocusedRowCellValue("Phone")?.ToString() ?? "";
 
-            var form = new FrmBranchEdit($"Editing Branch: {currentName}", currentName, currentAddress, currentPhone);
+            var form = new FrmBranchEdit(string.Format(LocalizationManager.T("Branches_EditingTitleFmt"), currentName), currentName, currentAddress, currentPhone);
 
             if (form.ShowDialog() == DialogResult.OK)
             {
@@ -104,7 +113,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                     if (branch == null)
                     {
-                        Sett.MsgBlue("Error", $"No branch found with Id = {id}");
+                        Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("Branches_EntityName"), id));
                         return;
                     }
 
@@ -114,7 +123,7 @@ namespace Clothes_Shop_ERP.modlestore
                     db.SaveChanges();
                 }
 
-                Sett.MsgBlue("Success", "Branch updated");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("Branches_EntityName")));
                 GetData();
             }
         }
@@ -126,7 +135,7 @@ namespace Clothes_Shop_ERP.modlestore
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
             string name = gridView1.GetFocusedRowCellValue("Name").ToString();
 
-            if (XtraMessageBox.Show($"Delete '{name}'?", "Confirm",
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), name), LocalizationManager.T("Common_ConfirmTitle"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
@@ -138,7 +147,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                     if (branch == null)
                     {
-                        Sett.MsgBlue("Error", $"No branch found with Id = {id}");
+                        Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("Branches_EntityName"), id));
                         return;
                     }
 
@@ -146,12 +155,12 @@ namespace Clothes_Shop_ERP.modlestore
                     db.SaveChanges();
                 }
 
-                Sett.MsgBlue("Success", "Branch deleted");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("Branches_EntityName")));
                 GetData();
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                Sett.MsgBlue("Cannot Delete", "This branch has related data (users, invoices, stock...). Remove those first.");
+                Sett.MsgBlue(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("Branches_HasRelatedData"));
             }
         }
 
@@ -169,14 +178,14 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelected());
-                menu.Items.Add("Activate/Deactivate", null, (s, ev) => ToggleActive());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuActivateDeactivate"), null, (s, ev) => ToggleActive());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
         }
     }

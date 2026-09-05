@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,17 @@ namespace Clothes_Shop_ERP.modlestore
                 gridView1.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 gridView1.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
             }
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            if (gridView1.Columns["Product"] != null) gridView1.Columns["Product"].Caption = LocalizationManager.T("StockCount_ColProduct");
+            if (gridView1.Columns["Branch"] != null) gridView1.Columns["Branch"].Caption = LocalizationManager.T("Shared_Branch");
+            if (gridView1.Columns["MovementType"] != null) gridView1.Columns["MovementType"].Caption = LocalizationManager.T("StockMovements_ColMovementType");
+            if (gridView1.Columns["Quantity"] != null) gridView1.Columns["Quantity"].Caption = LocalizationManager.T("StockCount_ColQuantity");
+            if (gridView1.Columns["RefType"] != null) gridView1.Columns["RefType"].Caption = LocalizationManager.T("StockMovements_ColRefType");
+            if (gridView1.Columns["RefId"] != null) gridView1.Columns["RefId"].Caption = LocalizationManager.T("StockMovements_ColRefId");
+            if (gridView1.Columns["CreatedAt"] != null) gridView1.Columns["CreatedAt"].Caption = LocalizationManager.T("Shared_CreatedAt");
         }
         public UcStockMovements()
         {

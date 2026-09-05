@@ -25,6 +25,12 @@ namespace Clothes_Shop_ERP.modlestore
         private DateEdit _customFrom, _customTo;
         private DateTime _selectedFrom, _selectedTo;
 
+        private PopupContainerEdit _overviewRangeEdit;
+        private PopupContainerControl _overviewRangePopup;
+        private RadioGroup _overviewRangeRadioGroup;
+        private DateEdit _overviewCustomFrom, _overviewCustomTo;
+        private DateTime _overviewSelectedFrom, _overviewSelectedTo;
+
         private GridControl _lowStockGrid;
         private GridView _lowStockView;
         private GridControl _recentSalesGrid;
@@ -38,6 +44,7 @@ namespace Clothes_Shop_ERP.modlestore
             BuildUi();
             LoadCardsAndSideData();
             ApplySelectedRange();
+            ApplyOverviewSelectedRange();
         }
 
         private void BuildUi()
@@ -96,8 +103,20 @@ namespace Clothes_Shop_ERP.modlestore
             rightSide.Controls.Add(lowStockGroup, 0, 0);
 
             var pieGroup = new GroupControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Overview"), Dock = DockStyle.Fill };
+            var pieLayout = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2 };
+            pieLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
+            pieLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+
+            var overviewPeriodBar = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1 };
+            BuildOverviewRangePicker();
+            _overviewRangeEdit.Anchor = AnchorStyles.Right;
+            overviewPeriodBar.Controls.Add(_overviewRangeEdit, 0, 0);
+
             _pieChart = new ChartControl { Dock = DockStyle.Fill };
-            pieGroup.Controls.Add(_pieChart);
+
+            pieLayout.Controls.Add(overviewPeriodBar, 0, 0);
+            pieLayout.Controls.Add(_pieChart, 0, 1);
+            pieGroup.Controls.Add(pieLayout);
             rightSide.Controls.Add(pieGroup, 0, 1);
 
             var recentTabs = new XtraTabControl { Dock = DockStyle.Fill };
@@ -146,11 +165,11 @@ namespace Clothes_Shop_ERP.modlestore
             _rangeRadioGroup.SelectedIndex = 3;
             _rangeRadioGroup.SelectedIndexChanged += RangeRadioGroup_SelectedIndexChanged;
 
-            var lblFrom = new LabelControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_From"), Location = new Point(10, 200) };
+            var lblFrom = new LabelControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Shared_From"), Location = new Point(10, 200) };
             _customFrom = new DateEdit { Location = new Point(40, 197), Width = 95, Enabled = false };
             _customFrom.DateTime = DateTime.Today;
 
-            var lblTo = new LabelControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_To"), Location = new Point(145, 200) };
+            var lblTo = new LabelControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Shared_To"), Location = new Point(145, 200) };
             _customTo = new DateEdit { Location = new Point(175, 197), Width = 95, Enabled = false };
             _customTo.DateTime = DateTime.Today;
 
@@ -167,6 +186,88 @@ namespace Clothes_Shop_ERP.modlestore
             _rangeEdit = new PopupContainerEdit { Width = 220 };
             _rangeEdit.Properties.PopupControl = _rangePopup;
             _rangeEdit.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+        }
+
+        private void BuildOverviewRangePicker()
+        {
+            _overviewRangePopup = new PopupContainerControl { Size = new Size(260, 260) };
+
+            _overviewRangeRadioGroup = new RadioGroup
+            {
+                Location = new Point(5, 5),
+                Size = new Size(250, 190),
+                BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder
+            };
+            _overviewRangeRadioGroup.Properties.Items.AddRange(new RadioGroupItem[]
+            {
+                new RadioGroupItem(0, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Today")),
+                new RadioGroupItem(1, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last7Days")),
+                new RadioGroupItem(2, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last14Days")),
+                new RadioGroupItem(3, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last28Days")),
+                new RadioGroupItem(4, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last60Days")),
+                new RadioGroupItem(5, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Last90Days")),
+                new RadioGroupItem(6, Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Custom")),
+            });
+            _overviewRangeRadioGroup.SelectedIndex = 3;
+            _overviewRangeRadioGroup.SelectedIndexChanged += OverviewRangeRadioGroup_SelectedIndexChanged;
+
+            var lblFrom = new LabelControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Shared_From"), Location = new Point(10, 200) };
+            _overviewCustomFrom = new DateEdit { Location = new Point(40, 197), Width = 95, Enabled = false };
+            _overviewCustomFrom.DateTime = DateTime.Today;
+
+            var lblTo = new LabelControl { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Shared_To"), Location = new Point(145, 200) };
+            _overviewCustomTo = new DateEdit { Location = new Point(175, 197), Width = 95, Enabled = false };
+            _overviewCustomTo.DateTime = DateTime.Today;
+
+            var btnApply = new SimpleButton { Text = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Apply"), Location = new Point(150, 225), Width = 100 };
+            btnApply.Click += (s, e) => { ApplyOverviewSelectedRange(); _overviewRangeEdit.ClosePopup(); };
+
+            _overviewRangePopup.Controls.Add(_overviewRangeRadioGroup);
+            _overviewRangePopup.Controls.Add(lblFrom);
+            _overviewRangePopup.Controls.Add(_overviewCustomFrom);
+            _overviewRangePopup.Controls.Add(lblTo);
+            _overviewRangePopup.Controls.Add(_overviewCustomTo);
+            _overviewRangePopup.Controls.Add(btnApply);
+
+            _overviewRangeEdit = new PopupContainerEdit { Width = 220 };
+            _overviewRangeEdit.Properties.PopupControl = _overviewRangePopup;
+            _overviewRangeEdit.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+        }
+
+        private void OverviewRangeRadioGroup_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            bool isCustom = _overviewRangeRadioGroup.SelectedIndex == 6;
+            _overviewCustomFrom.Enabled = isCustom;
+            _overviewCustomTo.Enabled = isCustom;
+
+            if (!isCustom)
+            {
+                ApplyOverviewSelectedRange();
+                _overviewRangeEdit.ClosePopup();
+            }
+        }
+
+        private void ApplyOverviewSelectedRange()
+        {
+            DateTime today = DateTime.Today;
+            switch (_overviewRangeRadioGroup.SelectedIndex)
+            {
+                case 0: _overviewSelectedFrom = today; _overviewSelectedTo = today; break;
+                case 1: _overviewSelectedFrom = today.AddDays(-6); _overviewSelectedTo = today; break;
+                case 2: _overviewSelectedFrom = today.AddDays(-13); _overviewSelectedTo = today; break;
+                case 3: _overviewSelectedFrom = today.AddDays(-27); _overviewSelectedTo = today; break;
+                case 4: _overviewSelectedFrom = today.AddDays(-59); _overviewSelectedTo = today; break;
+                case 5: _overviewSelectedFrom = today.AddDays(-89); _overviewSelectedTo = today; break;
+                case 6:
+                    _overviewSelectedFrom = _overviewCustomFrom.DateTime.Date;
+                    _overviewSelectedTo = _overviewCustomTo.DateTime.Date;
+                    break;
+            }
+
+            string itemText = _overviewRangeRadioGroup.Properties.Items[_overviewRangeRadioGroup.SelectedIndex].Description;
+            _overviewRangeEdit.Text = $"{itemText}: {_overviewSelectedFrom:dd/MM} - {_overviewSelectedTo:dd/MM/yyyy}";
+
+            LoadOverviewPie();
         }
 
         private void RangeRadioGroup_SelectedIndexChanged(object sender, EventArgs e)
@@ -273,23 +374,12 @@ namespace Clothes_Shop_ERP.modlestore
                                          bs.MinQuantity
                                      }).Take(10).ToList();
                 _lowStockGrid.DataSource = lowStockItems;
-
-                decimal allSales = db.SalesInvoices.Sum(x => (decimal?)x.NetAmount) ?? 0;
-                decimal allPurchases = db.PurchaseInvoices.Sum(x => (decimal?)x.TotalAmount) ?? 0;
-                decimal allIncome = db.TreasuryTransactions.Where(x => x.TransactionType == "In").Sum(x => (decimal?)x.Amount) ?? 0;
-                decimal allExpense = db.TreasuryTransactions.Where(x => x.TransactionType == "Out").Sum(x => (decimal?)x.Amount) ?? 0;
-
-                var pieSeries = new Series(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Overview"), ViewType.Pie);
-                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Sales"), (double)allSales));
-                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Purchases"), (double)allPurchases));
-                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Income"), (double)allIncome));
-                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Expenses"), (double)allExpense));
-                pieSeries.LegendPointOptions.Pattern = "{A}: {VP:P0}";
-                pieSeries.Label.TextPattern = "{A}\n{VP:P0}";
-
-                _pieChart.Series.Clear();
-                _pieChart.Series.Add(pieSeries);
-                _pieChart.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
+                _lowStockView.PopulateColumns();
+                if (_lowStockView.Columns["Product"] != null) _lowStockView.Columns["Product"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("StockCount_ColProduct");
+                if (_lowStockView.Columns["Size"] != null) _lowStockView.Columns["Size"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Shared_Size");
+                if (_lowStockView.Columns["Color"] != null) _lowStockView.Columns["Color"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Shared_Color");
+                if (_lowStockView.Columns["Quantity"] != null) _lowStockView.Columns["Quantity"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("StockCount_ColQuantity");
+                if (_lowStockView.Columns["MinQuantity"] != null) _lowStockView.Columns["MinQuantity"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("StockCount_ColMinQuantity");
 
                 var recentSales = db.SalesInvoices
                     .Include(x => x.Customer)
@@ -305,6 +395,13 @@ namespace Clothes_Shop_ERP.modlestore
                         Due = x.NetAmount - x.PaidAmount
                     }).ToList();
                 _recentSalesGrid.DataSource = recentSales;
+                _recentSalesView.PopulateColumns();
+                if (_recentSalesView.Columns["InvoiceDate"] != null) _recentSalesView.Columns["InvoiceDate"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Purchases_ColInvoiceDate");
+                if (_recentSalesView.Columns["InvoiceNumber"] != null) _recentSalesView.Columns["InvoiceNumber"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("SalesInvoices_ColInvoiceNumber");
+                if (_recentSalesView.Columns["Customer"] != null) _recentSalesView.Columns["Customer"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("SalesInvoices_ColCustomer");
+                if (_recentSalesView.Columns["NetAmount"] != null) _recentSalesView.Columns["NetAmount"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("SalesInvoices_ColNetAmount");
+                if (_recentSalesView.Columns["PaidAmount"] != null) _recentSalesView.Columns["PaidAmount"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Purchases_ColPaidAmount");
+                if (_recentSalesView.Columns["Due"] != null) _recentSalesView.Columns["Due"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_ColDue");
 
                 var recentPurchases = db.PurchaseInvoices
                     .Include(x => x.Supplier)
@@ -319,6 +416,45 @@ namespace Clothes_Shop_ERP.modlestore
                         Due = x.TotalAmount - x.PaidAmount
                     }).ToList();
                 _recentPurchaseGrid.DataSource = recentPurchases;
+                _recentPurchaseView.PopulateColumns();
+                if (_recentPurchaseView.Columns["InvoiceDate"] != null) _recentPurchaseView.Columns["InvoiceDate"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Purchases_ColInvoiceDate");
+                if (_recentPurchaseView.Columns["Supplier"] != null) _recentPurchaseView.Columns["Supplier"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Purchases_ColSupplier");
+                if (_recentPurchaseView.Columns["TotalAmount"] != null) _recentPurchaseView.Columns["TotalAmount"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Shared_TotalAmount");
+                if (_recentPurchaseView.Columns["PaidAmount"] != null) _recentPurchaseView.Columns["PaidAmount"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Purchases_ColPaidAmount");
+                if (_recentPurchaseView.Columns["Due"] != null) _recentPurchaseView.Columns["Due"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_ColDue");
+            }
+        }
+
+        private void LoadOverviewPie()
+        {
+            using (var db = new ClothesShopDBContext())
+            {
+                DateTime rangeEndExclusive = _overviewSelectedTo.AddDays(1);
+
+                decimal rangeSales = db.SalesInvoices
+                    .Where(x => x.InvoiceDate >= _overviewSelectedFrom && x.InvoiceDate < rangeEndExclusive)
+                    .Sum(x => (decimal?)x.NetAmount) ?? 0;
+                decimal rangePurchases = db.PurchaseInvoices
+                    .Where(x => x.InvoiceDate >= _overviewSelectedFrom && x.InvoiceDate < rangeEndExclusive)
+                    .Sum(x => (decimal?)x.TotalAmount) ?? 0;
+                decimal rangeIncome = db.TreasuryTransactions
+                    .Where(x => x.TransactionType == "In" && x.CreatedAt >= _overviewSelectedFrom && x.CreatedAt < rangeEndExclusive)
+                    .Sum(x => (decimal?)x.Amount) ?? 0;
+                decimal rangeExpense = db.TreasuryTransactions
+                    .Where(x => x.TransactionType == "Out" && x.CreatedAt >= _overviewSelectedFrom && x.CreatedAt < rangeEndExclusive)
+                    .Sum(x => (decimal?)x.Amount) ?? 0;
+
+                var pieSeries = new Series(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Overview"), ViewType.Pie);
+                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Sales"), (double)rangeSales));
+                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Purchases"), (double)rangePurchases));
+                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Income"), (double)rangeIncome));
+                pieSeries.Points.Add(new SeriesPoint(Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_Expenses"), (double)rangeExpense));
+                pieSeries.LegendPointOptions.Pattern = "{A}: {VP:P0}";
+                pieSeries.Label.TextPattern = "{A}\n{VP:P0}";
+
+                _pieChart.Series.Clear();
+                _pieChart.Series.Add(pieSeries);
+                _pieChart.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
             }
         }
 

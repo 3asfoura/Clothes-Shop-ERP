@@ -1,4 +1,5 @@
-﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,11 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
             gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            ColName.Caption = LocalizationManager.T("Shared_Name");
         }
         public void GetData()
         {
@@ -40,19 +46,19 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelected());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
 
             menu.Show(gridControl1, e.Location);
         }
         private void AddNew()
         {
-            string name = XtraInputBox.Show("Payment method name:", "New Payment Method", "");
+            string name = XtraInputBox.Show(LocalizationManager.T("PaymentMethods_NamePrompt"), LocalizationManager.T("PaymentMethods_NewTitle"), "");
             if (string.IsNullOrWhiteSpace(name)) return;
 
             using (var db = new ClothesShopDBContext())
@@ -60,7 +66,7 @@ namespace Clothes_Shop_ERP.modlestore
                 db.PaymentMethods.Add(new PaymentMethodEntity { Name = name });
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Payment method added");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("PaymentMethods_EntityName")));
             GetData();
         }
 
@@ -70,17 +76,17 @@ namespace Clothes_Shop_ERP.modlestore
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
             string currentName = gridView1.GetFocusedRowCellValue("Name").ToString();
 
-            string newName = XtraInputBox.Show("Enter new name:", $"Editing: {currentName}", currentName);
+            string newName = XtraInputBox.Show(LocalizationManager.T("PaymentMethods_EditNamePrompt"), string.Format(LocalizationManager.T("PaymentMethods_EditingTitleFmt"), currentName), currentName);
             if (string.IsNullOrWhiteSpace(newName)) return;
 
             using (var db = new ClothesShopDBContext())
             {
                 var method = db.PaymentMethods.Where(x => x.Id == id).FirstOrDefault();
-                if (method == null) { Sett.MsgBlue("Error", $"No item found with Id = {id}"); return; }
+                if (method == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("PaymentMethods_EntityName"), id)); return; }
                 method.Name = newName;
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Payment method updated");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("PaymentMethods_EntityName")));
             GetData();
         }
 
@@ -90,7 +96,7 @@ namespace Clothes_Shop_ERP.modlestore
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
             string name = gridView1.GetFocusedRowCellValue("Name").ToString();
 
-            if (XtraMessageBox.Show($"Delete '{name}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), name), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
             try
@@ -101,12 +107,12 @@ namespace Clothes_Shop_ERP.modlestore
                     if (method != null) db.PaymentMethods.Remove(method);
                     db.SaveChanges();
                 }
-                Sett.MsgBlue("Success", "Payment method deleted");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("PaymentMethods_EntityName")));
                 GetData();
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                Sett.MsgBlue("Cannot Delete", "This payment method is used by existing invoices. It can't be removed.");
+                Sett.MsgBlue(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("PaymentMethods_InUse"));
             }
         }
     }

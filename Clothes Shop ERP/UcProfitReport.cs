@@ -24,10 +24,10 @@ namespace Clothes_Shop_ERP.modlestore
         }
         public void ApplyLanguage()
         {
-            LblSummary.Text = LocalizationManager.T("Reports_Summary");
             btnRun.Text = LocalizationManager.T("Reports_GenerateReport");
-            lblTo.Text = LocalizationManager.T("Reports_To");
-            lblFrom.Text = LocalizationManager.T("Reports_From");
+            lblTo.Text = LocalizationManager.T("Shared_To");
+            lblFrom.Text = LocalizationManager.T("Shared_From");
+            lblExpensesHintItem.Text = LocalizationManager.T("ProfitReport_GeneralExpensesHint");
         }
         private void RunReport()
         {
@@ -59,17 +59,33 @@ namespace Clothes_Shop_ERP.modlestore
                     .ToList();
 
                 GridResult.DataSource = grouped;
+                GridViewResult.PopulateColumns();
                 if (GridViewResult.Columns["Quantity"] != null)
                 {
                     GridViewResult.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                     GridViewResult.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
                 }
+                if (GridViewResult.Columns["Product"] != null) GridViewResult.Columns["Product"].Caption = LocalizationManager.T("StockCount_ColProduct");
+                if (GridViewResult.Columns["QuantitySold"] != null) GridViewResult.Columns["QuantitySold"].Caption = LocalizationManager.T("ProfitReport_ColQuantitySold");
+                if (GridViewResult.Columns["Revenue"] != null) GridViewResult.Columns["Revenue"].Caption = LocalizationManager.T("ProfitReport_ColRevenue");
+                if (GridViewResult.Columns["Cost"] != null) GridViewResult.Columns["Cost"].Caption = LocalizationManager.T("ProfitReport_ColCost");
+                if (GridViewResult.Columns["Profit"] != null) GridViewResult.Columns["Profit"].Caption = LocalizationManager.T("ProfitReport_ColProfit");
                 decimal totalRevenue = grouped.Sum(x => x.Revenue);
                 decimal totalCost = grouped.Sum(x => x.Cost);
-                decimal totalProfit = totalRevenue - totalCost;
-                decimal margin = totalRevenue == 0 ? 0 : (totalProfit / totalRevenue) * 100;
+                decimal grossProfit = totalRevenue - totalCost;
+                decimal margin = totalRevenue == 0 ? 0 : (grossProfit / totalRevenue) * 100;
 
-                LblSummary.Text = $"Revenue: {totalRevenue:n2}  |  Cost: {totalCost:n2}  |  Profit: {totalProfit:n2}  ({margin:n1}%)";
+                // General expenses: manual Treasury entries (electricity, rent, salaries...) that
+                // aren't tied to a specific sale/purchase, so they don't show up in the per-product
+                // cost above. Net profit = gross profit from goods minus these overhead costs.
+                decimal generalExpenses = db.TreasuryTransactions
+                    .Where(x => x.TransactionType == "Out" && x.RefType == "Manual"
+                             && x.CreatedAt >= from && x.CreatedAt <= to)
+                    .Sum(x => (decimal?)x.Amount) ?? 0;
+                decimal netProfit = grossProfit - generalExpenses;
+
+                LblSummary.Text = string.Format(LocalizationManager.T("ProfitReport_NetSummaryFmt"),
+                    totalRevenue, totalCost, grossProfit, margin, generalExpenses, netProfit);
             }
         }
 

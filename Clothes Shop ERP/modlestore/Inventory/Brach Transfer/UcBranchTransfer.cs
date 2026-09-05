@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,14 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
             gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            ColFrom.Caption = LocalizationManager.T("Shared_ColFrom");
+            Col.Caption = LocalizationManager.T("Shared_ColTo");
+            ColStatus.Caption = LocalizationManager.T("Shared_Status");
+            ColCreatedAt.Caption = LocalizationManager.T("Shared_CreatedAt");
         }
 
         public void GetData()
@@ -53,7 +62,7 @@ namespace Clothes_Shop_ERP.modlestore
 
         private void AddNew()
         {
-            var form = new FrmStockTransferEdit("New Stock Transfer");
+            var form = new FrmStockTransferEdit(LocalizationManager.T("BranchTransfer_NewTitle"));
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
@@ -85,13 +94,13 @@ namespace Clothes_Shop_ERP.modlestore
                     db.SaveChanges();
                     transaction.Commit();
 
-                    Sett.MsgBlue("Success", "Transfer created as Pending. Mark it Completed once the stock has actually moved.");
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Success"), LocalizationManager.T("BranchTransfer_CreatedPending"));
                     GetData();
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    Sett.MsgBlue("Error", "Could not create the transfer. " + ex.Message);
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("BranchTransfer_CreateFailed"), ex.Message));
                 }
             }
         }
@@ -109,7 +118,7 @@ namespace Clothes_Shop_ERP.modlestore
                     var transfer = db.StockTransfers.Where(x => x.Id == id).FirstOrDefault();
                     if (transfer == null || transfer.Status != "Pending")
                     {
-                        Sett.MsgBlue("Error", "This transfer can no longer be changed.");
+                        Sett.MsgBlue(LocalizationManager.T("Shared_Error"), LocalizationManager.T("BranchTransfer_Locked"));
                         return;
                     }
 
@@ -128,7 +137,7 @@ namespace Clothes_Shop_ERP.modlestore
                             if (rowsAffected == 0)
                             {
                                 transaction.Rollback();
-                                Sett.MsgBlue("Error", $"Not enough stock at the source branch for one of the items. Transfer not completed.");
+                                Sett.MsgBlue(LocalizationManager.T("Shared_Error"), LocalizationManager.T("BranchTransfer_NotEnoughStock"));
                                 return;
                             }
 
@@ -181,13 +190,13 @@ namespace Clothes_Shop_ERP.modlestore
                     db.SaveChanges();
                     transaction.Commit();
 
-                    Sett.MsgGreen("Success", $"Transfer marked as {newStatus}");
+                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("BranchTransfer_StatusChanged"), newStatus));
                     GetData();
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    Sett.MsgBlue("Error", "Could not update the transfer. " + ex.Message);
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("BranchTransfer_UpdateFailed"), ex.Message));
                 }
             }
         }
@@ -205,7 +214,7 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New Transfer", null, (s, ev) => AddNew());
+            menu.Items.Add(LocalizationManager.T("BranchTransfer_MenuNewTransfer"), null, (s, ev) => AddNew());
 
             if (hit.InRow)
             {
@@ -213,8 +222,8 @@ namespace Clothes_Shop_ERP.modlestore
                 string status = gridView1.GetFocusedRowCellValue("Status")?.ToString();
                 if (status == "Pending")
                 {
-                    menu.Items.Add("Mark Completed (moves the stock)", null, (s, ev) => SetStatus("Completed"));
-                    menu.Items.Add("Cancel Transfer", null, (s, ev) => SetStatus("Cancelled"));
+                    menu.Items.Add(LocalizationManager.T("BranchTransfer_MenuMarkCompleted"), null, (s, ev) => SetStatus("Completed"));
+                    menu.Items.Add(LocalizationManager.T("BranchTransfer_MenuCancelTransfer"), null, (s, ev) => SetStatus("Cancelled"));
                 }
             }
 

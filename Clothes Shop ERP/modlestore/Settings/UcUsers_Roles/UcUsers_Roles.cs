@@ -37,8 +37,8 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             ColUsername.Caption = LocalizationManager.T("UsersRoles_ColUsername");
             ColFullName.Caption = LocalizationManager.T("UsersRoles_ColFullName");
             ColRoleName.Caption = LocalizationManager.T("UsersRoles_ColRoleName");
-            ColIsActive.Caption = LocalizationManager.T("UsersRoles_ColIsActive");
-            Col_Role.Caption = LocalizationManager.T("UsersRoles_ColRole_Name");
+            ColIsActive.Caption = LocalizationManager.T("Shared_IsActive");
+            Col_Role.Caption = LocalizationManager.T("Shared_Name");
         }
         public void GetDataRoles()
         {
@@ -68,7 +68,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
         }
         private void AddNewUsers()
         {
-            var form = new FrmUserEdit("New User", isEditMode: false);
+            var form = new FrmUserEdit(LocalizationManager.T("UsersRoles_NewUserTitle"), isEditMode: false);
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
@@ -76,7 +76,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                 bool usernameTaken = db.Users.Any(u => u.Username == form.Username);
                 if (usernameTaken)
                 {
-                    Sett.MsgBlue("Error", "This username is already taken.");
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), LocalizationManager.T("UsersRoles_UsernameTaken"));
                     return;
                 }
 
@@ -90,7 +90,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                 });
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "User added");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("UsersRoles_UserEntityName")));
             GetDataUsers();
         }
 
@@ -105,13 +105,13 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             using (var db = new ClothesShopDBContext())
                 currentRoleId = db.Users.Where(u => u.Id == id).Select(u => u.RoleId).FirstOrDefault();
 
-            var form = new FrmUserEdit($"Editing User: {currentUsername}", isEditMode: true, currentUsername, currentFullName, currentRoleId);
+            var form = new FrmUserEdit(string.Format(LocalizationManager.T("UsersRoles_EditingUserTitleFmt"), currentUsername), isEditMode: true, currentUsername, currentFullName, currentRoleId);
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
             {
                 var user = db.Users.Where(u => u.Id == id).FirstOrDefault();
-                if (user == null) { Sett.MsgBlue("Error", $"No user found with Id = {id}"); return; }
+                if (user == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("UsersRoles_UserEntityName"), id)); return; }
 
                 user.FullName = form.FullName;
                 user.RoleId = form.RoleId;
@@ -122,7 +122,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
 
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "User updated");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("UsersRoles_UserEntityName")));
             GetDataUsers();
         }
 
@@ -132,9 +132,9 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             int id = Convert.ToInt32(gridView2.GetFocusedRowCellValue("Id"));
             string username = gridView2.GetFocusedRowCellValue("Username").ToString();
             bool currentStatus = Convert.ToBoolean(gridView2.GetFocusedRowCellValue("IsActive"));
-            string action = currentStatus ? "Deactivate" : "Activate";
+            string action = currentStatus ? LocalizationManager.T("Shared_Deactivate") : LocalizationManager.T("Shared_Activate");
 
-            if (XtraMessageBox.Show($"{action} '{username}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmAction"), action, username), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
             using (var db = new ClothesShopDBContext())
@@ -144,7 +144,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                 user.IsActive = !currentStatus;
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", $"User {action.ToLower()}d");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XActionedPastTense"), LocalizationManager.T("UsersRoles_UserEntityName"), action.ToLower()));
             GetDataUsers();
         }
 
@@ -154,7 +154,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             int id = Convert.ToInt32(gridView2.GetFocusedRowCellValue("Id"));
             string username = gridView2.GetFocusedRowCellValue("Username").ToString();
 
-            if (XtraMessageBox.Show($"Delete '{username}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), username), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
             try
@@ -162,21 +162,21 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                 using (var db = new ClothesShopDBContext())
                 {
                     var user = db.Users.Where(u => u.Id == id).FirstOrDefault();
-                    if (user == null) { Sett.MsgBlue("Error", $"No user found with Id = {id}"); return; }
+                    if (user == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("UsersRoles_UserEntityName"), id)); return; }
                     db.Users.Remove(user);
                     db.SaveChanges();
                 }
-                Sett.MsgBlue("Success", "User deleted");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("UsersRoles_UserEntityName")));
                 GetDataUsers();
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                Sett.MsgBlue("Cannot Delete", "This user created invoices or other records. Deactivate instead of deleting.");
+                Sett.MsgBlue(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("UsersRoles_UserHasRecords"));
             }
         }
         private void AddNewRoles()
         {
-            string name = XtraInputBox.Show("Role name:", "New Role", "");
+            string name = XtraInputBox.Show(LocalizationManager.T("Roles_NamePrompt"), LocalizationManager.T("Roles_NewTitle"), "");
             if (string.IsNullOrWhiteSpace(name)) return;
 
             using (var db = new ClothesShopDBContext())
@@ -185,7 +185,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                 db.SaveChanges();
             }
 
-            Sett.MsgGreen("Success", "Role added");
+            Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("UsersRoles_RoleEntityName")));
             GetDataRoles();
         }
 
@@ -196,7 +196,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             int id = Convert.ToInt32(dgv_RolesList.GetFocusedRowCellValue("Id"));
             string currentName = dgv_RolesList.GetFocusedRowCellValue("Name").ToString();
 
-            string newName = XtraInputBox.Show("Enter new role name:", $"Editing Role: {currentName}", currentName);
+            string newName = XtraInputBox.Show(LocalizationManager.T("Roles_EditNamePrompt"), string.Format(LocalizationManager.T("Roles_EditingTitleFmt"), currentName), currentName);
             if (string.IsNullOrWhiteSpace(newName)) return;
 
             using (var db = new ClothesShopDBContext())
@@ -205,7 +205,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
 
                 if (role == null)
                 {
-                    Sett.MsgBlue("Error", $"No role found with Id = {id}");
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("UsersRoles_RoleEntityName"), id));
                     return;
                 }
 
@@ -213,7 +213,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                 db.SaveChanges();
             }
 
-            Sett.MsgBlue("Success", "Role updated");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("UsersRoles_RoleEntityName")));
             GetDataRoles();
         }
 
@@ -224,7 +224,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             int id = Convert.ToInt32(dgv_RolesList.GetFocusedRowCellValue("Id"));
             string name = dgv_RolesList.GetFocusedRowCellValue("Name").ToString();
 
-            if (XtraMessageBox.Show($"Delete '{name}'?", "Confirm",
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), name), LocalizationManager.T("Common_ConfirmTitle"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
@@ -236,7 +236,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
 
                     if (role == null)
                     {
-                        Sett.MsgBlue("Error", $"No role found with Id = {id}");
+                        Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("UsersRoles_RoleEntityName"), id));
                         return;
                     }
 
@@ -244,12 +244,12 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                     db.SaveChanges();
                 }
 
-                Sett.MsgBlue("Success", "Role deleted");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("UsersRoles_RoleEntityName")));
                 GetDataRoles();
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                Sett.MsgBlue("Cannot Delete", "This role is assigned to one or more users. Reassign them first.");
+                Sett.MsgBlue(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("UsersRoles_RoleAssigned"));
             }
         }
         private void gridControl2_MouseUp(object sender, MouseEventArgs e)
@@ -262,13 +262,13 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                 return;
 
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNewUsers());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNewUsers());
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelectedUsers());
-                menu.Items.Add("Activate/Deactivate", null, (s, ev) => ToggleActiveUsers());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelectedUsers());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelectedUsers());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuActivateDeactivate"), null, (s, ev) => ToggleActiveUsers());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelectedUsers());
             }
 
             menu.Show(gridControl2, e.Location);
@@ -283,13 +283,13 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNewRoles());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNewRoles());
             menu.Show(dgv_Roles, e.Location);
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelectedRoles());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelectedRoles());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelectedRoles());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelectedRoles());
             }
         }
     }

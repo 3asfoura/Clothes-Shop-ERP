@@ -1,4 +1,5 @@
-﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,12 @@ namespace Clothes_Shop_ERP.modlestore
             gridView2.OptionsCustomization.AllowSort = false;
             gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             gridView2.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            groupControl1.Text = LocalizationManager.T("ColorsSizes_Colors");
+            groupControl3.Text = LocalizationManager.T("ColorsSizes_Sizes");
         }
         public void GetData()
         {
@@ -33,6 +40,9 @@ namespace Clothes_Shop_ERP.modlestore
                     .Select(x => new { x.Id, x.Name, x.HexCode })
                     .ToList();
             }
+            if (gridView1.Columns["Name"] != null) gridView1.Columns["Name"].Caption = LocalizationManager.T("Shared_Name");
+            if (gridView1.Columns["HexCode"] != null) gridView1.Columns["HexCode"].Caption = LocalizationManager.T("ColorsSizes_ColHexCode");
+
             using (var db = new ClothesShopDBContext())
             {
                 gridView2.GridControl.DataSource = db.Sizes
@@ -40,6 +50,8 @@ namespace Clothes_Shop_ERP.modlestore
                     .Select(x => new { x.Id, x.Name, x.SortOrder })
                     .ToList();
             }
+            if (gridView2.Columns["Name"] != null) gridView2.Columns["Name"].Caption = LocalizationManager.T("Shared_Name");
+            if (gridView2.Columns["SortOrder"] != null) gridView2.Columns["SortOrder"].Caption = LocalizationManager.T("ColorsSizes_ColSortOrder");
         }
         private void UcColorsSizes_Load(object sender, EventArgs e)
         {
@@ -48,11 +60,11 @@ namespace Clothes_Shop_ERP.modlestore
 
         private void gridView1_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
         {
-           
+
         }
         private void AddNew_Color()
         {
-            var form = new FrmColorEdit("New Color");
+            var form = new FrmColorEdit(LocalizationManager.T("ColorsSizes_NewColorTitle"));
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
@@ -60,7 +72,7 @@ namespace Clothes_Shop_ERP.modlestore
                 db.Colors.Add(new ColorEntity { Name = form.ColorName, HexCode = form.HexCode });
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Color added");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("ColorsSizes_ColorEntityName")));
             GetData();
         }
 
@@ -71,18 +83,18 @@ namespace Clothes_Shop_ERP.modlestore
             string currentName = gridView1.GetFocusedRowCellValue("Name").ToString();
             string currentHex = gridView1.GetFocusedRowCellValue("HexCode")?.ToString() ?? "";
 
-            var form = new FrmColorEdit($"Editing Color: {currentName}", currentName, currentHex);
+            var form = new FrmColorEdit(string.Format(LocalizationManager.T("ColorsSizes_EditingColorTitleFmt"), currentName), currentName, currentHex);
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
             {
                 var color = db.Colors.Where(x => x.Id == id).FirstOrDefault();
-                if (color == null) { Sett.MsgBlue("Error", $"No color found with Id = {id}"); return; }
+                if (color == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("ColorsSizes_ColorEntityName"), id)); return; }
                 color.Name = form.ColorName;
                 color.HexCode = form.HexCode;
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Color updated");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("ColorsSizes_ColorEntityName")));
             GetData();
         }
 
@@ -92,7 +104,7 @@ namespace Clothes_Shop_ERP.modlestore
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
             string name = gridView1.GetFocusedRowCellValue("Name").ToString();
 
-            if (XtraMessageBox.Show($"Delete '{name}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), name), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
             try
@@ -100,22 +112,22 @@ namespace Clothes_Shop_ERP.modlestore
                 using (var db = new ClothesShopDBContext())
                 {
                     var color = db.Colors.Where(x => x.Id == id).FirstOrDefault();
-                    if (color == null) { Sett.MsgBlue("Error", $"No color found with Id = {id}"); return; }
+                    if (color == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("ColorsSizes_ColorEntityName"), id)); return; }
                     db.Colors.Remove(color);
                     db.SaveChanges();
                 }
-                Sett.MsgBlue("Success", "Color deleted");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("ColorsSizes_ColorEntityName")));
                 GetData();
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                Sett.MsgBlue("Cannot Delete", "This color is used by one or more product variants. Remove those first.");
+                Sett.MsgBlue(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("ColorsSizes_ColorInUse"));
             }
         }
 
         private void AddNew_Size()
         {
-            var form = new FrmSizeEdit("New Size");
+            var form = new FrmSizeEdit(LocalizationManager.T("ColorsSizes_NewSizeTitle"));
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
@@ -123,7 +135,7 @@ namespace Clothes_Shop_ERP.modlestore
                 db.Sizes.Add(new SizeEntity { Name = form.SizeName, SortOrder = form.SortOrder });
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Size added");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("ColorsSizes_SizeEntityName")));
             GetData();
         }
 
@@ -134,18 +146,18 @@ namespace Clothes_Shop_ERP.modlestore
             string currentName = gridView1.GetFocusedRowCellValue("Name").ToString();
             int currentSort = Convert.ToInt32(gridView1.GetFocusedRowCellValue("SortOrder"));
 
-            var form = new FrmSizeEdit($"Editing Size: {currentName}", currentName, currentSort);
+            var form = new FrmSizeEdit(string.Format(LocalizationManager.T("ColorsSizes_EditingSizeTitleFmt"), currentName), currentName, currentSort);
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
             {
                 var size = db.Sizes.Where(x => x.Id == id).FirstOrDefault();
-                if (size == null) { Sett.MsgBlue("Error", $"No size found with Id = {id}"); return; }
+                if (size == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("ColorsSizes_SizeEntityName"), id)); return; }
                 size.Name = form.SizeName;
                 size.SortOrder = form.SortOrder;
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Size updated");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("ColorsSizes_SizeEntityName")));
             GetData();
         }
 
@@ -155,7 +167,7 @@ namespace Clothes_Shop_ERP.modlestore
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
             string name = gridView1.GetFocusedRowCellValue("Name").ToString();
 
-            if (XtraMessageBox.Show($"Delete '{name}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), name), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
             try
@@ -163,21 +175,21 @@ namespace Clothes_Shop_ERP.modlestore
                 using (var db = new ClothesShopDBContext())
                 {
                     var size = db.Sizes.Where(x => x.Id == id).FirstOrDefault();
-                    if (size == null) { Sett.MsgBlue("Error", $"No size found with Id = {id}"); return; }
+                    if (size == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("ColorsSizes_SizeEntityName"), id)); return; }
                     db.Sizes.Remove(size);
                     db.SaveChanges();
                 }
-                Sett.MsgBlue("Success", "Size deleted");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("ColorsSizes_SizeEntityName")));
                 GetData();
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                Sett.MsgBlue("Cannot Delete", "This size is used by one or more product variants. Remove those first.");
+                Sett.MsgBlue(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("ColorsSizes_SizeInUse"));
             }
         }
         private void gridView2_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
         {
-           
+
         }
 
         private void gridView1_RowCellStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowCellStyleEventArgs e)
@@ -195,12 +207,12 @@ namespace Clothes_Shop_ERP.modlestore
             }
             catch
             {
-                
+
             }
         }
         private Color GetContrastColor(Color bg)
         {
-           
+
             double brightness = (bg.R * 299 + bg.G * 587 + bg.B * 114) / 1000.0;
             return brightness > 125 ? Color.Black : Color.White;
         }
@@ -214,13 +226,13 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew_Size());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew_Size());
             menu.Show(gridControl2, e.Location);
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelected_Size());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected_Size());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected_Size());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected_Size());
             }
         }
 
@@ -233,13 +245,13 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew_Color());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew_Color());
             menu.Show(gridControl1, e.Location);
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelected_Color());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected_Color());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected_Color());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected_Color());
             }
         }
     }

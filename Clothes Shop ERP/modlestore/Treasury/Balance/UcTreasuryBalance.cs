@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
@@ -29,7 +30,7 @@ namespace Clothes_Shop_ERP.modlestore
         {
             var btnRefresh = new SimpleButton
             {
-                Text = "تحديث",
+                Text = LocalizationManager.T("Shared_Refresh"),
                 Location = new Point(20, 15),
                 Width = 100
             };
@@ -37,7 +38,7 @@ namespace Clothes_Shop_ERP.modlestore
 
             LblTotalBalance = new LabelControl
             {
-                Text = "الرصيد الحالي: 0.00",
+                Text = LocalizationManager.T("TreasuryBalance_CurrentBalance"),
                 Location = new Point(140, 12),
                 AutoSizeMode = LabelAutoSizeMode.None,
                 Size = new Size(400, 30),
@@ -46,7 +47,7 @@ namespace Clothes_Shop_ERP.modlestore
 
             LblTotalsBreakdown = new LabelControl
             {
-                Text = "إجمالي الداخل: 0.00   |   إجمالي الخارج: 0.00",
+                Text = LocalizationManager.T("TreasuryBalance_InOutTotals"),
                 Location = new Point(20, 50),
                 AutoSizeMode = LabelAutoSizeMode.None,
                 Size = new Size(500, 20),
@@ -99,15 +100,20 @@ namespace Clothes_Shop_ERP.modlestore
                     .ToList();
 
                 GridResult.DataSource = perBranch;
+                GridViewResult.PopulateColumns();
+                if (GridViewResult.Columns["Branch"] != null) GridViewResult.Columns["Branch"].Caption = LocalizationManager.T("Shared_Branch");
+                if (GridViewResult.Columns["TotalIn"] != null) GridViewResult.Columns["TotalIn"].Caption = LocalizationManager.T("TreasuryBalance_ColTotalIn");
+                if (GridViewResult.Columns["TotalOut"] != null) GridViewResult.Columns["TotalOut"].Caption = LocalizationManager.T("TreasuryBalance_ColTotalOut");
+                if (GridViewResult.Columns["Balance"] != null) GridViewResult.Columns["Balance"].Caption = LocalizationManager.T("TreasuryBalance_ColBalance");
 
                 decimal totalIn = rows.Where(x => x.TransactionType == "In").Sum(x => x.Amount);
                 decimal totalOut = rows.Where(x => x.TransactionType == "Out").Sum(x => x.Amount);
                 decimal balance = totalIn - totalOut;
 
-                LblTotalBalance.Text = $"الرصيد الحالي: {balance:n2}";
+                LblTotalBalance.Text = string.Format(LocalizationManager.T("TreasuryBalance_CurrentBalanceFmt"), balance);
                 LblTotalBalance.ForeColor = balance >= 0 ? Color.DarkGreen : Color.DarkRed;
 
-                LblTotalsBreakdown.Text = $"إجمالي الداخل: {totalIn:n2}   |   إجمالي الخارج: {totalOut:n2}";
+                LblTotalsBreakdown.Text = string.Format(LocalizationManager.T("TreasuryBalance_InOutTotalsFmt"), totalIn, totalOut);
             }
         }
 

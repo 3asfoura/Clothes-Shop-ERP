@@ -36,6 +36,7 @@
             this.layoutControl2 = new DevExpress.XtraLayout.LayoutControl();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.LblSummary = new DevExpress.XtraLayout.SimpleLabelItem();
+            this.lblExpensesHintItem = new DevExpress.XtraLayout.SimpleLabelItem();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
             this.btnRun = new DevExpress.XtraEditors.SimpleButton();
             this.DtFrom = new DevExpress.XtraEditors.DateEdit();
@@ -53,6 +54,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LblSummary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lblExpensesHintItem)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DtFrom.Properties)).BeginInit();
@@ -117,34 +119,48 @@
             this.layoutControl2.Location = new System.Drawing.Point(0, 546);
             this.layoutControl2.Name = "layoutControl2";
             this.layoutControl2.Root = this.layoutControlGroup1;
-            this.layoutControl2.Size = new System.Drawing.Size(1007, 62);
+            this.layoutControl2.Size = new System.Drawing.Size(1007, 90);
             this.layoutControl2.TabIndex = 4;
             this.layoutControl2.Text = "layoutControl2";
-            // 
+            //
             // layoutControlGroup1
-            // 
+            //
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup1.GroupBordersVisible = false;
             this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.LblSummary});
+            this.LblSummary,
+            this.lblExpensesHintItem});
             this.layoutControlGroup1.Name = "Root";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(1007, 62);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(1007, 90);
             this.layoutControlGroup1.TextVisible = false;
-            // 
+            //
             // LblSummary
-            // 
+            //
             this.LblSummary.AllowHotTrack = false;
-            this.LblSummary.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LblSummary.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LblSummary.AppearanceItemCaption.Options.UseFont = true;
             this.LblSummary.CustomizationFormText = "Total: 0.00  |  Invoices: 0";
             this.LblSummary.Location = new System.Drawing.Point(0, 0);
             this.LblSummary.Name = "LblSummary";
             this.LblSummary.OptionsPrint.AppearanceItem.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LblSummary.OptionsPrint.AppearanceItem.Options.UseFont = true;
-            this.LblSummary.Size = new System.Drawing.Size(987, 42);
+            this.LblSummary.Size = new System.Drawing.Size(987, 56);
             this.LblSummary.Text = "Total: 0.00  |  Invoices: 0";
             this.LblSummary.TextSize = new System.Drawing.Size(212, 25);
-            // 
+            //
+            // lblExpensesHintItem
+            //
+            this.lblExpensesHintItem.AllowHotTrack = false;
+            this.lblExpensesHintItem.AppearanceItemCaption.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExpensesHintItem.AppearanceItemCaption.ForeColor = System.Drawing.Color.Gray;
+            this.lblExpensesHintItem.AppearanceItemCaption.Options.UseFont = true;
+            this.lblExpensesHintItem.AppearanceItemCaption.Options.UseForeColor = true;
+            this.lblExpensesHintItem.Location = new System.Drawing.Point(0, 56);
+            this.lblExpensesHintItem.Name = "lblExpensesHintItem";
+            this.lblExpensesHintItem.Size = new System.Drawing.Size(987, 20);
+            this.lblExpensesHintItem.Text = "General Expenses = manual Treasury entries not tied to any purchase or sale.";
+            this.lblExpensesHintItem.TextSize = new System.Drawing.Size(0, 0);
+            //
             // layoutControl1
             // 
             this.layoutControl1.Controls.Add(this.btnRun);
@@ -269,6 +285,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LblSummary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lblExpensesHintItem)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
             this.layoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DtFrom.Properties.CalendarTimeProperties)).EndInit();
@@ -293,6 +310,7 @@
         private DevExpress.XtraLayout.LayoutControl layoutControl2;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
         private DevExpress.XtraLayout.SimpleLabelItem LblSummary;
+        private DevExpress.XtraLayout.SimpleLabelItem lblExpensesHintItem;
         private DevExpress.XtraLayout.LayoutControl layoutControl1;
         private DevExpress.XtraEditors.SimpleButton btnRun;
         private DevExpress.XtraLayout.LayoutControlGroup Root;

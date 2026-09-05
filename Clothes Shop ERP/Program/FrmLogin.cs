@@ -60,13 +60,13 @@ namespace Clothes_Shop_ERP
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                Sett.MsgRed("Warning", "Please enter your username and password");
+                Sett.MsgRed(LocalizationManager.T("Shared_Warning"), LocalizationManager.T("Login_EnterCredentials"));
                 return;
             }
 
             if (TXT_Branch.EditValue == null)
             {
-                Sett.MsgRed("Warning", "Please select a branch");
+                Sett.MsgRed(LocalizationManager.T("Shared_Warning"), LocalizationManager.T("Login_SelectBranch"));
                 return;
             }
 
@@ -76,7 +76,7 @@ namespace Clothes_Shop_ERP
 
                 if (user == null)
                 {
-                    Sett.MsgRed("Login Failed", "Username not found");
+                    Sett.MsgRed(LocalizationManager.T("Login_Failed"), LocalizationManager.T("Login_UsernameNotFound"));
                     return;
                 }
 
@@ -84,7 +84,7 @@ namespace Clothes_Shop_ERP
 
                 if (!passwordCorrect)
                 {
-                    Sett.MsgRed("Login Failed", "Incorrect password");
+                    Sett.MsgRed(LocalizationManager.T("Login_Failed"), LocalizationManager.T("Login_IncorrectPassword"));
                     return;
                 }
 
@@ -92,7 +92,7 @@ namespace Clothes_Shop_ERP
                 CurrentUserFullName = user.FullName;
                 CurrentBranchId = (int)TXT_Branch.EditValue;
 
-                 Sett.MsgGreen("Welcome", $"Welcome, {user.FullName}");
+                 Sett.MsgGreen(LocalizationManager.T("Login_WelcomeTitle"), string.Format(LocalizationManager.T("Login_WelcomeUser"), user.FullName));
                 this.Hide();
             }
 

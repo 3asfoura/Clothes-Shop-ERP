@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -43,22 +44,22 @@ namespace Clothes_Shop_ERP
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            var lblUsername = new LabelControl { Text = "Username:", Location = new System.Drawing.Point(20, 20) };
+            var lblUsername = new LabelControl { Text = LocalizationManager.T("FrmUserEdit_Username"), Location = new System.Drawing.Point(20, 20) };
             TxtUsername = new TextEdit { Text = username, Location = new System.Drawing.Point(20, 40), Width = 320 };
             TxtUsername.Enabled = !isEditMode;   // don't allow changing the username once created
 
             var lblPassword = new LabelControl
             {
-                Text = isEditMode ? "New Password (leave empty to keep current):" : "Password:",
+                Text = isEditMode ? LocalizationManager.T("FrmUserEdit_NewPasswordHint") : LocalizationManager.T("FrmUserEdit_Password"),
                 Location = new System.Drawing.Point(20, 75)
             };
             TxtPassword = new TextEdit { Location = new System.Drawing.Point(20, 95), Width = 320 };
             TxtPassword.Properties.UseSystemPasswordChar = true;
 
-            var lblFullName = new LabelControl { Text = "Full Name:", Location = new System.Drawing.Point(20, 130) };
+            var lblFullName = new LabelControl { Text = LocalizationManager.T("FrmUserEdit_FullName"), Location = new System.Drawing.Point(20, 130) };
             TxtFullName = new TextEdit { Text = fullName, Location = new System.Drawing.Point(20, 150), Width = 320 };
 
-            var lblRole = new LabelControl { Text = "Role:", Location = new System.Drawing.Point(20, 185) };
+            var lblRole = new LabelControl { Text = LocalizationManager.T("FrmUserEdit_Role"), Location = new System.Drawing.Point(20, 185) };
             CmbRole = new ComboBoxEdit { Location = new System.Drawing.Point(20, 205), Width = 320 };
             CmbRole.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
@@ -74,25 +75,25 @@ namespace Clothes_Shop_ERP
             int idx = _roleIds.IndexOf(currentRoleId);
             CmbRole.SelectedIndex = idx >= 0 ? idx : 0;
 
-            ChkIsActive = new CheckEdit { Text = "Active", Checked = isActive, Location = new System.Drawing.Point(20, 240) };
+            ChkIsActive = new CheckEdit { Text = LocalizationManager.T("Shared_Active"), Checked = isActive, Location = new System.Drawing.Point(20, 240) };
 
-            var btnSave = new SimpleButton { Text = "Save", Location = new System.Drawing.Point(160, 270), DialogResult = DialogResult.OK };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("Shared_BtnSave"), Location = new System.Drawing.Point(160, 270), DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(TxtUsername.Text) || string.IsNullOrWhiteSpace(TxtFullName.Text))
                 {
-                    XtraMessageBox.Show("Please fill in username and full name.");
+                    XtraMessageBox.Show(LocalizationManager.T("UsersRoles_FillUsernameFullName"));
                     this.DialogResult = DialogResult.None;
                     return;
                 }
                 if (!_isEditMode && string.IsNullOrWhiteSpace(TxtPassword.Text))
                 {
-                    XtraMessageBox.Show("Please enter a password for the new user.");
+                    XtraMessageBox.Show(LocalizationManager.T("UsersRoles_PasswordRequiredForNewUser"));
                     this.DialogResult = DialogResult.None;
                 }
             };
 
-            var btnCancel = new SimpleButton { Text = "Cancel", Location = new System.Drawing.Point(240, 270), DialogResult = DialogResult.Cancel };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(240, 270), DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblUsername);
             this.Controls.Add(TxtUsername);

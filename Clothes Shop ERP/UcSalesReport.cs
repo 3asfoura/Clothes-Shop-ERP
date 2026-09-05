@@ -14,10 +14,9 @@ namespace Clothes_Shop_ERP.modlestore
     {
         public void ApplyLanguage()
         {
-            LblSummary.Text = LocalizationManager.T("Reports_Summary");
             btnRun.Text = LocalizationManager.T("Reports_GenerateReport");
-            lblTo.Text = LocalizationManager.T("Reports_To");
-            lblFrom.Text = LocalizationManager.T("Reports_From");
+            lblTo.Text = LocalizationManager.T("Shared_To");
+            lblFrom.Text = LocalizationManager.T("Shared_From");
         }
         public UcSalesReport()
         {
@@ -52,9 +51,14 @@ namespace Clothes_Shop_ERP.modlestore
                     .ToList();
 
                 GridResult.DataSource = invoices;
+                GridViewResult.PopulateColumns();
+                if (GridViewResult.Columns["InvoiceNumber"] != null) GridViewResult.Columns["InvoiceNumber"].Caption = LocalizationManager.T("SalesInvoices_ColInvoiceNumber");
+                if (GridViewResult.Columns["Branch"] != null) GridViewResult.Columns["Branch"].Caption = LocalizationManager.T("Shared_Branch");
+                if (GridViewResult.Columns["InvoiceDate"] != null) GridViewResult.Columns["InvoiceDate"].Caption = LocalizationManager.T("Purchases_ColInvoiceDate");
+                if (GridViewResult.Columns["NetAmount"] != null) GridViewResult.Columns["NetAmount"].Caption = LocalizationManager.T("SalesInvoices_ColNetAmount");
 
                 decimal total = invoices.Sum(x => x.NetAmount);
-                LblSummary.Text = $"Total: {total:n2}  |  Invoices: {invoices.Count}";
+                LblSummary.Text = string.Format(LocalizationManager.T("Reports_SummaryFmt"), total, invoices.Count);
             }
         }
 

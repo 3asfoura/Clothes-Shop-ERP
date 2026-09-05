@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -38,14 +39,14 @@ namespace Clothes_Shop_ERP
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            var lblType = new LabelControl { Text = "Type:", Location = new System.Drawing.Point(20, 20) };
+            var lblType = new LabelControl { Text = LocalizationManager.T("FrmTreasuryEdit_Type"), Location = new System.Drawing.Point(20, 20) };
             CmbType = new ComboBoxEdit { Location = new System.Drawing.Point(20, 40), Width = 320 };
             CmbType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            CmbType.Properties.Items.Add("In (Cash received)");
-            CmbType.Properties.Items.Add("Out (Cash paid)");
+            CmbType.Properties.Items.Add(LocalizationManager.T("FrmTreasuryEdit_TypeIn"));
+            CmbType.Properties.Items.Add(LocalizationManager.T("FrmTreasuryEdit_TypeOut"));
             CmbType.SelectedIndex = type == "In" ? 0 : 1;
 
-            var lblBranch = new LabelControl { Text = "Branch:", Location = new System.Drawing.Point(20, 75) };
+            var lblBranch = new LabelControl { Text = LocalizationManager.T("Shared_ColBranch"), Location = new System.Drawing.Point(20, 75) };
             CmbBranch = new ComboBoxEdit { Location = new System.Drawing.Point(20, 95), Width = 320 };
             CmbBranch.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
@@ -60,25 +61,25 @@ namespace Clothes_Shop_ERP
             int bIdx = _branchIds.IndexOf(currentBranchId != 0 ? currentBranchId : FrmLogin.CurrentBranchId);
             CmbBranch.SelectedIndex = bIdx >= 0 ? bIdx : 0;
 
-            var lblAmount = new LabelControl { Text = "Amount:", Location = new System.Drawing.Point(20, 130) };
+            var lblAmount = new LabelControl { Text = LocalizationManager.T("FrmTreasuryEdit_Amount"), Location = new System.Drawing.Point(20, 130) };
             SpinAmount = new SpinEdit { Value = amount, Location = new System.Drawing.Point(20, 150), Width = 320 };
             SpinAmount.Properties.MaxValue = 9999999;
             SpinAmount.Properties.DisplayFormat.FormatString = "n2";
 
-            var lblDescription = new LabelControl { Text = "Description:", Location = new System.Drawing.Point(20, 185) };
+            var lblDescription = new LabelControl { Text = LocalizationManager.T("FrmTreasuryEdit_Description"), Location = new System.Drawing.Point(20, 185) };
             TxtDescription = new TextEdit { Text = description, Location = new System.Drawing.Point(20, 205), Width = 320 };
 
-            var btnSave = new SimpleButton { Text = "Save", Location = new System.Drawing.Point(160, 250), DialogResult = DialogResult.OK };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("Shared_BtnSave"), Location = new System.Drawing.Point(160, 250), DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
                 if (SpinAmount.Value <= 0)
                 {
-                    XtraMessageBox.Show("Please enter an amount greater than zero.");
+                    XtraMessageBox.Show(LocalizationManager.T("Treasury_AmountGreaterThanZero"));
                     this.DialogResult = DialogResult.None;
                 }
             };
 
-            var btnCancel = new SimpleButton { Text = "Cancel", Location = new System.Drawing.Point(240, 250), DialogResult = DialogResult.Cancel };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(240, 250), DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblType); this.Controls.Add(CmbType);
             this.Controls.Add(lblBranch); this.Controls.Add(CmbBranch);

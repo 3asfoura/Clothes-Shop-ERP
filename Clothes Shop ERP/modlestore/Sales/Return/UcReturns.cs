@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,14 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
             gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            Col.Caption = LocalizationManager.T("Returns_ColInvoice");
+            ColBranch.Caption = LocalizationManager.T("Shared_Branch");
+            ColReturnDate.Caption = LocalizationManager.T("Returns_ColReturnDate");
+            ColTotalAmount.Caption = LocalizationManager.T("Shared_TotalAmount");
         }
         public void GetData()
         {
@@ -48,7 +57,7 @@ namespace Clothes_Shop_ERP.modlestore
 
         private void AddNew()
         {
-            var form = new FrmReturnEdit("New Return");
+            var form = new FrmReturnEdit(LocalizationManager.T("Returns_NewTitle"));
             if (form.ShowDialog() != DialogResult.OK) return;
 
             int branchId = FrmLogin.CurrentBranchId;
@@ -126,13 +135,13 @@ namespace Clothes_Shop_ERP.modlestore
                     db.SaveChanges();
                     transaction.Commit();
 
-                    Sett.MsgGreen("Success", $"Return recorded. Amount: {total:n2}");
+                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Returns_Recorded"), total));
                     GetData();
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    Sett.MsgBlue("Error", "Could not save the return. Nothing was changed. " + ex.Message);
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Returns_SaveFailed"), ex.Message));
                 }
             }
         }
@@ -145,7 +154,7 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
 
             if (hit.InRow)

@@ -1,4 +1,5 @@
-﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,6 +23,17 @@ namespace Clothes_Shop_ERP
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
             gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            ColProductName.Caption = LocalizationManager.T("ProductVariants_ColProductName");
+            ColColor.Caption = LocalizationManager.T("Shared_Color");
+            ColSize.Caption = LocalizationManager.T("Shared_Size");
+            ColBarcode.Caption = LocalizationManager.T("ProductVariants_ColBarcode");
+            ColSalePrice.Caption = LocalizationManager.T("ProductVariants_ColSalePrice");
+            ColCostPrice.Caption = LocalizationManager.T("ProductVariants_ColCostPrice");
+            ColIsActive.Caption = LocalizationManager.T("Shared_IsActive");
         }
         public void GetData()
         {
@@ -48,12 +60,12 @@ namespace Clothes_Shop_ERP
 
         private void gridView1_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
         {
-          
+
         }
 
         private void AddNew()
         {
-            var form = new FrmVariantEdit("New Variant");
+            var form = new FrmVariantEdit(LocalizationManager.T("ProductVariants_NewTitle"));
             if (form.ShowDialog() != DialogResult.OK) return;
 
             try
@@ -61,7 +73,7 @@ namespace Clothes_Shop_ERP
                 using (var db = new ClothesShopDBContext())
                 {
                     bool barcodeTaken = db.ProductVariants.Any(v => v.Barcode == form.Barcode);
-                    if (barcodeTaken) { Sett.MsgBlue("Error", "This barcode is already used."); return; }
+                    if (barcodeTaken) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), LocalizationManager.T("ProductVariants_BarcodeUsed")); return; }
 
                     db.ProductVariants.Add(new VariantEntity
                     {
@@ -75,12 +87,12 @@ namespace Clothes_Shop_ERP
                     });
                     db.SaveChanges();
                 }
-                Sett.MsgBlue("Success", "Variant added");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("ProductVariants_EntityName")));
                 GetData();
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                Sett.MsgBlue("Error", "This exact combination (same product, color, and size) already exists.");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Error"), LocalizationManager.T("ProductVariants_CombinationExists"));
             }
         }
         private void EditSelected()
@@ -92,9 +104,9 @@ namespace Clothes_Shop_ERP
             using (var db = new ClothesShopDBContext())
                 current = db.ProductVariants.Where(x => x.Id == id).FirstOrDefault();
 
-            if (current == null) { Sett.MsgBlue("Error", $"No variant found with Id = {id}"); return; }
+            if (current == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("ProductVariants_EntityName"), id)); return; }
 
-            var form = new FrmVariantEdit($"Editing: {current.Barcode}", current.Barcode, current.SalePrice,
+            var form = new FrmVariantEdit(string.Format(LocalizationManager.T("ProductVariants_EditingTitleFmt"), current.Barcode), current.Barcode, current.SalePrice,
                 current.CostPrice, current.IsActive ?? true, current.ProductId, current.ColorId, current.SizeId);
 
             if (form.ShowDialog() != DialogResult.OK) return;
@@ -111,7 +123,7 @@ namespace Clothes_Shop_ERP
                 variant.IsActive = form.IsActive;
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Variant updated");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("ProductVariants_EntityName")));
             GetData();
         }
 
@@ -121,7 +133,7 @@ namespace Clothes_Shop_ERP
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
             string barcode = gridView1.GetFocusedRowCellValue("Barcode").ToString();
 
-            if (XtraMessageBox.Show($"Delete '{barcode}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), barcode), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
             try
@@ -132,12 +144,12 @@ namespace Clothes_Shop_ERP
                     if (variant != null) db.ProductVariants.Remove(variant);
                     db.SaveChanges();
                 }
-                Sett.MsgBlue("Success", "Variant deleted");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("ProductVariants_EntityName")));
                 GetData();
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                Sett.MsgBlue("Cannot Delete", "This variant has stock or sales linked to it. Deactivate instead.");
+                Sett.MsgBlue(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("ProductVariants_HasStockOrSales"));
             }
         }
 
@@ -155,13 +167,13 @@ namespace Clothes_Shop_ERP
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelected());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
         }
     }

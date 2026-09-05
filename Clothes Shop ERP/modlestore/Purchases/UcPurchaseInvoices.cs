@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,6 +26,16 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
             gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            ColSupplier.Caption = LocalizationManager.T("Purchases_ColSupplier");
+            ColBranch.Caption = LocalizationManager.T("Shared_Branch");
+            ColInvoiceDate.Caption = LocalizationManager.T("Purchases_ColInvoiceDate");
+            ColTotalAmount.Caption = LocalizationManager.T("Shared_TotalAmount");
+            ColPaidAmount.Caption = LocalizationManager.T("Purchases_ColPaidAmount");
+            ColStatus.Caption = LocalizationManager.T("Shared_Status");
         }
 
         public void GetData()
@@ -59,7 +70,7 @@ namespace Clothes_Shop_ERP.modlestore
         }
         private void AddNew()
         {
-            var form = new FrmPurchaseInvoiceEdit("New Purchase Invoice");
+            var form = new FrmPurchaseInvoiceEdit(LocalizationManager.T("Purchases_NewInvoiceTitle"));
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
@@ -150,14 +161,14 @@ namespace Clothes_Shop_ERP.modlestore
                     db.SaveChanges();
                     transaction.Commit();
 
-                    string statusMsg = status == "Completed" ? "fully paid" : $"partially paid ({paidNow:n2} of {total:n2})";
-                    Sett.MsgBlue("Success", $"Invoice saved — {statusMsg}.");
+                    string statusMsg = status == "Completed" ? LocalizationManager.T("Purchases_FullyPaid") : string.Format(LocalizationManager.T("Purchases_PartiallyPaidFmt"), paidNow, total);
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Purchases_SavedStatus"), statusMsg));
                     GetData();
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    Sett.MsgBlue("Error", "Could not save the invoice. Nothing was changed. " + ex.Message);
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Purchases_SaveFailed"), ex.Message));
                 }
             }
         }
@@ -171,7 +182,7 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
 
             if (hit.InRow)

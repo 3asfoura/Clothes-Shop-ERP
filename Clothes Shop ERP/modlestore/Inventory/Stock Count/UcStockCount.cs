@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,14 @@ namespace Clothes_Shop_ERP.modlestore
             ColQuantity.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             ColQuantity.DisplayFormat.FormatString = "0.###";
             gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            ApplyLanguage();
+        }
+        public void ApplyLanguage()
+        {
+            ColProduct.Caption = LocalizationManager.T("StockCount_ColProduct");
+            ColBranch.Caption = LocalizationManager.T("Shared_Branch");
+            ColQuantity.Caption = LocalizationManager.T("StockCount_ColQuantity");
+            ColMinQuantity.Caption = LocalizationManager.T("StockCount_ColMinQuantity");
         }
         public void GetData()
         {
@@ -70,13 +79,13 @@ namespace Clothes_Shop_ERP.modlestore
         }
         private void AddNew()
         {
-            var form = new FrmStockCountEdit("New Stock Entry", isEditMode: false);
+            var form = new FrmStockCountEdit(LocalizationManager.T("StockCount_NewEntryTitle"), isEditMode: false);
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
             {
                 bool exists = db.BranchStock.Any(s => s.ProductVariantId == form.ProductVariantId && s.BranchId == form.BranchId);
-                if (exists) { Sett.MsgBlue("Error", "This variant already has a stock entry for this branch. Edit it instead."); return; }
+                if (exists) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), LocalizationManager.T("StockCount_EntryExists")); return; }
 
                 db.BranchStock.Add(new StockEntity
                 {
@@ -87,7 +96,7 @@ namespace Clothes_Shop_ERP.modlestore
                 });
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Stock entry added");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("StockCount_EntityName")));
             GetData();
         }
 
@@ -100,9 +109,9 @@ namespace Clothes_Shop_ERP.modlestore
             using (var db = new ClothesShopDBContext())
                 current = db.BranchStock.Where(x => x.Id == id).FirstOrDefault();
 
-            if (current == null) { Sett.MsgBlue("Error", $"No stock entry found with Id = {id}"); return; }
+            if (current == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("StockCount_EntityName"), id)); return; }
 
-            var form = new FrmStockCountEdit("Edit Stock Quantity", isEditMode: true,
+            var form = new FrmStockCountEdit(LocalizationManager.T("StockCount_EditQuantityTitle"), isEditMode: true,
                 current.ProductVariantId, current.BranchId, current.Quantity, current.MinQuantity);
 
             if (form.ShowDialog() != DialogResult.OK) return;
@@ -114,7 +123,7 @@ namespace Clothes_Shop_ERP.modlestore
                 stock.MinQuantity = form.MinQuantity;
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Stock entry updated");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("StockCount_EntityName")));
             GetData();
         }
 
@@ -123,7 +132,7 @@ namespace Clothes_Shop_ERP.modlestore
             if (gridView1.FocusedRowHandle < 0) return;
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
 
-            if (XtraMessageBox.Show("Delete this stock entry?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (XtraMessageBox.Show(LocalizationManager.T("StockCount_ConfirmDeleteEntry"), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
             using (var db = new ClothesShopDBContext())
@@ -132,7 +141,7 @@ namespace Clothes_Shop_ERP.modlestore
                 if (stock != null) db.BranchStock.Remove(stock);
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Stock entry deleted");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("StockCount_EntityName")));
             GetData();
         }
 
@@ -151,12 +160,12 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelected());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
 
             menu.Show(gridControl1, e.Location);

@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
@@ -49,36 +50,36 @@ namespace Clothes_Shop_ERP
             this.MinimizeBox = false;
 
             // ---- Header ----
-            var lblSupplier = new LabelControl { Text = "Supplier:", Location = new System.Drawing.Point(20, 15) };
+            var lblSupplier = new LabelControl { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_Supplier"), Location = new System.Drawing.Point(20, 15) };
             CmbSupplier = new ComboBoxEdit { Location = new System.Drawing.Point(20, 33), Width = 270 };
             CmbSupplier.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            var lblBranch = new LabelControl { Text = "Branch:", Location = new System.Drawing.Point(310, 15) };
+            var lblBranch = new LabelControl { Text = LocalizationManager.T("Shared_ColBranch"), Location = new System.Drawing.Point(310, 15) };
             CmbBranch = new ComboBoxEdit { Location = new System.Drawing.Point(310, 33), Width = 270 };
             CmbBranch.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
             // ---- Add-line row: create every control first, before loading any data ----
-            var lblLine = new LabelControl { Text = "Add item:", Location = new System.Drawing.Point(20, 70) };
+            var lblLine = new LabelControl { Text = LocalizationManager.T("Shared_AddItem"), Location = new System.Drawing.Point(20, 70) };
 
             CmbVariant = new ComboBoxEdit { Location = new System.Drawing.Point(20, 90), Width = 280 };
             CmbVariant.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            var lblQty = new LabelControl { Text = "Qty:", Location = new System.Drawing.Point(310, 70) };
+            var lblQty = new LabelControl { Text = LocalizationManager.T("Shared_Qty"), Location = new System.Drawing.Point(310, 70) };
             SpinQty = new SpinEdit { Location = new System.Drawing.Point(310, 90), Width = 80, Value = 1 };
             SpinQty.Properties.MinValue = 1;
             SpinQty.Properties.MaxValue = 99999;
 
-            var lblCost = new LabelControl { Text = "Unit Cost:", Location = new System.Drawing.Point(400, 70) };
+            var lblCost = new LabelControl { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_UnitCost"), Location = new System.Drawing.Point(400, 70) };
             SpinCost = new SpinEdit { Location = new System.Drawing.Point(400, 90), Width = 90 };
             SpinCost.Properties.MaxValue = 999999;
             SpinCost.Properties.DisplayFormat.FormatString = "n2";
 
-            var btnAddLine = new SimpleButton { Text = "Add", Location = new System.Drawing.Point(500, 90), Width = 80 };
+            var btnAddLine = new SimpleButton { Text = LocalizationManager.T("POS_BtnAddManual"), Location = new System.Drawing.Point(500, 90), Width = 80 };
             btnAddLine.Click += (s, e) =>
             {
                 if (CmbVariant.SelectedIndex < 0)
                 {
-                    XtraMessageBox.Show("Please select a product first.");
+                    XtraMessageBox.Show(LocalizationManager.T("Shared_SelectProductFirst"));
                     return;
                 }
                 _lines.Add(new PurchaseLineItem
@@ -128,10 +129,14 @@ namespace Clothes_Shop_ERP
             {
                 GridViewLines.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 GridViewLines.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+                GridViewLines.Columns["Quantity"].Caption = LocalizationManager.T("StockCount_ColQuantity");
             }
+            if (GridViewLines.Columns["ProductDisplay"] != null) GridViewLines.Columns["ProductDisplay"].Caption = LocalizationManager.T("StockCount_ColProduct");
+            if (GridViewLines.Columns["UnitCost"] != null) GridViewLines.Columns["UnitCost"].Caption = LocalizationManager.T("Purchases_ColUnitCost");
+            if (GridViewLines.Columns["Total"] != null) GridViewLines.Columns["Total"].Caption = LocalizationManager.T("Shared_ColTotal");
             GridViewLines.OptionsBehavior.Editable = false;
 
-            var btnRemoveLine = new SimpleButton { Text = "Remove Selected Line", Location = new System.Drawing.Point(20, 355), Width = 180 };
+            var btnRemoveLine = new SimpleButton { Text = LocalizationManager.T("Shared_RemoveSelectedLine"), Location = new System.Drawing.Point(20, 355), Width = 180 };
             btnRemoveLine.Click += (s, e) =>
             {
                 if (GridViewLines.FocusedRowHandle < 0) return;
@@ -145,35 +150,35 @@ namespace Clothes_Shop_ERP
 
             LblTotal = new LabelControl
             {
-                Text = "Total: 0.00",
+                Text = string.Format(LocalizationManager.T("FrmPurchaseInvoiceEdit_TotalFmt"), 0),
                 Location = new System.Drawing.Point(420, 358),
                 Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold)
             };
 
             // ---- Payment ----
-            var lblPaid = new LabelControl { Text = "Amount Paid Now:", Location = new System.Drawing.Point(20, 400) };
+            var lblPaid = new LabelControl { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_AmountPaidNow"), Location = new System.Drawing.Point(20, 400) };
             SpinPaidNow = new SpinEdit { Value = 0, Location = new System.Drawing.Point(20, 420), Width = 200 };
             SpinPaidNow.Properties.MaxValue = 9999999;
             SpinPaidNow.Properties.DisplayFormat.FormatString = "n2";
 
             var lblPaidHint = new LabelControl
             {
-                Text = "(Leave as 0 for a fully credit/unpaid purchase)",
+                Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_PaidHint"),
                 Location = new System.Drawing.Point(230, 425),
                 ForeColor = System.Drawing.Color.Gray
             };
 
-            var btnSave = new SimpleButton { Text = "Save Invoice", Location = new System.Drawing.Point(340, 460), Width = 120, DialogResult = DialogResult.OK };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_BtnSaveInvoice"), Location = new System.Drawing.Point(340, 460), Width = 120, DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
                 if (_lines.Count == 0)
                 {
-                    XtraMessageBox.Show("Please add at least one item to the invoice.");
+                    XtraMessageBox.Show(LocalizationManager.T("Purchases_AddAtLeastOneInvoiceItem"));
                     this.DialogResult = DialogResult.None;
                 }
             };
 
-            var btnCancel = new SimpleButton { Text = "Cancel", Location = new System.Drawing.Point(470, 460), Width = 100, DialogResult = DialogResult.Cancel };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(470, 460), Width = 100, DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblSupplier); this.Controls.Add(CmbSupplier);
             this.Controls.Add(lblBranch); this.Controls.Add(CmbBranch);
@@ -195,7 +200,7 @@ namespace Clothes_Shop_ERP
         private void RefreshTotal()
         {
             decimal total = _lines.Sum(l => l.Total);
-            LblTotal.Text = $"Total: {total:n2}";
+            LblTotal.Text = string.Format(LocalizationManager.T("FrmPurchaseInvoiceEdit_TotalFmt"), total);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
@@ -44,30 +45,30 @@ namespace Clothes_Shop_ERP
             this.MinimizeBox = false;
 
             // ---- Branch pickers ----
-            var lblFrom = new LabelControl { Text = "From Branch:", Location = new System.Drawing.Point(20, 15) };
+            var lblFrom = new LabelControl { Text = LocalizationManager.T("StockTransferEdit_FromBranch"), Location = new System.Drawing.Point(20, 15) };
             CmbFromBranch = new ComboBoxEdit { Location = new System.Drawing.Point(20, 35), Width = 260 };
             CmbFromBranch.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            var lblTo = new LabelControl { Text = "To Branch:", Location = new System.Drawing.Point(300, 15) };
+            var lblTo = new LabelControl { Text = LocalizationManager.T("StockTransferEdit_ToBranch"), Location = new System.Drawing.Point(300, 15) };
             CmbToBranch = new ComboBoxEdit { Location = new System.Drawing.Point(300, 35), Width = 260 };
             CmbToBranch.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
             // ---- Add-line row: create controls first, before loading any data ----
-            var lblLine = new LabelControl { Text = "Add item:", Location = new System.Drawing.Point(20, 70) };
+            var lblLine = new LabelControl { Text = LocalizationManager.T("Shared_AddItem"), Location = new System.Drawing.Point(20, 70) };
 
             CmbVariant = new ComboBoxEdit { Location = new System.Drawing.Point(20, 90), Width = 300 };
             CmbVariant.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            var lblQty = new LabelControl { Text = "Qty:", Location = new System.Drawing.Point(330, 70) };
+            var lblQty = new LabelControl { Text = LocalizationManager.T("Shared_Qty"), Location = new System.Drawing.Point(330, 70) };
             SpinQty = new SpinEdit { Location = new System.Drawing.Point(330, 90), Width = 80, Value = 1 };
             SpinQty.Properties.MinValue = 1;
 
-            var btnAddLine = new SimpleButton { Text = "Add", Location = new System.Drawing.Point(420, 90), Width = 80 };
+            var btnAddLine = new SimpleButton { Text = LocalizationManager.T("POS_BtnAddManual"), Location = new System.Drawing.Point(420, 90), Width = 80 };
             btnAddLine.Click += (s, e) =>
             {
                 if (CmbVariant.SelectedIndex < 0)
                 {
-                    XtraMessageBox.Show("Please select a product first.");
+                    XtraMessageBox.Show(LocalizationManager.T("Shared_SelectProductFirst"));
                     return;
                 }
                 _lines.Add(new TransferLineItem
@@ -105,10 +106,12 @@ namespace Clothes_Shop_ERP
             {
                 GridViewLines.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 GridViewLines.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+                GridViewLines.Columns["Quantity"].Caption = LocalizationManager.T("StockCount_ColQuantity");
             }
+            if (GridViewLines.Columns["ProductDisplay"] != null) GridViewLines.Columns["ProductDisplay"].Caption = LocalizationManager.T("StockCount_ColProduct");
             GridViewLines.OptionsBehavior.Editable = false;
 
-            var btnRemoveLine = new SimpleButton { Text = "Remove Selected Line", Location = new System.Drawing.Point(20, 355), Width = 180 };
+            var btnRemoveLine = new SimpleButton { Text = LocalizationManager.T("Shared_RemoveSelectedLine"), Location = new System.Drawing.Point(20, 355), Width = 180 };
             btnRemoveLine.Click += (s, e) =>
             {
                 if (GridViewLines.FocusedRowHandle < 0) return;
@@ -116,23 +119,23 @@ namespace Clothes_Shop_ERP
                 if (line != null) _lines.Remove(line);
             };
 
-            var btnSave = new SimpleButton { Text = "Save Transfer", Location = new System.Drawing.Point(340, 400), Width = 120, DialogResult = DialogResult.OK };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("StockTransferEdit_BtnSaveTransfer"), Location = new System.Drawing.Point(340, 400), Width = 120, DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
                 if (CmbFromBranch.SelectedIndex == CmbToBranch.SelectedIndex)
                 {
-                    XtraMessageBox.Show("From and To branches must be different.");
+                    XtraMessageBox.Show(LocalizationManager.T("BranchTransfer_FromToMustDiffer"));
                     this.DialogResult = DialogResult.None;
                     return;
                 }
                 if (_lines.Count == 0)
                 {
-                    XtraMessageBox.Show("Please add at least one item.");
+                    XtraMessageBox.Show(LocalizationManager.T("Shared_AddAtLeastOneItem"));
                     this.DialogResult = DialogResult.None;
                 }
             };
 
-            var btnCancel = new SimpleButton { Text = "Cancel", Location = new System.Drawing.Point(470, 400), Width = 90, DialogResult = DialogResult.Cancel };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(470, 400), Width = 90, DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblFrom); this.Controls.Add(CmbFromBranch);
             this.Controls.Add(lblTo); this.Controls.Add(CmbToBranch);

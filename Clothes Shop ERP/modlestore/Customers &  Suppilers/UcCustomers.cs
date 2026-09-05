@@ -26,10 +26,10 @@ namespace Clothes_Shop_ERP.modlestore
         }
         public void ApplyLanguage()
         {
-            Col.Caption = LocalizationManager.T("Customers_ColName");
-            ColPhone.Caption = LocalizationManager.T("Customers_ColPhone");
-            ColAddress.Caption = LocalizationManager.T("Customers_ColAddress");
-            ColIsActive.Caption = LocalizationManager.T("Customers_ColIsActive");
+            Col.Caption = LocalizationManager.T("Shared_Name");
+            ColPhone.Caption = LocalizationManager.T("Shared_Phone");
+            ColAddress.Caption = LocalizationManager.T("Shared_Address");
+            ColIsActive.Caption = LocalizationManager.T("Shared_IsActive");
         }
         public void GetData()
         {
@@ -46,7 +46,7 @@ namespace Clothes_Shop_ERP.modlestore
         }
         private void AddNew()
         {
-            var form = new FrmPartyEdit("New Customer");
+            var form = new FrmPartyEdit(LocalizationManager.T("Customers_NewTitle"));
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
@@ -60,7 +60,7 @@ namespace Clothes_Shop_ERP.modlestore
                 });
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Customer added");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("Customers_EntityName")));
             GetData();
         }
 
@@ -73,20 +73,20 @@ namespace Clothes_Shop_ERP.modlestore
             string currentPhone = gridView1.GetFocusedRowCellValue("Phone")?.ToString() ?? "";
             bool currentActive = Convert.ToBoolean(gridView1.GetFocusedRowCellValue("IsActive"));
 
-            var form = new FrmPartyEdit($"Editing: {currentName}", currentName, currentAddress, currentPhone, currentActive);
+            var form = new FrmPartyEdit(string.Format(LocalizationManager.T("Party_EditingTitleFmt"), currentName), currentName, currentAddress, currentPhone, currentActive);
             if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
             {
                 var customer = db.Customers.Where(x => x.Id == id).FirstOrDefault();
-                if (customer == null) { Sett.MsgBlue("Error", $"No customer found with Id = {id}"); return; }
+                if (customer == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("Customers_EntityName"), id)); return; }
                 customer.Name = form.PartyName;
                 customer.Address = form.Address;
                 customer.Phone = form.Phone;
                 customer.IsActive = form.IsActive;
                 db.SaveChanges();
             }
-            Sett.MsgBlue("Success", "Customer updated");
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("Customers_EntityName")));
             GetData();
         }
 
@@ -96,7 +96,7 @@ namespace Clothes_Shop_ERP.modlestore
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
             string name = gridView1.GetFocusedRowCellValue("Name").ToString();
 
-            if (XtraMessageBox.Show($"Delete '{name}'?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), name), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
             try
@@ -107,12 +107,12 @@ namespace Clothes_Shop_ERP.modlestore
                     if (customer != null) db.Customers.Remove(customer);
                     db.SaveChanges();
                 }
-                Sett.MsgBlue("Success", "Customer deleted");
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("Customers_EntityName")));
                 GetData();
             }
             catch (Microsoft.EntityFrameworkCore.DbUpdateException)
             {
-                Sett.MsgBlue("Cannot Delete", "This customer has sales invoices linked to them. Deactivate instead.");
+                Sett.MsgBlue(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("Customers_HasInvoices"));
             }
         }
 
@@ -130,13 +130,13 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add("New", null, (s, ev) => AddNew());
+            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
 
             if (hit.InRow)
             {
-                menu.Items.Add("Edit", null, (s, ev) => EditSelected());
-                menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
         }
     }
