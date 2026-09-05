@@ -23,8 +23,8 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsCustomization.AllowSort = false;
             gridView2.OptionsView.ShowGroupPanel = false;
             gridView2.OptionsCustomization.AllowSort = false;
-            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            gridView2.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            Sett.CenterColumns(gridView1);
+            Sett.CenterColumns(gridView2);
             ApplyLanguage();
         }
         public void ApplyLanguage()
@@ -226,10 +226,11 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew_Size());
+            bool canEdit = PermissionManager.CanEdit("ColorsSizes");
+            if (canEdit) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew_Size());
             menu.Show(gridControl2, e.Location);
 
-            if (hit.InRow)
+            if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected_Size());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected_Size());
@@ -245,10 +246,11 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew_Color());
+            bool canEdit = PermissionManager.CanEdit("ColorsSizes");
+            if (canEdit) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew_Color());
             menu.Show(gridControl1, e.Location);
 
-            if (hit.InRow)
+            if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected_Color());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected_Color());

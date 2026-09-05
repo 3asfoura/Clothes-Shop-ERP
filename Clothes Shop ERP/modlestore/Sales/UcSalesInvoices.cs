@@ -22,7 +22,7 @@ namespace Clothes_Shop_ERP.modlestore
             GetData();
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
-            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            Sett.CenterColumns(gridView1);
         }
         public void GetData()
         {
@@ -95,6 +95,8 @@ namespace Clothes_Shop_ERP.modlestore
                 var receipt = new ReceiptData
                 {
                     ShopName = invoice.Branch?.Name,
+                    ShopAddress = invoice.Branch?.Address,
+                    ShopPhone = invoice.Branch?.Phone,
                     InvoiceNumber = invoice.InvoiceNumber,
                     Date = invoice.InvoiceDate,
                     Customer = invoice.Customer?.Name ?? LocalizationManager.T("SalesInvoices_WalkInCustomer"),

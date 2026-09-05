@@ -22,7 +22,7 @@ namespace Clothes_Shop_ERP.modlestore
             InitializeComponent();
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
-            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            Sett.CenterColumns(gridView1);
             ApplyLanguage();
         }
         public void ApplyLanguage()
@@ -77,6 +77,18 @@ namespace Clothes_Shop_ERP.modlestore
             bool currentStatus = Convert.ToBoolean(gridView1.GetFocusedRowCellValue("IsActive"));
 
             string action = currentStatus ? LocalizationManager.T("Shared_Deactivate") : LocalizationManager.T("Shared_Activate");
+
+            if (currentStatus)
+            {
+                using (var db = new ClothesShopDBContext())
+                {
+                    if (db.Branches.Count(b => b.IsActive == true) <= 1)
+                    {
+                        Sett.MsgRed(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("Branches_CannotDeactivateLast"));
+                        return;
+                    }
+                }
+            }
 
             if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmAction"), action, name), LocalizationManager.T("Common_ConfirmTitle"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
@@ -135,6 +147,15 @@ namespace Clothes_Shop_ERP.modlestore
             int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
             string name = gridView1.GetFocusedRowCellValue("Name").ToString();
 
+            using (var db = new ClothesShopDBContext())
+            {
+                if (db.Branches.Count() <= 1)
+                {
+                    Sett.MsgRed(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("Branches_CannotDeactivateLast"));
+                    return;
+                }
+            }
+
             if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), name), LocalizationManager.T("Common_ConfirmTitle"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
@@ -178,10 +199,11 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
+            bool canEdit = PermissionManager.CanEdit("Branches");
+            if (canEdit) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
 
-            if (hit.InRow)
+            if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuActivateDeactivate"), null, (s, ev) => ToggleActive());

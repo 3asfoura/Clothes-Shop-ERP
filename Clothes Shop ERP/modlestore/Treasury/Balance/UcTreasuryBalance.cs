@@ -65,7 +65,7 @@ namespace Clothes_Shop_ERP.modlestore
             GridViewResult.OptionsBehavior.Editable = false;
             GridViewResult.OptionsView.ShowGroupPanel = false;
             GridViewResult.OptionsCustomization.AllowSort = false;
-            GridViewResult.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            Sett.CenterColumns(GridViewResult);
             this.Controls.Add(btnRefresh);
             this.Controls.Add(LblTotalBalance);
             this.Controls.Add(LblTotalsBreakdown);

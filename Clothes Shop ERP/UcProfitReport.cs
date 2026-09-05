@@ -21,6 +21,7 @@ namespace Clothes_Shop_ERP.modlestore
             ApplyLanguage();
             GridViewResult.OptionsView.ShowGroupPanel = false;
             GridViewResult.OptionsCustomization.AllowSort = false;
+            Sett.CenterColumns(GridViewResult);
         }
         public void ApplyLanguage()
         {

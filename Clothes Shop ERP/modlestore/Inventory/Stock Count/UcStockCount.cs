@@ -23,7 +23,7 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsCustomization.AllowSort = false;
             ColQuantity.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             ColQuantity.DisplayFormat.FormatString = "0.###";
-            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            Sett.CenterColumns(gridView1);
             ApplyLanguage();
         }
         public void ApplyLanguage()
@@ -160,9 +160,10 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
+            bool canEdit = PermissionManager.CanEdit("StockCount");
+            if (canEdit) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
 
-            if (hit.InRow)
+            if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());

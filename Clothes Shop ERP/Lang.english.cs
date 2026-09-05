@@ -32,6 +32,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Shared_Success", "Success" },
             { "Shared_Error", "Error" },
             { "Shared_Warning", "Warning" },
+            { "Shared_NoPermissionMsg", "You don't have permission to do this." },
             { "Shared_CannotDelete", "Cannot Delete" },
             { "Shared_NoXFoundWithId", "No {0} found with Id = {1}" },
             { "Shared_XAdded", "{0} added" },
@@ -281,6 +282,9 @@ namespace Clothes_Shop_ERP.Localization
             // ----- Users & Roles -----
             { "UsersRoles_UsernameTaken", "This username is already taken." },
             { "UsersRoles_UserHasRecords", "This user created invoices or other records. Deactivate instead of deleting." },
+            { "UsersRoles_CannotDeleteSelf", "You can't delete the account you're currently logged in with." },
+            { "UsersRoles_CannotDeactivateSelf", "You can't deactivate the account you're currently logged in with." },
+            { "UsersRoles_CannotDeactivateLastUser", "This is the last active user account - deactivating or deleting it would leave nobody able to log in." },
             { "UsersRoles_RoleAssigned", "This role is assigned to one or more users. Reassign them first." },
             { "UsersRoles_FillUsernameFullName", "Please fill in username and full name." },
             { "UsersRoles_PasswordRequiredForNewUser", "Please enter a password for the new user." },
@@ -303,8 +307,17 @@ namespace Clothes_Shop_ERP.Localization
             { "Returns_Recorded", "Return recorded. Amount: {0:n2}" },
             { "Returns_SelectInvoiceAndItem", "Please select an invoice and an item." },
 
+            // ----- Purchase Returns -----
+            { "Main_PurchaseReturns", "Purchase Returns" },
+            { "FrmPurchaseReturnEdit_Invoice", "Purchase Invoice:" },
+            { "PurchaseReturns_NewTitle", "New Purchase Return" },
+            { "PurchaseReturns_NotEnoughStock", "Not enough stock on hand to return this quantity." },
+            { "PurchaseReturns_Recorded", "Return to supplier recorded. Amount: {0:n2}" },
+            { "PurchaseReturns_SaveFailed", "Could not save the return. Nothing was changed. {0}" },
+
             // ----- POS -----
             { "POS_EmptyCartMsg", "Please add at least one item before checking out." },
+            { "POS_DiscountExceedsTotal", "The discount can't be more than the cart total." },
             { "POS_SaleFailed", "Could not complete the sale. Nothing was charged. {0}" },
             { "POS_ProductNotFoundByBarcode", "No active product with barcode {0}" },
             { "POS_NotEnoughStockFor", "Not enough stock for {0}. Please refresh and try again." },
@@ -471,6 +484,7 @@ namespace Clothes_Shop_ERP.Localization
             { "UsersRoles_UserEntityName", "User" },
             { "UsersRoles_RoleEntityName", "Role" },
             { "Branches_EntityName", "Branch" },
+            { "Branches_CannotDeactivateLast", "This is the only branch left - the app needs at least one to work." },
             { "StockCount_EntityName", "Stock entry" },
             { "Treasury_EntityName", "Treasury entry" },
             { "Shared_Activate", "Activate" },
@@ -518,6 +532,15 @@ namespace Clothes_Shop_ERP.Localization
             { "Roles_NewTitle", "New Role" },
             { "Roles_EditNamePrompt", "Enter new role name:" },
             { "Roles_EditingTitleFmt", "Editing Role: {0}" },
+            { "Roles_NameRequired", "Please enter a role name." },
+            { "Roles_CannotDeleteProtected", "This role can't be deleted - it's the account of last resort and always keeps full access." },
+            { "Roles_ProtectedAdminNote", "This role always has full access to every screen and can't be restricted:" },
+            { "Roles_PermissionsGroupTitle", "Screen permissions:" },
+            { "Roles_ColScreen", "Screen" },
+            { "Roles_ColPermission", "Permission" },
+            { "Permission_None", "None" },
+            { "Permission_Read", "Read" },
+            { "Permission_Write", "Read and Write" },
 
             // ----- Payment Methods (inline name prompt) -----
             { "PaymentMethods_NamePrompt", "Payment method name:" },
@@ -591,6 +614,8 @@ namespace Clothes_Shop_ERP.Localization
             { "Backup_BtnBrowse", "Browse..." },
             { "Backup_BtnSave", "Save Folder" },
             { "Backup_BtnBackupNow", "Backup Now" },
+            { "Backup_BtnSaveAs", "Save Database As..." },
+            { "Backup_FileFilter", "Backup Files (*.bak)|*.bak|All Files (*.*)|*.*" },
             { "Backup_LastBackupFmt", "Last backup: {0:g}" },
             { "Backup_NeverBackedUp", "Last backup: never" },
             { "Backup_FolderRequired", "Please choose a backup folder first." },
@@ -601,6 +626,12 @@ namespace Clothes_Shop_ERP.Localization
 
             // ----- Receipt printing -----
             { "Receipt_ThankYou", "Thank you for shopping with us!" },
+            { "Receipt_InvoiceLabel", "Invoice:" },
+            { "Receipt_CashierLabel", "Cashier:" },
+            { "Receipt_ItemsLabel", "Items:" },
+            { "Receipt_UnitsLabel", "units" },
+            { "Receipt_SubtotalLabel", "Subtotal:" },
+            { "Receipt_TotalLabel", "TOTAL:" },
             { "Shared_MenuPrintReceipt", "Print Receipt" },
 
             // ==================================================

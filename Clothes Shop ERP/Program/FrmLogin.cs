@@ -20,21 +20,21 @@ namespace Clothes_Shop_ERP
         public static int CurrentUserId;
         public static string CurrentUserFullName;
         public static int CurrentBranchId;
+        public static int CurrentRoleId;
         public FrmLogin()
         {
             InitializeComponent();
             ApplyLanguage();
-
-            // Hidden vendor-only shortcut (not shown anywhere in the UI): opens the
-            // license key generator. See LicenseManager.cs for how keys work.
-            this.KeyPreview = true;
-            this.KeyDown += (s, e) =>
-            {
-                if (e.Control && e.Alt && e.KeyCode == Keys.G)
-                    new FrmLicenseGenerator().ShowDialog(this);
-            };
         }
-      
+
+        // Hidden vendor-only shortcut (not shown anywhere in the UI, Ctrl+Alt+G):
+        // opens the license key generator. See LicenseManager.cs for how keys work.
+        private void FrmLogin_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.Alt && e.KeyCode == Keys.G)
+                new FrmLicenseGenerator().ShowDialog(this);
+        }
+
         public void ApplyLanguage()
         {
             this.Text = LocalizationManager.T("Login_Title");
@@ -100,8 +100,10 @@ namespace Clothes_Shop_ERP
                 CurrentUserId = user.Id;
                 CurrentUserFullName = user.FullName;
                 CurrentBranchId = (int)TXT_Branch.EditValue;
+                CurrentRoleId = user.RoleId;
+                PermissionManager.Load(CurrentRoleId);
 
-                 Sett.MsgGreen(LocalizationManager.T("Login_WelcomeTitle"), string.Format(LocalizationManager.T("Login_WelcomeUser"), user.FullName));
+                Sett.MsgGreen(LocalizationManager.T("Login_WelcomeTitle"), string.Format(LocalizationManager.T("Login_WelcomeUser"), user.FullName));
                 this.Hide();
             }
 

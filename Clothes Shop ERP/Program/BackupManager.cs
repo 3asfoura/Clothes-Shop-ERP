@@ -76,9 +76,39 @@ namespace Clothes_Shop_ERP
             try
             {
                 Directory.CreateDirectory(BackupFolder);
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                return false;
+            }
+
+            string dbName = Sett.cn.Database;
+            string fileName = $"{dbName}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+            string fullPath = Path.Combine(BackupFolder, fileName);
+
+            if (!BackupToFile(fullPath, out error)) return false;
+
+            LastBackupAt = DateTime.Now;
+            SaveSettings();
+            CleanupOldBackups(dbName);
+            return true;
+        }
+
+        /// <summary>Suggests a default file name for a manual "Save Database As..." dialog.</summary>
+        public static string SuggestedFileName() => $"{Sett.cn.Database}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+
+        /// <summary>
+        /// Backs up straight to whatever exact path the user picked themselves (e.g. via a
+        /// SaveFileDialog onto a USB drive) - a one-off manual copy, independent of the
+        /// configured BackupFolder and the daily-automatic bookkeeping above.
+        /// </summary>
+        public static bool BackupToFile(string fullPath, out string error)
+        {
+            error = null;
+            try
+            {
                 string dbName = Sett.cn.Database;
-                string fileName = $"{dbName}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
-                string fullPath = Path.Combine(BackupFolder, fileName);
 
                 // A dedicated connection, separate from the shared Sett.cn used
                 // everywhere else, so a backup can never collide with normal
@@ -95,10 +125,6 @@ namespace Clothes_Shop_ERP
                         cmd.ExecuteNonQuery();
                     }
                 }
-
-                LastBackupAt = DateTime.Now;
-                SaveSettings();
-                CleanupOldBackups(dbName);
                 return true;
             }
             catch (Exception ex)

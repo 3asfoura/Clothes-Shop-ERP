@@ -123,6 +123,7 @@ namespace Clothes_Shop_ERP.modlestore
                 if (GridViewResult.Columns["PaidAmount"] != null) GridViewResult.Columns["PaidAmount"].Caption = LocalizationManager.T("Purchases_ColPaidAmount");
                 if (GridViewResult.Columns["Due"] != null) GridViewResult.Columns["Due"].Caption = LocalizationManager.T("Dashboard_ColDue");
                 if (GridViewResult.Columns["Status"] != null) GridViewResult.Columns["Status"].Caption = LocalizationManager.T("Shared_Status");
+                Sett.CenterColumns(GridViewResult);
 
                 decimal totalInvoiced = rows.Sum(x => x.TotalAmount);
                 decimal totalPaid = rows.Sum(x => x.PaidAmount);

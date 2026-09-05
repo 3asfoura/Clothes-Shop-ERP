@@ -57,7 +57,7 @@ namespace Clothes_Shop_ERP.modlestore
             InitializeComponent();
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
-            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            Sett.CenterColumns(gridView1);
         }
 
         private void UcStockMovements_Load(object sender, EventArgs e)

@@ -26,8 +26,8 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             gridView2.OptionsCustomization.AllowSort = false;
             dgv_RolesList.OptionsView.ShowGroupPanel = false;
             dgv_RolesList.OptionsCustomization.AllowSort = false;
-            gridView2.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            dgv_RolesList.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            Sett.CenterColumns(gridView2);
+            Sett.CenterColumns(dgv_RolesList);
             ApplyLanguage();
         }
         public void ApplyLanguage()
@@ -134,6 +134,26 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             bool currentStatus = Convert.ToBoolean(gridView2.GetFocusedRowCellValue("IsActive"));
             string action = currentStatus ? LocalizationManager.T("Shared_Deactivate") : LocalizationManager.T("Shared_Activate");
 
+            // Deactivating would take away the ability to log in - block it if this
+            // is the account currently logged in, or the last active account left
+            // (either way, nobody would be able to sign in afterwards).
+            if (currentStatus)
+            {
+                if (id == FrmLogin.CurrentUserId)
+                {
+                    Sett.MsgRed(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("UsersRoles_CannotDeactivateSelf"));
+                    return;
+                }
+                using (var db = new ClothesShopDBContext())
+                {
+                    if (db.Users.Count(u => u.IsActive == true) <= 1)
+                    {
+                        Sett.MsgRed(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("UsersRoles_CannotDeactivateLastUser"));
+                        return;
+                    }
+                }
+            }
+
             if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmAction"), action, username), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
@@ -153,6 +173,21 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             if (gridView2.FocusedRowHandle < 0) return;
             int id = Convert.ToInt32(gridView2.GetFocusedRowCellValue("Id"));
             string username = gridView2.GetFocusedRowCellValue("Username").ToString();
+
+            if (id == FrmLogin.CurrentUserId)
+            {
+                Sett.MsgRed(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("UsersRoles_CannotDeleteSelf"));
+                return;
+            }
+            using (var db = new ClothesShopDBContext())
+            {
+                bool isActive = db.Users.Where(u => u.Id == id).Select(u => u.IsActive).FirstOrDefault() == true;
+                if (isActive && db.Users.Count(u => u.IsActive == true) <= 1)
+                {
+                    Sett.MsgRed(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("UsersRoles_CannotDeactivateLastUser"));
+                    return;
+                }
+            }
 
             if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), username), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
@@ -176,17 +211,38 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
         }
         private void AddNewRoles()
         {
-            string name = XtraInputBox.Show(LocalizationManager.T("Roles_NamePrompt"), LocalizationManager.T("Roles_NewTitle"), "");
-            if (string.IsNullOrWhiteSpace(name)) return;
+            var form = new FrmRoleEdit(LocalizationManager.T("Roles_NewTitle"), "", new System.Collections.Generic.Dictionary<string, string>());
+            if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
             {
-                db.Roles.Add(new Roles { Name = name });
+                var role = new Roles { Name = form.RoleName };
+                db.Roles.Add(role);
+                db.SaveChanges();
+
+                foreach (var row in form.ScreenPermissions)
+                {
+                    db.RolePermissions.Add(new RolePermissions
+                    {
+                        RoleId = role.Id,
+                        ScreenName = row.ScreenName,
+                        PermissionLevel = row.PermissionLevel
+                    });
+                }
                 db.SaveChanges();
             }
 
             Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("UsersRoles_RoleEntityName")));
             GetDataRoles();
+        }
+
+        // The role with the lowest Id always has full access regardless of what's
+        // configured (see PermissionManager.Load) - it can't be deleted or have its
+        // permissions edited, so nobody accidentally locks every admin out.
+        private int GetFirstRoleId()
+        {
+            using (var db = new ClothesShopDBContext())
+                return db.Roles.OrderBy(r => r.Id).Select(r => r.Id).First();
         }
 
         private void EditSelectedRoles()
@@ -195,9 +251,18 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
 
             int id = Convert.ToInt32(dgv_RolesList.GetFocusedRowCellValue("Id"));
             string currentName = dgv_RolesList.GetFocusedRowCellValue("Name").ToString();
+            bool isProtected = id == GetFirstRoleId();
 
-            string newName = XtraInputBox.Show(LocalizationManager.T("Roles_EditNamePrompt"), string.Format(LocalizationManager.T("Roles_EditingTitleFmt"), currentName), currentName);
-            if (string.IsNullOrWhiteSpace(newName)) return;
+            System.Collections.Generic.Dictionary<string, string> existingLevels;
+            using (var db = new ClothesShopDBContext())
+            {
+                existingLevels = db.RolePermissions
+                    .Where(x => x.RoleId == id)
+                    .ToDictionary(x => x.ScreenName, x => x.PermissionLevel);
+            }
+
+            var form = new FrmRoleEdit(string.Format(LocalizationManager.T("Roles_EditingTitleFmt"), currentName), currentName, existingLevels, isProtected);
+            if (form.ShowDialog() != DialogResult.OK) return;
 
             using (var db = new ClothesShopDBContext())
             {
@@ -209,9 +274,34 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                     return;
                 }
 
-                role.Name = newName;
+                role.Name = form.RoleName;
+
+                // The protected role's permission grid is locked/forced to "Write" in
+                // the dialog since it always has full access anyway - nothing to save.
+                if (!isProtected)
+                {
+                    var currentRows = db.RolePermissions.Where(x => x.RoleId == id).ToDictionary(x => x.ScreenName, x => x);
+                    foreach (var row in form.ScreenPermissions)
+                    {
+                        if (currentRows.TryGetValue(row.ScreenName, out var existing))
+                            existing.PermissionLevel = row.PermissionLevel;
+                        else
+                            db.RolePermissions.Add(new RolePermissions
+                            {
+                                RoleId = id,
+                                ScreenName = row.ScreenName,
+                                PermissionLevel = row.PermissionLevel
+                            });
+                    }
+                }
+
                 db.SaveChanges();
             }
+
+            // If the edited role is the one currently logged in, the sidebar/screen
+            // access needs the freshly-saved permissions right away.
+            if (id == FrmLogin.CurrentRoleId)
+                PermissionManager.Load(id);
 
             Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("UsersRoles_RoleEntityName")));
             GetDataRoles();
@@ -223,6 +313,12 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
 
             int id = Convert.ToInt32(dgv_RolesList.GetFocusedRowCellValue("Id"));
             string name = dgv_RolesList.GetFocusedRowCellValue("Name").ToString();
+
+            if (id == GetFirstRoleId())
+            {
+                Sett.MsgRed(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("Roles_CannotDeleteProtected"));
+                return;
+            }
 
             if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), name), LocalizationManager.T("Common_ConfirmTitle"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
@@ -262,9 +358,10 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
                 return;
 
             var menu = new ContextMenuStrip();
-            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNewUsers());
+            bool canEdit = PermissionManager.CanEdit("UsersRoles");
+            if (canEdit) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNewUsers());
 
-            if (hit.InRow)
+            if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelectedUsers());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuActivateDeactivate"), null, (s, ev) => ToggleActiveUsers());
@@ -283,13 +380,17 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNewRoles());
+            bool canEdit = PermissionManager.CanEdit("UsersRoles");
+            if (canEdit) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNewRoles());
             menu.Show(dgv_Roles, e.Location);
 
-            if (hit.InRow)
+            if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelectedRoles());
-                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelectedRoles());
+
+                int focusedRoleId = Convert.ToInt32(dgv_RolesList.GetFocusedRowCellValue("Id"));
+                if (focusedRoleId != GetFirstRoleId())
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelectedRoles());
             }
         }
     }

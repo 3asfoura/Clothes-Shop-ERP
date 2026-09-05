@@ -8,6 +8,7 @@ namespace Clothes_Shop_ERP.DAL
         public PurchaseInvoices()
         {
             PurchaseInvoiceDetails = new HashSet<PurchaseInvoiceDetails>();
+            PurchaseReturns = new HashSet<PurchaseReturns>();
         }
 
         public int Id { get; set; }
@@ -23,5 +24,6 @@ namespace Clothes_Shop_ERP.DAL
         public Users CreatedByUser { get; set; }
         public Suppliers Supplier { get; set; }
         public ICollection<PurchaseInvoiceDetails> PurchaseInvoiceDetails { get; set; }
+        public ICollection<PurchaseReturns> PurchaseReturns { get; set; }
     }
 }

@@ -81,6 +81,7 @@ namespace Clothes_Shop_ERP.modlestore
                 if (GridViewResult.Columns["Method"] != null) GridViewResult.Columns["Method"].Caption = LocalizationManager.T("DayClosing_ColMethod");
                 if (GridViewResult.Columns["Count"] != null) GridViewResult.Columns["Count"].Caption = LocalizationManager.T("DayClosing_ColCount");
                 if (GridViewResult.Columns["Total"] != null) GridViewResult.Columns["Total"].Caption = LocalizationManager.T("Shared_ColTotal");
+                Sett.CenterColumns(GridViewResult);
             }
         }
 

@@ -1,25 +1,20 @@
-﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.DAL;
 using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
-using SalesReturnEntity = Clothes_Shop_ERP.DAL.SalesReturns;
-using SalesReturnDetailEntity = Clothes_Shop_ERP.DAL.SalesReturnDetails; 
+using PurchaseReturnEntity = Clothes_Shop_ERP.DAL.PurchaseReturns;
+using PurchaseReturnDetailEntity = Clothes_Shop_ERP.DAL.PurchaseReturnDetails;
 using StockMovementEntity = Clothes_Shop_ERP.DAL.StockMovements;
 using TreasuryEntity = Clothes_Shop_ERP.DAL.TreasuryTransactions;
+
 namespace Clothes_Shop_ERP.modlestore
 {
-    public partial class UcReturns : DevExpress.XtraEditors.XtraUserControl
+    public partial class UcPurchaseReturns : DevExpress.XtraEditors.XtraUserControl
     {
-        public UcReturns()
+        public UcPurchaseReturns()
         {
             InitializeComponent();
             GetData();
@@ -30,7 +25,7 @@ namespace Clothes_Shop_ERP.modlestore
         }
         public void ApplyLanguage()
         {
-            Col.Caption = LocalizationManager.T("Returns_ColInvoice");
+            ColSupplier.Caption = LocalizationManager.T("Purchases_ColSupplier");
             ColBranch.Caption = LocalizationManager.T("Shared_Branch");
             ColReturnDate.Caption = LocalizationManager.T("Returns_ColReturnDate");
             ColTotalAmount.Caption = LocalizationManager.T("Shared_TotalAmount");
@@ -39,14 +34,14 @@ namespace Clothes_Shop_ERP.modlestore
         {
             using (var db = new ClothesShopDBContext())
             {
-                gridView1.GridControl.DataSource = db.SalesReturns
-                    .Include(x => x.SalesInvoice)
+                gridView1.GridControl.DataSource = db.PurchaseReturns
+                    .Include(x => x.PurchaseInvoice).ThenInclude(i => i.Supplier)
                     .Include(x => x.Branch)
                     .OrderByDescending(x => x.ReturnDate)
                     .Select(x => new
                     {
                         x.Id,
-                        Invoice = x.SalesInvoice.InvoiceNumber,
+                        Supplier = x.PurchaseInvoice.Supplier.Name,
                         Branch = x.Branch.Name,
                         x.ReturnDate,
                         x.TotalAmount
@@ -57,77 +52,70 @@ namespace Clothes_Shop_ERP.modlestore
 
         private void AddNew()
         {
-            var form = new FrmReturnEdit(LocalizationManager.T("Returns_NewTitle"));
+            var form = new FrmPurchaseReturnEdit(LocalizationManager.T("PurchaseReturns_NewTitle"));
             if (form.ShowDialog() != DialogResult.OK) return;
 
             int branchId = FrmLogin.CurrentBranchId;
-            decimal total = form.UnitPrice * form.Quantity;
+            decimal total = form.UnitCost * form.Quantity;
 
             using (var db = new ClothesShopDBContext())
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
                 {
-                    var salesReturn = new SalesReturnEntity
+                    var purchaseReturn = new PurchaseReturnEntity
                     {
-                        SalesInvoiceId = form.SalesInvoiceId,
+                        PurchaseInvoiceId = form.PurchaseInvoiceId,
                         BranchId = branchId,
                         ReturnDate = DateTime.Now,
                         TotalAmount = total,
                         CreatedByUserId = FrmLogin.CurrentUserId
                     };
-                    db.SalesReturns.Add(salesReturn);
-                    db.SaveChanges();   // generates salesReturn.Id for the detail row below
+                    db.PurchaseReturns.Add(purchaseReturn);
+                    db.SaveChanges();   // generates purchaseReturn.Id for the detail row below
 
-                    db.SalesReturnDetails.Add(new SalesReturnDetailEntity
+                    db.PurchaseReturnDetails.Add(new PurchaseReturnDetailEntity
                     {
-                        SalesReturnId = salesReturn.Id,
+                        PurchaseReturnId = purchaseReturn.Id,
                         ProductVariantId = form.ProductVariantId,
                         Quantity = form.Quantity,
-                        UnitPrice = form.UnitPrice,
+                        UnitCost = form.UnitCost,
                         Total = total
                     });
 
-                    // Give the stock back
-                    var stock = db.BranchStock.FirstOrDefault(s =>
-                        s.ProductVariantId == form.ProductVariantId && s.BranchId == branchId);
+                    // Take the stock back out - it's going back to the supplier
+                    int rowsAffected = db.Database.ExecuteSqlCommand(
+                        "UPDATE BranchStock SET Quantity = Quantity - {0} WHERE ProductVariantId = {1} AND BranchId = {2} AND Quantity >= {0}",
+                        form.Quantity, form.ProductVariantId, branchId);
 
-                    if (stock == null)
+                    if (rowsAffected == 0)
                     {
-                        db.BranchStock.Add(new Clothes_Shop_ERP.DAL.BranchStock
-                        {
-                            ProductVariantId = form.ProductVariantId,
-                            BranchId = branchId,
-                            Quantity = form.Quantity,
-                            MinQuantity = 0
-                        });
-                    }
-                    else
-                    {
-                        stock.Quantity += form.Quantity;
+                        transaction.Rollback();
+                        Sett.MsgBlue(LocalizationManager.T("POS_OutOfStockTitle"), LocalizationManager.T("PurchaseReturns_NotEnoughStock"));
+                        return;
                     }
 
                     db.StockMovements.Add(new StockMovementEntity
                     {
                         ProductVariantId = form.ProductVariantId,
                         BranchId = branchId,
-                        MovementType = "Return",
-                        Quantity = form.Quantity,
-                        RefType = "SalesReturn",
-                        RefId = salesReturn.Id,
+                        MovementType = "PurchaseReturn",
+                        Quantity = -form.Quantity,
+                        RefType = "PurchaseReturn",
+                        RefId = purchaseReturn.Id,
                         CreatedAt = DateTime.Now,
                         CreatedByUserId = FrmLogin.CurrentUserId
                     });
 
-                    // Money goes back out of the till
+                    // Money comes back from the supplier
                     db.TreasuryTransactions.Add(new TreasuryEntity
                     {
                         BranchId = branchId,
-                        TransactionType = "Out",
+                        TransactionType = "In",
                         Amount = total,
-                        Description = "Sales return",
-                        RefType = "SalesReturn",
-                        RefId = salesReturn.Id,
+                        Description = "Purchase return",
+                        RefType = "PurchaseReturn",
+                        RefId = purchaseReturn.Id,
                         CreatedAt = DateTime.Now,
                         CreatedByUserId = FrmLogin.CurrentUserId
                     });
@@ -135,13 +123,13 @@ namespace Clothes_Shop_ERP.modlestore
                     db.SaveChanges();
                     transaction.Commit();
 
-                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Returns_Recorded"), total));
+                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("PurchaseReturns_Recorded"), total));
                     GetData();
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Returns_SaveFailed"), ex.Message));
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("PurchaseReturns_SaveFailed"), ex.Message));
                 }
             }
         }
@@ -154,13 +142,8 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            if (PermissionManager.CanEdit("Returns")) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
+            if (PermissionManager.CanEdit("PurchaseReturns")) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
-
-            if (hit.InRow)
-            {
-             
-            }
         }
     }
 }

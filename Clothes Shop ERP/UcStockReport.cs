@@ -19,6 +19,7 @@ namespace Clothes_Shop_ERP
             InitializeComponent();
             RunReport();
             ApplyLanguage();
+            Sett.CenterColumns(GridViewResult);
         }
         public void ApplyLanguage()
         {

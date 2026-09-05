@@ -243,8 +243,11 @@ namespace Clothes_Shop_ERP.modlestore
             //
             this.lblType.Control = this.CmbType;
             this.lblType.Location = new System.Drawing.Point(0, 0);
+            this.lblType.MaxSize = new System.Drawing.Size(150, 66);
+            this.lblType.MinSize = new System.Drawing.Size(150, 66);
             this.lblType.Name = "lblType";
             this.lblType.Size = new System.Drawing.Size(150, 66);
+            this.lblType.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
             this.lblType.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 12, 0);
             this.lblType.Text = "Type:";
             this.lblType.TextLocation = DevExpress.Utils.Locations.Top;
@@ -254,8 +257,11 @@ namespace Clothes_Shop_ERP.modlestore
             //
             this.lblParty.Control = this.CmbParty;
             this.lblParty.Location = new System.Drawing.Point(150, 0);
+            this.lblParty.MaxSize = new System.Drawing.Size(295, 66);
+            this.lblParty.MinSize = new System.Drawing.Size(295, 66);
             this.lblParty.Name = "lblParty";
             this.lblParty.Size = new System.Drawing.Size(295, 66);
+            this.lblParty.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
             this.lblParty.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 12, 0);
             this.lblParty.Text = "Customer:";
             this.lblParty.TextLocation = DevExpress.Utils.Locations.Top;
@@ -265,8 +271,11 @@ namespace Clothes_Shop_ERP.modlestore
             //
             this.lblFrom.Control = this.DtFrom;
             this.lblFrom.Location = new System.Drawing.Point(445, 0);
+            this.lblFrom.MaxSize = new System.Drawing.Size(190, 66);
+            this.lblFrom.MinSize = new System.Drawing.Size(190, 66);
             this.lblFrom.Name = "lblFrom";
             this.lblFrom.Size = new System.Drawing.Size(190, 66);
+            this.lblFrom.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
             this.lblFrom.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 12, 0);
             this.lblFrom.Text = "From:";
             this.lblFrom.TextLocation = DevExpress.Utils.Locations.Top;
@@ -276,8 +285,11 @@ namespace Clothes_Shop_ERP.modlestore
             //
             this.lblTo.Control = this.DtTo;
             this.lblTo.Location = new System.Drawing.Point(635, 0);
+            this.lblTo.MaxSize = new System.Drawing.Size(191, 66);
+            this.lblTo.MinSize = new System.Drawing.Size(191, 66);
             this.lblTo.Name = "lblTo";
             this.lblTo.Size = new System.Drawing.Size(191, 66);
+            this.lblTo.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
             this.lblTo.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 12, 0);
             this.lblTo.Text = "To:";
             this.lblTo.TextLocation = DevExpress.Utils.Locations.Top;
@@ -287,8 +299,11 @@ namespace Clothes_Shop_ERP.modlestore
             //
             this.layoutControlItemRun.Control = this.btnRun;
             this.layoutControlItemRun.Location = new System.Drawing.Point(826, 0);
+            this.layoutControlItemRun.MaxSize = new System.Drawing.Size(181, 66);
+            this.layoutControlItemRun.MinSize = new System.Drawing.Size(181, 66);
             this.layoutControlItemRun.Name = "layoutControlItemRun";
             this.layoutControlItemRun.Size = new System.Drawing.Size(181, 66);
+            this.layoutControlItemRun.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
             this.layoutControlItemRun.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemRun.TextVisible = false;
             //

@@ -63,6 +63,7 @@ namespace Clothes_Shop_ERP.modlestore
                 if (GridViewResult.Columns["RecordId"] != null) GridViewResult.Columns["RecordId"].Caption = LocalizationManager.T("AuditLogs_ColRecordId");
                 if (GridViewResult.Columns["Action"] != null) GridViewResult.Columns["Action"].Caption = LocalizationManager.T("AuditLogs_ColAction");
                 if (GridViewResult.Columns["User"] != null) GridViewResult.Columns["User"].Caption = LocalizationManager.T("AuditLogs_ColUser");
+                Sett.CenterColumns(GridViewResult);
 
                 if (CmbTable.Properties.Items.Count == 0)
                 {

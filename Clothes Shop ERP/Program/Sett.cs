@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Security.Principal;
 using System.Windows.Forms;
 using static System.Console;
+using DevExpress.Utils;
+using DevExpress.XtraGrid.Views.Grid;
 
 namespace Clothes_Shop_ERP
 {
@@ -43,7 +45,16 @@ namespace Clothes_Shop_ERP
         {
             Sett.MsgAlert(title + "\n" + description, eDesktopAlertColor.Green, 3);
         }
-    
+
+        // Centers both the column headers and the cell content of every column in
+        // a grid - called once per GridView so every screen in the app looks
+        // consistent instead of each one centering (or not) a little differently.
+        public static void CenterColumns(GridView view)
+        {
+            view.Appearance.HeaderPanel.TextOptions.HAlignment = HorzAlignment.Center;
+            foreach (DevExpress.XtraGrid.Columns.GridColumn col in view.Columns)
+                col.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+        }
 
     }
 }

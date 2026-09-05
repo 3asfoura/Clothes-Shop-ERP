@@ -380,6 +380,7 @@ namespace Clothes_Shop_ERP.modlestore
                 if (_lowStockView.Columns["Color"] != null) _lowStockView.Columns["Color"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Shared_Color");
                 if (_lowStockView.Columns["Quantity"] != null) _lowStockView.Columns["Quantity"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("StockCount_ColQuantity");
                 if (_lowStockView.Columns["MinQuantity"] != null) _lowStockView.Columns["MinQuantity"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("StockCount_ColMinQuantity");
+                Sett.CenterColumns(_lowStockView);
 
                 var recentSales = db.SalesInvoices
                     .Include(x => x.Customer)
@@ -402,6 +403,7 @@ namespace Clothes_Shop_ERP.modlestore
                 if (_recentSalesView.Columns["NetAmount"] != null) _recentSalesView.Columns["NetAmount"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("SalesInvoices_ColNetAmount");
                 if (_recentSalesView.Columns["PaidAmount"] != null) _recentSalesView.Columns["PaidAmount"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Purchases_ColPaidAmount");
                 if (_recentSalesView.Columns["Due"] != null) _recentSalesView.Columns["Due"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_ColDue");
+                Sett.CenterColumns(_recentSalesView);
 
                 var recentPurchases = db.PurchaseInvoices
                     .Include(x => x.Supplier)
@@ -422,6 +424,7 @@ namespace Clothes_Shop_ERP.modlestore
                 if (_recentPurchaseView.Columns["TotalAmount"] != null) _recentPurchaseView.Columns["TotalAmount"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Shared_TotalAmount");
                 if (_recentPurchaseView.Columns["PaidAmount"] != null) _recentPurchaseView.Columns["PaidAmount"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Purchases_ColPaidAmount");
                 if (_recentPurchaseView.Columns["Due"] != null) _recentPurchaseView.Columns["Due"].Caption = Clothes_Shop_ERP.Localization.LocalizationManager.T("Dashboard_ColDue");
+                Sett.CenterColumns(_recentPurchaseView);
             }
         }
 

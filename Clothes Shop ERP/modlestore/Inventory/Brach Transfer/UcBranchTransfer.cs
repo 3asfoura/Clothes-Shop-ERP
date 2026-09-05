@@ -23,7 +23,7 @@ namespace Clothes_Shop_ERP.modlestore
             InitializeComponent();
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
-            gridView1.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            Sett.CenterColumns(gridView1);
             ApplyLanguage();
         }
         public void ApplyLanguage()
@@ -214,13 +214,14 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InColumnPanel || hit.InColumn)
                 return;
             var menu = new ContextMenuStrip();
-            menu.Items.Add(LocalizationManager.T("BranchTransfer_MenuNewTransfer"), null, (s, ev) => AddNew());
+            bool canEdit = PermissionManager.CanEdit("BranchTransfer");
+            if (canEdit) menu.Items.Add(LocalizationManager.T("BranchTransfer_MenuNewTransfer"), null, (s, ev) => AddNew());
 
             if (hit.InRow)
             {
                 gridView1.FocusedRowHandle = hit.RowHandle;
                 string status = gridView1.GetFocusedRowCellValue("Status")?.ToString();
-                if (status == "Pending")
+                if (status == "Pending" && canEdit)
                 {
                     menu.Items.Add(LocalizationManager.T("BranchTransfer_MenuMarkCompleted"), null, (s, ev) => SetStatus("Completed"));
                     menu.Items.Add(LocalizationManager.T("BranchTransfer_MenuCancelTransfer"), null, (s, ev) => SetStatus("Cancelled"));

@@ -40,7 +40,7 @@ namespace Clothes_Shop_ERP
             TxtBarcode.Focus();
             GridViewCart.OptionsView.ShowGroupPanel = false;
             GridViewCart.OptionsCustomization.AllowSort = false;
-            GridViewCart.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            Sett.CenterColumns(GridViewCart);
         }
         public void ApplyLanguage()
         {
@@ -156,6 +156,12 @@ namespace Clothes_Shop_ERP
 
         private void SimpleButton_Click(object sender, EventArgs e)
         {
+            if (!PermissionManager.CanEdit("PointOfSale"))
+            {
+                Sett.MsgRed(LocalizationManager.T("Shared_Warning"), LocalizationManager.T("Shared_NoPermissionMsg"));
+                return;
+            }
+
             if (_cart.Count == 0)
             {
                 Sett.MsgBlue(LocalizationManager.T("POS_EmptyCartTitle"), LocalizationManager.T("POS_EmptyCartMsg"));
@@ -164,6 +170,13 @@ namespace Clothes_Shop_ERP
 
             decimal subTotal = _cart.Sum(l => l.LineTotal);
             decimal discount = (decimal)SpinDiscount.Value;
+
+            if (discount > subTotal)
+            {
+                Sett.MsgBlue(LocalizationManager.T("Shared_Warning"), LocalizationManager.T("POS_DiscountExceedsTotal"));
+                return;
+            }
+
             decimal netTotal = subTotal - discount;
             int branchId = FrmLogin.CurrentBranchId;
 
@@ -249,10 +262,13 @@ namespace Clothes_Shop_ERP
 
                     Sett.MsgGreen(LocalizationManager.T("POS_SaleCompletedTitle"), string.Format(LocalizationManager.T("POS_SaleCompletedMsg"), invoice.InvoiceNumber, netTotal));
 
-                    string branchName = db.Branches.Where(b => b.Id == branchId).Select(b => b.Name).FirstOrDefault();
+                    var branchInfo = db.Branches.Where(b => b.Id == branchId)
+                        .Select(b => new { b.Name, b.Address, b.Phone }).FirstOrDefault();
                     var receipt = new ReceiptData
                     {
-                        ShopName = branchName,
+                        ShopName = branchInfo?.Name,
+                        ShopAddress = branchInfo?.Address,
+                        ShopPhone = branchInfo?.Phone,
                         InvoiceNumber = invoice.InvoiceNumber,
                         Date = invoice.InvoiceDate,
                         Customer = CmbCustomer.Text,
@@ -311,10 +327,30 @@ namespace Clothes_Shop_ERP
                 GridViewCart.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
                 GridViewCart.Columns["Quantity"].Caption = LocalizationManager.T("StockCount_ColQuantity");
             }
-            if (GridViewCart.Columns["ProductDisplay"] != null) GridViewCart.Columns["ProductDisplay"].Caption = LocalizationManager.T("StockCount_ColProduct");
-            if (GridViewCart.Columns["UnitPrice"] != null) GridViewCart.Columns["UnitPrice"].Caption = LocalizationManager.T("POS_ColUnitPrice");
-            if (GridViewCart.Columns["LineTotal"] != null) GridViewCart.Columns["LineTotal"].Caption = LocalizationManager.T("Shared_ColTotal");
-            GridViewCart.OptionsBehavior.Editable = false;
+            if (GridViewCart.Columns["ProductDisplay"] != null)
+            {
+                GridViewCart.Columns["ProductDisplay"].Caption = LocalizationManager.T("StockCount_ColProduct");
+                GridViewCart.Columns["ProductDisplay"].OptionsColumn.AllowEdit = false;
+            }
+            if (GridViewCart.Columns["UnitPrice"] != null)
+            {
+                GridViewCart.Columns["UnitPrice"].Caption = LocalizationManager.T("POS_ColUnitPrice");
+                GridViewCart.Columns["UnitPrice"].OptionsColumn.AllowEdit = false;
+            }
+            if (GridViewCart.Columns["LineTotal"] != null)
+            {
+                GridViewCart.Columns["LineTotal"].Caption = LocalizationManager.T("Shared_ColTotal");
+                GridViewCart.Columns["LineTotal"].OptionsColumn.AllowEdit = false;
+            }
+
+            // The grid itself is editable so a scanned/added line's quantity can be
+            // corrected directly (e.g. scanned once but meant 3) - every other
+            // column stays locked via AllowEdit above.
+            GridViewCart.OptionsBehavior.Editable = true;
+            GridViewCart.CellValueChanged += (s, e) =>
+            {
+                if (e.Column == GridViewCart.Columns["Quantity"]) RefreshTotal();
+            };
 
             RefreshTotal();
 

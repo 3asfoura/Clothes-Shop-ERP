@@ -12,19 +12,20 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP
 {
-    public partial class FrmMain : DevExpress.XtraBars.FluentDesignSystem.FluentDesignForm, IMessageFilter
+    public partial class FrmMain : DevExpress.XtraBars.FluentDesignSystem.FluentDesignForm
     {
         // Auto-lock: re-shows the login screen after this many minutes with no
-        // mouse/keyboard activity anywhere in the app.
+        // mouse/keyboard activity anywhere on the PC - not just this app. Reads
+        // the same Windows-wide idle counter screensavers use (GetLastInputInfo),
+        // so it's accurate no matter which control, popup or dialog has focus.
         private const int IdleLockMinutes = 5;
-        private DateTime _lastActivity = DateTime.Now;
-        private readonly Timer _idleTimer = new Timer { Interval = 5000 };
         private bool _isLocked;
 
         public FrmMain()
@@ -34,37 +35,74 @@ namespace Clothes_Shop_ERP
             DarkModeToggle();
             ComboLanguage.EditValue = LocalizationManager.CurrentLanguage.ToString();
             ApplyLanguage();
-
-            Application.AddMessageFilter(this);
-            this.FormClosed += (s, e) => Application.RemoveMessageFilter(this);
-            _idleTimer.Tick += IdleTimer_Tick;
-            _idleTimer.Start();
         }
 
-        // IMessageFilter: sees every Windows message for the whole app, so any
-        // mouse move/click or key press anywhere resets the idle clock - not
-        // just activity on FrmMain itself.
-        public bool PreFilterMessage(ref Message m)
+        [StructLayout(LayoutKind.Sequential)]
+        private struct LASTINPUTINFO
         {
-            const int WM_MOUSEMOVE = 0x0200, WM_LBUTTONDOWN = 0x0201, WM_RBUTTONDOWN = 0x0204,
-                      WM_KEYDOWN = 0x0100, WM_MOUSEWHEEL = 0x020A;
-            if (m.Msg == WM_MOUSEMOVE || m.Msg == WM_LBUTTONDOWN || m.Msg == WM_RBUTTONDOWN
-                || m.Msg == WM_KEYDOWN || m.Msg == WM_MOUSEWHEEL)
-            {
-                _lastActivity = DateTime.Now;
-            }
-            return false;
+            public uint cbSize;
+            public uint dwTime;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
+
+        private static TimeSpan GetSystemIdleTime()
+        {
+            var info = new LASTINPUTINFO { cbSize = (uint)Marshal.SizeOf(typeof(LASTINPUTINFO)) };
+            GetLastInputInfo(ref info);
+            return TimeSpan.FromMilliseconds((uint)Environment.TickCount - info.dwTime);
         }
 
         private void IdleTimer_Tick(object sender, EventArgs e)
         {
             if (_isLocked) return;
-            if ((DateTime.Now - _lastActivity).TotalMinutes >= IdleLockMinutes)
+            if (GetSystemIdleTime().TotalMinutes >= IdleLockMinutes)
             {
                 _isLocked = true;
                 new FrmLogin().ShowDialog(this);
-                _lastActivity = DateTime.Now;
                 _isLocked = false;
+            }
+        }
+        // Hides sidebar entries the current role has no access to (PermissionLevel
+        // "None"). Screens the role can at least Read stay visible here - the
+        // Read-vs-Write (read-only) restriction is enforced inside each screen.
+        private void ApplyPermissions()
+        {
+            var screenElements = new System.Collections.Generic.Dictionary<string, DevExpress.XtraBars.Navigation.AccordionControlElement>
+            {
+                { "Products", ElementProducts },
+                { "ProductVariants", ElementProductVariants },
+                { "Categories", ElementCategories },
+                { "Brands", ElementBrands },
+                { "ColorsSizes", ElementColors_Sizes },
+                { "StockCount", ElementStock_Count },
+                { "StockMovements", ElementStock_Movements },
+                { "BranchTransfer", ElementBranch_Transfer },
+                { "PointOfSale", ElementPoint_of_Sale },
+                { "SalesInvoices", ElementSales_Invoices },
+                { "Returns", ElementReturns },
+                { "Customers", ElementCustomers },
+                { "PurchaseInvoices", ElementPurchase },
+                { "PurchaseReturns", ElementPurchaseReturns },
+                { "Suppliers", ElementSuppliers },
+                { "Treasury", ElementTreasury },
+                { "TreasuryBalance", ElementTreasuryBalance },
+                { "SalesReport", ElementSalesReport1 },
+                { "StockReport", ElementStockReport },
+                { "ProfitReport", ElementProfitReport },
+                { "AccountStatement", ElementAccountStatement },
+                { "DayClosingReport", ElementDayClosingReport },
+                { "Branches", ElementBranches },
+                { "UsersRoles", ElementUsers_Roles },
+                { "PaymentMethods", ElementPaymentMethods },
+                { "AuditLogs", ElementAuditLogs },
+                { "BackupSettings", ElementBackupSettings },
+            };
+
+            foreach (var pair in screenElements)
+            {
+                pair.Value.Visible = PermissionManager.CanView(pair.Key);
             }
         }
         public void ApplyLanguage()
@@ -85,6 +123,7 @@ namespace Clothes_Shop_ERP
             ElementCustomers.Text = LocalizationManager.T("Main_Customers");
             ElementPurchasing.Text = LocalizationManager.T("Main_Purchasing");
             ElementPurchase.Text = LocalizationManager.T("Main_PurchaseInvoices");
+            ElementPurchaseReturns.Text = LocalizationManager.T("Main_PurchaseReturns");
             ElementSuppliers.Text = LocalizationManager.T("Main_Suppliers");
             _ElementTreasury.Text = LocalizationManager.T("Main_Treasury");
             ElementTreasury.Text = LocalizationManager.T("Main_TreasuryTransactions");
@@ -105,6 +144,7 @@ namespace Clothes_Shop_ERP
         private void FrmMain_Load(object sender, EventArgs e)
         {
             new FrmLogin().ShowDialog();
+            ApplyPermissions();
 
             UcDashboard dash = new UcDashboard();
             setTabPage(dash, "Dashboard", null);
@@ -237,6 +277,12 @@ namespace Clothes_Shop_ERP
         {
             UcPurchaseInvoices frm = new UcPurchaseInvoices();
             setTabPage(frm, ElementPurchase.Text, ElementPurchase.ImageOptions.SvgImage);
+        }
+
+        private void ElementPurchaseReturns_Click(object sender, EventArgs e)
+        {
+            Clothes_Shop_ERP.modlestore.UcPurchaseReturns frm = new Clothes_Shop_ERP.modlestore.UcPurchaseReturns();
+            setTabPage(frm, ElementPurchaseReturns.Text, ElementPurchaseReturns.ImageOptions.SvgImage);
         }
 
         private void ElementPoint_of_Sale_Click(object sender, EventArgs e)

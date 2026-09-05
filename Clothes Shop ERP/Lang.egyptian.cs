@@ -32,6 +32,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Shared_Success", "نجاح" },
             { "Shared_Error", "خطأ" },
             { "Shared_Warning", "تحذير" },
+            { "Shared_NoPermissionMsg", "مالكش صلاحية تعمل الحاجة دي." },
             { "Shared_CannotDelete", "لا يمكن الحذف" },
             { "Shared_NoXFoundWithId", "لا يوجد {0} برقم = {1}" },
             { "Shared_XAdded", "تمت إضافة {0}" },
@@ -281,6 +282,9 @@ namespace Clothes_Shop_ERP.Localization
             // ----- Users & Roles -----
             { "UsersRoles_UsernameTaken", "اسم المستخدم هذا مستخدم بالفعل." },
             { "UsersRoles_UserHasRecords", "قام هذا المستخدم بإنشاء فواتير أو سجلات أخرى. قم بإلغاء تنشيطه بدلاً من حذفه." },
+            { "UsersRoles_CannotDeleteSelf", "متقدرش تمسح الحساب اللي انت داخل بيه دلوقتي." },
+            { "UsersRoles_CannotDeactivateSelf", "متقدرش تعطّل الحساب اللي انت داخل بيه دلوقتي." },
+            { "UsersRoles_CannotDeactivateLastUser", "ده آخر حساب مستخدم شغال — لو عطّلته أو مسحته محدش هيقدر يسجل دخول تاني." },
             { "UsersRoles_RoleAssigned", "هذا الدور مسند إلى مستخدم واحد أو أكثر. أعد إسنادهم أولاً." },
             { "UsersRoles_FillUsernameFullName", "الرجاء إدخال اسم المستخدم والاسم الكامل." },
             { "UsersRoles_PasswordRequiredForNewUser", "الرجاء إدخال كلمة مرور للمستخدم الجديد." },
@@ -303,8 +307,17 @@ namespace Clothes_Shop_ERP.Localization
             { "Returns_Recorded", "تم تسجيل المرتجع. المبلغ: {0:n2}" },
             { "Returns_SelectInvoiceAndItem", "الرجاء اختيار فاتورة وعنصر." },
 
+            // ----- Purchase Returns -----
+            { "Main_PurchaseReturns", "مرتجع المورد" },
+            { "FrmPurchaseReturnEdit_Invoice", "فاتورة الشراء:" },
+            { "PurchaseReturns_NewTitle", "مرتجع مورد جديد" },
+            { "PurchaseReturns_NotEnoughStock", "الكمية المتوفرة في المخزون غير كافية لإرجاع هذه الكمية." },
+            { "PurchaseReturns_Recorded", "تم تسجيل مرتجع المورد. المبلغ: {0:n2}" },
+            { "PurchaseReturns_SaveFailed", "تعذر حفظ المرتجع. لم يتم تغيير أي شيء. {0}" },
+
             // ----- POS -----
             { "POS_EmptyCartMsg", "الرجاء إضافة عنصر واحد على الأقل قبل إتمام الشراء." },
+            { "POS_DiscountExceedsTotal", "الخصم متقدرش يكون أكبر من إجمالي الفاتورة." },
             { "POS_SaleFailed", "تعذر إتمام عملية البيع. لم يتم خصم أي مبلغ. {0}" },
             { "POS_ProductNotFoundByBarcode", "لا يوجد منتج نشط بالباركود {0}" },
             { "POS_NotEnoughStockFor", "الكمية غير كافية لـ {0}. الرجاء التحديث والمحاولة مرة أخرى." },
@@ -471,6 +484,7 @@ namespace Clothes_Shop_ERP.Localization
             { "UsersRoles_UserEntityName", "المستخدم" },
             { "UsersRoles_RoleEntityName", "الدور" },
             { "Branches_EntityName", "الفرع" },
+            { "Branches_CannotDeactivateLast", "ده آخر فرع موجود — البرنامج محتاج فرع واحد على الأقل عشان يشتغل." },
             { "StockCount_EntityName", "قيد الجرد" },
             { "Treasury_EntityName", "قيد الخزينة" },
             { "Shared_Activate", "تفعيل" },
@@ -518,6 +532,15 @@ namespace Clothes_Shop_ERP.Localization
             { "Roles_NewTitle", "دور جديد" },
             { "Roles_EditNamePrompt", "أدخل اسم الدور الجديد:" },
             { "Roles_EditingTitleFmt", "تعديل الدور: {0}" },
+            { "Roles_NameRequired", "من فضلك أدخل اسم الدور." },
+            { "Roles_CannotDeleteProtected", "الدور ده مينفعش يتمسح — هو الحساب الاحتياطي الأساسي وبيفضل معاه صلاحية كاملة دايمًا." },
+            { "Roles_ProtectedAdminNote", "الدور ده بياخد صلاحية كاملة على كل الشاشات دايمًا ومينفعش يتقيّد:" },
+            { "Roles_PermissionsGroupTitle", "صلاحيات الشاشات:" },
+            { "Roles_ColScreen", "الشاشة" },
+            { "Roles_ColPermission", "الصلاحية" },
+            { "Permission_None", "بدون صلاحية" },
+            { "Permission_Read", "قراءة فقط" },
+            { "Permission_Write", "قراءة وكتابة" },
 
             // ----- Payment Methods (inline name prompt) -----
             { "PaymentMethods_NamePrompt", "اسم طريقة الدفع:" },
@@ -591,6 +614,8 @@ namespace Clothes_Shop_ERP.Localization
             { "Backup_BtnBrowse", "استعراض..." },
             { "Backup_BtnSave", "حفظ المجلد" },
             { "Backup_BtnBackupNow", "نسخ احتياطي الآن" },
+            { "Backup_BtnSaveAs", "حفظ نسخة من الداتابيز باسم..." },
+            { "Backup_FileFilter", "ملفات النسخ الاحتياطي (*.bak)|*.bak|كل الملفات (*.*)|*.*" },
             { "Backup_LastBackupFmt", "آخر نسخة احتياطية: {0:g}" },
             { "Backup_NeverBackedUp", "آخر نسخة احتياطية: لا يوجد" },
             { "Backup_FolderRequired", "الرجاء اختيار مجلد النسخ الاحتياطي أولاً." },
@@ -601,6 +626,12 @@ namespace Clothes_Shop_ERP.Localization
 
             // ----- Receipt printing -----
             { "Receipt_ThankYou", "شكراً لتسوقكم معنا!" },
+            { "Receipt_InvoiceLabel", "فاتورة:" },
+            { "Receipt_CashierLabel", "الكاشير:" },
+            { "Receipt_ItemsLabel", "عدد الأصناف:" },
+            { "Receipt_UnitsLabel", "قطعة" },
+            { "Receipt_SubtotalLabel", "الإجمالي قبل الخصم:" },
+            { "Receipt_TotalLabel", "الإجمالي:" },
             { "Shared_MenuPrintReceipt", "طباعة الإيصال" },
 
             // ==================================================

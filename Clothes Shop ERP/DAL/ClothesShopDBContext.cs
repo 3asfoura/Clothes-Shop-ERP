@@ -27,6 +27,9 @@ namespace Clothes_Shop_ERP.DAL
         public virtual DbSet<ProductVariants> ProductVariants { get; set; }
         public virtual DbSet<PurchaseInvoiceDetails> PurchaseInvoiceDetails { get; set; }
         public virtual DbSet<PurchaseInvoices> PurchaseInvoices { get; set; }
+        public virtual DbSet<PurchaseReturnDetails> PurchaseReturnDetails { get; set; }
+        public virtual DbSet<PurchaseReturns> PurchaseReturns { get; set; }
+        public virtual DbSet<RolePermissions> RolePermissions { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<SalesInvoiceDetails> SalesInvoiceDetails { get; set; }
         public virtual DbSet<SalesInvoices> SalesInvoices { get; set; }
@@ -283,6 +286,68 @@ namespace Clothes_Shop_ERP.DAL
                     .HasForeignKey(d => d.SupplierId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PInvoice_Supplier");
+            });
+
+            modelBuilder.Entity<PurchaseReturnDetails>(entity =>
+            {
+                entity.Property(e => e.Quantity).HasColumnType("decimal(18, 3)");
+
+                entity.HasOne(d => d.ProductVariant)
+                    .WithMany(p => p.PurchaseReturnDetails)
+                    .HasForeignKey(d => d.ProductVariantId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PRDetail_Variant");
+
+                entity.HasOne(d => d.PurchaseReturn)
+                    .WithMany(p => p.PurchaseReturnDetails)
+                    .HasForeignKey(d => d.PurchaseReturnId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PRDetail_Return");
+            });
+
+            modelBuilder.Entity<PurchaseReturns>(entity =>
+            {
+                entity.Property(e => e.ReturnDate).HasDefaultValueSql("(sysutcdatetime())");
+
+                entity.HasOne(d => d.Branch)
+                    .WithMany(p => p.PurchaseReturns)
+                    .HasForeignKey(d => d.BranchId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PReturn_Branch");
+
+                entity.HasOne(d => d.CreatedByUser)
+                    .WithMany(p => p.PurchaseReturns)
+                    .HasForeignKey(d => d.CreatedByUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PReturn_User");
+
+                entity.HasOne(d => d.PurchaseInvoice)
+                    .WithMany(p => p.PurchaseReturns)
+                    .HasForeignKey(d => d.PurchaseInvoiceId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PReturn_Invoice");
+            });
+
+            modelBuilder.Entity<RolePermissions>(entity =>
+            {
+                entity.HasIndex(e => new { e.RoleId, e.ScreenName })
+                    .HasName("UQ_RolePermissions_RoleScreen")
+                    .IsUnique();
+
+                entity.Property(e => e.PermissionLevel)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasDefaultValueSql("('None')");
+
+                entity.Property(e => e.ScreenName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.RolePermissions)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RolePermissions_Role");
             });
 
             modelBuilder.Entity<Roles>(entity =>

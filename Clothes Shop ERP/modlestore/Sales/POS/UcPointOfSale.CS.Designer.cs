@@ -142,7 +142,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.SpinManualQty.Properties.EditValueChangedFiringMode = DevExpress.XtraEditors.Controls.EditValueChangedFiringMode.Default;
             this.SpinManualQty.Properties.MaxValue = new decimal(new int[] {
-            1,
+            9999,
             0,
             0,
             0});
@@ -302,6 +302,11 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.SpinDiscount.Properties.DisplayFormat.FormatString = "n2";
             this.SpinDiscount.Properties.EditValueChangedFiringMode = DevExpress.XtraEditors.Controls.EditValueChangedFiringMode.Default;
+            this.SpinDiscount.Properties.MinValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             this.SpinDiscount.Size = new System.Drawing.Size(228, 26);
             this.SpinDiscount.StyleController = this.layoutControl2;
             this.SpinDiscount.TabIndex = 7;

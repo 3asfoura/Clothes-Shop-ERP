@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.idleTimer = new System.Windows.Forms.Timer(this.components);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.repositoryItemCheckedComboBoxEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckedComboBoxEdit();
             this.repositoryItemImageComboBox4 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
@@ -55,6 +56,7 @@
             this.ElementCustomers = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementPurchasing = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementPurchase = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            this.ElementPurchaseReturns = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementSuppliers = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this._ElementTreasury = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementTreasury = new DevExpress.XtraBars.Navigation.AccordionControlElement();
@@ -324,6 +326,7 @@
             // 
             this.ElementPurchasing.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] {
             this.ElementPurchase,
+            this.ElementPurchaseReturns,
             this.ElementSuppliers});
             this.ElementPurchasing.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this.ElementPurchasing.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("ElementPurchasing.ImageOptions.SvgImage")));
@@ -339,7 +342,14 @@
             this.ElementPurchase.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
             this.ElementPurchase.Text = "Purchase Invoices";
             this.ElementPurchase.Click += new System.EventHandler(this.ElementPurchase_Click);
-            // 
+            //
+            // ElementPurchaseReturns
+            //
+            this.ElementPurchaseReturns.Name = "ElementPurchaseReturns";
+            this.ElementPurchaseReturns.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementPurchaseReturns.Text = "Purchase Returns";
+            this.ElementPurchaseReturns.Click += new System.EventHandler(this.ElementPurchaseReturns_Click);
+            //
             // ElementSuppliers
             // 
             this.ElementSuppliers.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
@@ -535,9 +545,15 @@
             new DevExpress.XtraEditors.Controls.ImageComboBoxItem("English", "English", -1),
             new DevExpress.XtraEditors.Controls.ImageComboBoxItem("المصري", "Egyptian", -1)});
             this.repositoryItemImageComboBox2.Name = "repositoryItemImageComboBox2";
-            // 
+            //
+            // idleTimer
+            //
+            this.idleTimer.Enabled = true;
+            this.idleTimer.Interval = 5000;
+            this.idleTimer.Tick += new System.EventHandler(this.IdleTimer_Tick);
+            //
             // FrmMain
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1134, 806);
@@ -592,6 +608,7 @@
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementReturns;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementCustomers;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementPurchase;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement ElementPurchaseReturns;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementSuppliers;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementTreasury;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementSalesReport1;
@@ -608,6 +625,7 @@
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementAuditLogs;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementBackupSettings;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementTreasuryBalance;
+        private System.Windows.Forms.Timer idleTimer;
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox2;

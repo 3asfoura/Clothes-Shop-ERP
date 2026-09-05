@@ -152,7 +152,7 @@ namespace Clothes_Shop_ERP.modlestore
             //
             // btnRun
             //
-            this.btnRun.Location = new System.Drawing.Point(262, 44);
+            this.btnRun.Location = new System.Drawing.Point(789, 44);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(200, 22);
             this.btnRun.StyleController = this.layoutControl1;
@@ -188,8 +188,11 @@ namespace Clothes_Shop_ERP.modlestore
             //
             this.lblDate.Control = this.DtDate;
             this.lblDate.Location = new System.Drawing.Point(0, 0);
+            this.lblDate.MaxSize = new System.Drawing.Size(230, 66);
+            this.lblDate.MinSize = new System.Drawing.Size(230, 66);
             this.lblDate.Name = "lblDate";
             this.lblDate.Size = new System.Drawing.Size(230, 66);
+            this.lblDate.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
             this.lblDate.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 20, 0);
             this.lblDate.Text = "Date:";
             this.lblDate.TextLocation = DevExpress.Utils.Locations.Top;
@@ -198,9 +201,13 @@ namespace Clothes_Shop_ERP.modlestore
             // layoutControlItemRun
             //
             this.layoutControlItemRun.Control = this.btnRun;
-            this.layoutControlItemRun.Location = new System.Drawing.Point(230, 0);
+            this.layoutControlItemRun.ControlAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            this.layoutControlItemRun.Location = new System.Drawing.Point(787, 0);
+            this.layoutControlItemRun.MaxSize = new System.Drawing.Size(220, 66);
+            this.layoutControlItemRun.MinSize = new System.Drawing.Size(220, 66);
             this.layoutControlItemRun.Name = "layoutControlItemRun";
             this.layoutControlItemRun.Size = new System.Drawing.Size(220, 66);
+            this.layoutControlItemRun.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
             this.layoutControlItemRun.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemRun.TextVisible = false;
             //

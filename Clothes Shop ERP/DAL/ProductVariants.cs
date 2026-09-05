@@ -9,6 +9,7 @@ namespace Clothes_Shop_ERP.DAL
         {
             BranchStock = new HashSet<BranchStock>();
             PurchaseInvoiceDetails = new HashSet<PurchaseInvoiceDetails>();
+            PurchaseReturnDetails = new HashSet<PurchaseReturnDetails>();
             SalesInvoiceDetails = new HashSet<SalesInvoiceDetails>();
             SalesReturnDetails = new HashSet<SalesReturnDetails>();
             StockMovements = new HashSet<StockMovements>();
@@ -29,6 +30,7 @@ namespace Clothes_Shop_ERP.DAL
         public Sizes Size { get; set; }
         public ICollection<BranchStock> BranchStock { get; set; }
         public ICollection<PurchaseInvoiceDetails> PurchaseInvoiceDetails { get; set; }
+        public ICollection<PurchaseReturnDetails> PurchaseReturnDetails { get; set; }
         public ICollection<SalesInvoiceDetails> SalesInvoiceDetails { get; set; }
         public ICollection<SalesReturnDetails> SalesReturnDetails { get; set; }
         public ICollection<StockMovements> StockMovements { get; set; }
