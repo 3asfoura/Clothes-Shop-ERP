@@ -235,6 +235,15 @@
     <Compile Include="modlestore\Settings\AuditLogs\UcAuditLogs.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="modlestore\Settings\AuditLogs\UcAuditLogs.Designer.cs">
+      <DependentUpon>UcAuditLogs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="modlestore\Settings\Backup\UcBackupSettings.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="modlestore\Settings\Backup\UcBackupSettings.Designer.cs">
+      <DependentUpon>UcBackupSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="modlestore\Settings\UcUsers_Roles\UcUsers_Roles.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -250,6 +259,19 @@
     <Compile Include="modlestore\Treasury\FrmTreasuryEdit.Designer.cs">
       <DependentUpon>FrmTreasuryEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Program\FrmActivation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Program\FrmActivation.Designer.cs">
+      <DependentUpon>FrmActivation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program\FrmLicenseGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Program\FrmLicenseGenerator.Designer.cs">
+      <DependentUpon>FrmLicenseGenerator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program\LicenseManager.cs" />
     <Compile Include="modlestore\Customers &amp;  Suppilers\FrmPartyEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -391,6 +413,18 @@
     <Compile Include="UcDashboard.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UcAccountStatement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcAccountStatement.Designer.cs">
+      <DependentUpon>UcAccountStatement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UcDayClosingReport.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UcDayClosingReport.Designer.cs">
+      <DependentUpon>UcDayClosingReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="UcProfitReport.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -430,6 +464,8 @@
     <Compile Include="Program\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program\Sett.cs" />
+    <Compile Include="Program\BackupManager.cs" />
+    <Compile Include="Program\ReceiptPrinter.cs" />
     <Compile Include="UcStockReport.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -462,6 +498,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="modlestore\Settings\AuditLogs\UcAuditLogs.resx">
+      <DependentUpon>UcAuditLogs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="modlestore\Settings\Backup\UcBackupSettings.resx">
+      <DependentUpon>UcBackupSettings.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -509,6 +551,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="modlestore\Sales\UcSalesInvoices.resx">
       <DependentUpon>UcSalesInvoices.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcAccountStatement.resx">
+      <DependentUpon>UcAccountStatement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UcDayClosingReport.resx">
+      <DependentUpon>UcDayClosingReport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UcProfitReport.resx">
       <DependentUpon>UcProfitReport.cs</DependentUpon>

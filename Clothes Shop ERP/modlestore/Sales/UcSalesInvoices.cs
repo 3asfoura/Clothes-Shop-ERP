@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -35,7 +36,7 @@ namespace Clothes_Shop_ERP.modlestore
                     {
                         x.Id,
                         x.InvoiceNumber,
-                        Customer = x.Customer != null ? x.Customer.Name : "Walk-in",
+                        Customer = x.Customer != null ? x.Customer.Name : LocalizationManager.T("SalesInvoices_WalkInCustomer"),
                         Branch = x.Branch.Name,
                         x.InvoiceDate,
                         x.NetAmount,
@@ -44,6 +45,14 @@ namespace Clothes_Shop_ERP.modlestore
                     })
                     .ToList();
             }
+            gridView1.PopulateColumns();
+            if (gridView1.Columns["InvoiceNumber"] != null) gridView1.Columns["InvoiceNumber"].Caption = LocalizationManager.T("SalesInvoices_ColInvoiceNumber");
+            if (gridView1.Columns["Customer"] != null) gridView1.Columns["Customer"].Caption = LocalizationManager.T("SalesInvoices_ColCustomer");
+            if (gridView1.Columns["Branch"] != null) gridView1.Columns["Branch"].Caption = LocalizationManager.T("Shared_Branch");
+            if (gridView1.Columns["InvoiceDate"] != null) gridView1.Columns["InvoiceDate"].Caption = LocalizationManager.T("Purchases_ColInvoiceDate");
+            if (gridView1.Columns["NetAmount"] != null) gridView1.Columns["NetAmount"].Caption = LocalizationManager.T("SalesInvoices_ColNetAmount");
+            if (gridView1.Columns["PaidAmount"] != null) gridView1.Columns["PaidAmount"].Caption = LocalizationManager.T("Purchases_ColPaidAmount");
+            if (gridView1.Columns["Status"] != null) gridView1.Columns["Status"].Caption = LocalizationManager.T("Shared_Status");
         }
 
         private void gridControl1_MouseUp(object sender, MouseEventArgs e)
@@ -59,8 +68,50 @@ namespace Clothes_Shop_ERP.modlestore
 
             if (hit.InRow)
             {
-                menu.Items.Add("ViewDetails", null, (s, ev) => ViewDetails());
-          
+                menu.Items.Add(LocalizationManager.T("Shared_MenuViewDetails"), null, (s, ev) => ViewDetails());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuPrintReceipt"), null, (s, ev) => PrintReceipt());
+
+            }
+        }
+        private void PrintReceipt()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+
+            using (var db = new ClothesShopDBContext())
+            {
+                var invoice = db.SalesInvoices
+                    .Include(x => x.Customer)
+                    .Include(x => x.Branch)
+                    .Include(x => x.PaymentMethod)
+                    .FirstOrDefault(x => x.Id == id);
+                if (invoice == null) return;
+
+                var details = db.SalesInvoiceDetails
+                    .Include(x => x.ProductVariant).ThenInclude(v => v.Product)
+                    .Where(x => x.SalesInvoiceId == id)
+                    .ToList();
+
+                var receipt = new ReceiptData
+                {
+                    ShopName = invoice.Branch?.Name,
+                    InvoiceNumber = invoice.InvoiceNumber,
+                    Date = invoice.InvoiceDate,
+                    Customer = invoice.Customer?.Name ?? LocalizationManager.T("SalesInvoices_WalkInCustomer"),
+                    PaymentMethod = invoice.PaymentMethod?.Name,
+                    SubTotal = invoice.TotalAmount,
+                    Discount = invoice.DiscountAmount,
+                    NetTotal = invoice.NetAmount,
+                    Lines = details.Select(d => new ReceiptLine
+                    {
+                        Product = $"{d.ProductVariant.Product.Name} ({d.ProductVariant.Barcode})",
+                        Quantity = d.Quantity,
+                        UnitPrice = d.UnitPrice,
+                        LineTotal = d.Total
+                    }).ToList()
+                };
+
+                ReceiptPrinter.Preview(receipt);
             }
         }
         private void ViewDetails()
@@ -78,7 +129,7 @@ namespace Clothes_Shop_ERP.modlestore
                 string message = string.Join("\n", details.Select(d =>
                     $"{d.ProductVariant.Product.Name} ({d.ProductVariant.Barcode})  x{d.Quantity}  @ {d.UnitPrice:n2} = {d.Total:n2}"));
 
-                XtraMessageBox.Show(message, "Invoice Details");
+                XtraMessageBox.Show(message, LocalizationManager.T("SalesInvoices_DetailsTitle"));
             }
         }
 
@@ -90,7 +141,7 @@ namespace Clothes_Shop_ERP.modlestore
             e.Menu.Items.Clear();
             if (e.HitInfo.InRow)
             {
-                e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("View Details", (s, ev) => ViewDetails()));
+                e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem(LocalizationManager.T("Shared_MenuViewDetails"), (s, ev) => ViewDetails()));
             }
         }
     }

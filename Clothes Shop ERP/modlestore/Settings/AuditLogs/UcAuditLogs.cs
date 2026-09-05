@@ -1,67 +1,30 @@
-﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.DAL;
 using Clothes_Shop_ERP.Localization;
-using DevExpress.XtraEditors;
-using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP.modlestore
 {
-    public class UcAuditLogs : DevExpress.XtraEditors.XtraUserControl
+    public partial class UcAuditLogs : DevExpress.XtraEditors.XtraUserControl
     {
-        private DateEdit DtFrom, DtTo;
-        private ComboBoxEdit CmbTable;
-        private GridControl GridResult;
-        private GridView GridViewResult;
-
         public UcAuditLogs()
         {
-            this.Dock = DockStyle.Fill;
-            BuildUi();
-            RunReport();
-        
-        }
-      
-        private void BuildUi()
-        {
-            var lblFrom = new LabelControl { Text = "من:", Location = new Point(20, 18) };
-            DtFrom = new DateEdit { Location = new Point(20, 38), Width = 140 };
+            InitializeComponent();
             DtFrom.DateTime = DateTime.Today.AddDays(-7);
-            lblFrom.Text = LocalizationManager.T("AuditLogs_From");
-            var lblTo = new LabelControl { Text = "إلى:", Location = new Point(170, 18) };
-            DtTo = new DateEdit { Location = new Point(170, 38), Width = 140 };
             DtTo.DateTime = DateTime.Today;
-            lblTo.Text = LocalizationManager.T("AuditLogs_To");
-            var lblTable = new LabelControl { Text = "الجدول:", Location = new Point(320, 18) };
-            CmbTable = new ComboBoxEdit { Location = new Point(320, 38), Width = 200 };
-            CmbTable.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            ApplyLanguage();
+            RunReport();
+        }
+
+        public void ApplyLanguage()
+        {
+            lblFrom.Text = LocalizationManager.T("Shared_From");
+            lblTo.Text = LocalizationManager.T("Shared_To");
             lblTable.Text = LocalizationManager.T("AuditLogs_Table");
-            var btnRun = new SimpleButton { Text = "تحديث", Location = new Point(530, 37), Width = 100 };
-            btnRun.Click += (s, e) => RunReport();
-            btnRun.Text = LocalizationManager.T("AuditLogs_Refresh");
-
-            GridResult = new GridControl
-            {
-                Location = new Point(20, 75),
-                Size = new Size(900, 450),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
-            };
-            GridViewResult = new GridView(GridResult);
-            GridResult.MainView = GridViewResult;
-            GridViewResult.OptionsBehavior.Editable = false;
-            GridViewResult.OptionsView.ShowGroupPanel = false;
-            GridViewResult.RowCellStyle += GridViewResult_RowCellStyle;
-            GridViewResult.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-
-            this.Controls.Add(lblFrom); this.Controls.Add(DtFrom);
-            this.Controls.Add(lblTo); this.Controls.Add(DtTo);
-            this.Controls.Add(lblTable); this.Controls.Add(CmbTable);
-            this.Controls.Add(btnRun);
-            this.Controls.Add(GridResult);
+            btnRun.Text = LocalizationManager.T("Shared_Refresh");
         }
 
         private void RunReport()
@@ -71,7 +34,6 @@ namespace Clothes_Shop_ERP.modlestore
 
             using (var db = new ClothesShopDBContext())
             {
-                
                 var query = from log in db.AuditLogs
                             join u in db.Users on log.ChangedByUserId equals u.Id into users
                             from u in users.DefaultIfEmpty()
@@ -83,12 +45,11 @@ namespace Clothes_Shop_ERP.modlestore
                                 log.TableName,
                                 log.RecordId,
                                 log.Action,
-                                User = u != null ? u.FullName : "System"
+                                User = u != null ? u.FullName : LocalizationManager.T("AuditLogs_SystemUser")
                             };
 
                 var data = query.ToList();
 
-              
                 if (CmbTable.SelectedIndex > 0)
                 {
                     string selectedTable = CmbTable.Text;
@@ -96,8 +57,13 @@ namespace Clothes_Shop_ERP.modlestore
                 }
 
                 GridResult.DataSource = data;
+                GridViewResult.PopulateColumns();
+                if (GridViewResult.Columns["ChangedAt"] != null) GridViewResult.Columns["ChangedAt"].Caption = LocalizationManager.T("AuditLogs_ColChangedAt");
+                if (GridViewResult.Columns["TableName"] != null) GridViewResult.Columns["TableName"].Caption = LocalizationManager.T("AuditLogs_ColTable");
+                if (GridViewResult.Columns["RecordId"] != null) GridViewResult.Columns["RecordId"].Caption = LocalizationManager.T("AuditLogs_ColRecordId");
+                if (GridViewResult.Columns["Action"] != null) GridViewResult.Columns["Action"].Caption = LocalizationManager.T("AuditLogs_ColAction");
+                if (GridViewResult.Columns["User"] != null) GridViewResult.Columns["User"].Caption = LocalizationManager.T("AuditLogs_ColUser");
 
-           
                 if (CmbTable.Properties.Items.Count == 0)
                 {
                     CmbTable.Properties.Items.Add(LocalizationManager.T("txtAll"));
@@ -106,6 +72,11 @@ namespace Clothes_Shop_ERP.modlestore
                     CmbTable.SelectedIndex = 0;
                 }
             }
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            RunReport();
         }
 
         private void GridViewResult_RowCellStyle(object sender, RowCellStyleEventArgs e)
@@ -118,14 +89,6 @@ namespace Clothes_Shop_ERP.modlestore
             if (action == "Insert") { e.Appearance.ForeColor = Color.DarkGreen; }
             else if (action == "Update") { e.Appearance.ForeColor = Color.DarkBlue; }
             else if (action == "Delete") { e.Appearance.ForeColor = Color.DarkRed; }
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            this.Name = "UcAuditLogs";
-            this.Size = new Size(950, 550);
-            this.ResumeLayout(false);
         }
     }
 }

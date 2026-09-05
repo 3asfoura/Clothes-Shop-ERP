@@ -63,11 +63,14 @@
             this.ElementSalesReport1 = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementStockReport = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementProfitReport = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            this.ElementAccountStatement = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            this.ElementDayClosingReport = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementSettings = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementBranches = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementUsers_Roles = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementPaymentMethods = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementAuditLogs = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            this.ElementBackupSettings = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.fluentDesignFormControl1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl();
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.ComboLanguage = new DevExpress.XtraBars.BarEditItem();
@@ -378,7 +381,9 @@
             this.ElementReports.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] {
             this.ElementSalesReport1,
             this.ElementStockReport,
-            this.ElementProfitReport});
+            this.ElementProfitReport,
+            this.ElementAccountStatement,
+            this.ElementDayClosingReport});
             this.ElementReports.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this.ElementReports.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("ElementReports.ImageOptions.SvgImage")));
             this.ElementReports.Name = "ElementReports";
@@ -410,14 +415,29 @@
             this.ElementProfitReport.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
             this.ElementProfitReport.Text = "Profit Report";
             this.ElementProfitReport.Click += new System.EventHandler(this.ElementProfitReport_Click);
-            // 
+            //
+            // ElementAccountStatement
+            //
+            this.ElementAccountStatement.Name = "ElementAccountStatement";
+            this.ElementAccountStatement.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementAccountStatement.Text = "Account Statement";
+            this.ElementAccountStatement.Click += new System.EventHandler(this.ElementAccountStatement_Click);
+            //
+            // ElementDayClosingReport
+            //
+            this.ElementDayClosingReport.Name = "ElementDayClosingReport";
+            this.ElementDayClosingReport.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementDayClosingReport.Text = "Day Closing (Z-Report)";
+            this.ElementDayClosingReport.Click += new System.EventHandler(this.ElementDayClosingReport_Click);
+            //
             // ElementSettings
-            // 
+            //
             this.ElementSettings.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] {
             this.ElementBranches,
             this.ElementUsers_Roles,
             this.ElementPaymentMethods,
-            this.ElementAuditLogs});
+            this.ElementAuditLogs,
+            this.ElementBackupSettings});
             this.ElementSettings.Expanded = true;
             this.ElementSettings.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this.ElementSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("ElementSettings.ImageOptions.SvgImage")));
@@ -457,9 +477,16 @@
             this.ElementAuditLogs.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
             this.ElementAuditLogs.Text = "AuditLogs";
             this.ElementAuditLogs.Click += new System.EventHandler(this.ElementAuditLogs_Click);
-            // 
+            //
+            // ElementBackupSettings
+            //
+            this.ElementBackupSettings.Name = "ElementBackupSettings";
+            this.ElementBackupSettings.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementBackupSettings.Text = "Backup";
+            this.ElementBackupSettings.Click += new System.EventHandler(this.ElementBackupSettings_Click);
+            //
             // fluentDesignFormControl1
-            // 
+            //
             this.fluentDesignFormControl1.FluentDesignForm = this;
             this.fluentDesignFormControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.barButtonItem1,
@@ -570,6 +597,8 @@
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementSalesReport1;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementStockReport;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementProfitReport;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement ElementAccountStatement;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement ElementDayClosingReport;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementBranches;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementUsers_Roles;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementPaymentMethods;
@@ -577,6 +606,7 @@
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementProductVariants;
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementAuditLogs;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement ElementBackupSettings;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementTreasuryBalance;
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;

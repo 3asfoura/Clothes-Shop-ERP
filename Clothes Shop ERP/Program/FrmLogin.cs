@@ -24,6 +24,15 @@ namespace Clothes_Shop_ERP
         {
             InitializeComponent();
             ApplyLanguage();
+
+            // Hidden vendor-only shortcut (not shown anywhere in the UI): opens the
+            // license key generator. See LicenseManager.cs for how keys work.
+            this.KeyPreview = true;
+            this.KeyDown += (s, e) =>
+            {
+                if (e.Control && e.Alt && e.KeyCode == Keys.G)
+                    new FrmLicenseGenerator().ShowDialog(this);
+            };
         }
       
         public void ApplyLanguage()

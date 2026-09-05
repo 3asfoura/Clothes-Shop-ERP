@@ -1,4 +1,5 @@
 ﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
@@ -33,12 +34,24 @@ namespace Clothes_Shop_ERP
         {
 
             InitializeComponent();
+            ApplyLanguage();
             BuildUi();
             LoadLookups();
             TxtBarcode.Focus();
             GridViewCart.OptionsView.ShowGroupPanel = false;
             GridViewCart.OptionsCustomization.AllowSort = false;
             GridViewCart.Appearance.HeaderPanel.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+        }
+        public void ApplyLanguage()
+        {
+            btnAddManual.Text = LocalizationManager.T("POS_BtnAddManual");
+            layoutControlItem2.Text = LocalizationManager.T("POS_PickManually");
+            layoutControlItem1.Text = LocalizationManager.T("POS_ScanBarcode");
+            btnRemoveLine.Text = LocalizationManager.T("POS_BtnRemoveLine");
+            SimpleButton.Text = LocalizationManager.T("POS_BtnCheckout");
+            lblCustomer.Text = LocalizationManager.T("POS_Customer");
+            lblPayment.Text = LocalizationManager.T("POS_PaymentMethod");
+            lblDiscount.Text = LocalizationManager.T("POS_Discount");
         }
         private void LoadLookups()
         {
@@ -65,7 +78,7 @@ namespace Clothes_Shop_ERP
                     _variantIds.Add(v.Id);
                 }
 
-                CmbCustomer.Properties.Items.Add("Walk-in Customer");
+                CmbCustomer.Properties.Items.Add(LocalizationManager.T("POS_WalkInCustomer"));
                 _customerIds.Add(null);
                 foreach (var c in db.Customers.Where(x => x.IsActive == true).ToList())
                 {
@@ -102,7 +115,7 @@ namespace Clothes_Shop_ERP
 
                 if (variant == null)
                 {
-                    Sett.MsgBlue("Not Found", $"No active product with barcode {code}");
+                    Sett.MsgBlue(LocalizationManager.T("POS_NotFoundTitle"), string.Format(LocalizationManager.T("POS_ProductNotFoundByBarcode"), code));
                     return;
                 }
 
@@ -138,14 +151,14 @@ namespace Clothes_Shop_ERP
         {
             decimal subTotal = _cart.Sum(l => l.LineTotal);
             decimal net = subTotal - (decimal)SpinDiscount.Value;
-            LblTotal.Text = $"Total: {net:n2}";
+            LblTotal.Text = string.Format(LocalizationManager.T("POS_TotalFmt"), net);
         }
 
         private void SimpleButton_Click(object sender, EventArgs e)
         {
             if (_cart.Count == 0)
             {
-                Sett.MsgBlue("Empty Cart", "Please add at least one item before checking out.");
+                Sett.MsgBlue(LocalizationManager.T("POS_EmptyCartTitle"), LocalizationManager.T("POS_EmptyCartMsg"));
                 return;
             }
 
@@ -171,7 +184,7 @@ namespace Clothes_Shop_ERP
                         if (rowsAffected == 0)
                         {
                             transaction.Rollback();
-                            Sett.MsgBlue("Out of Stock", $"Not enough stock for {line.ProductDisplay}. Please refresh and try again.");
+                            Sett.MsgBlue(LocalizationManager.T("POS_OutOfStockTitle"), string.Format(LocalizationManager.T("POS_NotEnoughStockFor"), line.ProductDisplay));
                             return;
                         }
                     }
@@ -234,7 +247,29 @@ namespace Clothes_Shop_ERP
                     db.SaveChanges();
                     transaction.Commit();
 
-                    Sett.MsgGreen("Sale Completed", $"Invoice {invoice.InvoiceNumber} - Total: {netTotal:n2}");
+                    Sett.MsgGreen(LocalizationManager.T("POS_SaleCompletedTitle"), string.Format(LocalizationManager.T("POS_SaleCompletedMsg"), invoice.InvoiceNumber, netTotal));
+
+                    string branchName = db.Branches.Where(b => b.Id == branchId).Select(b => b.Name).FirstOrDefault();
+                    var receipt = new ReceiptData
+                    {
+                        ShopName = branchName,
+                        InvoiceNumber = invoice.InvoiceNumber,
+                        Date = invoice.InvoiceDate,
+                        Customer = CmbCustomer.Text,
+                        Cashier = FrmLogin.CurrentUserFullName,
+                        PaymentMethod = CmbPaymentMethod.Text,
+                        SubTotal = subTotal,
+                        Discount = discount,
+                        NetTotal = netTotal,
+                        Lines = _cart.Select(l => new ReceiptLine
+                        {
+                            Product = l.ProductDisplay,
+                            Quantity = l.Quantity,
+                            UnitPrice = l.UnitPrice,
+                            LineTotal = l.LineTotal
+                        }).ToList()
+                    };
+                    ReceiptPrinter.Print(receipt);
 
                     _cart.Clear();
                     SpinDiscount.Value = 0;
@@ -244,7 +279,7 @@ namespace Clothes_Shop_ERP
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    Sett.MsgBlue("Error", "Could not complete the sale. Nothing was charged. " + ex.Message);
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("POS_SaleFailed"), ex.Message));
                 }
             }
         }
@@ -274,7 +309,11 @@ namespace Clothes_Shop_ERP
             {
                 GridViewCart.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
                 GridViewCart.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
+                GridViewCart.Columns["Quantity"].Caption = LocalizationManager.T("StockCount_ColQuantity");
             }
+            if (GridViewCart.Columns["ProductDisplay"] != null) GridViewCart.Columns["ProductDisplay"].Caption = LocalizationManager.T("StockCount_ColProduct");
+            if (GridViewCart.Columns["UnitPrice"] != null) GridViewCart.Columns["UnitPrice"].Caption = LocalizationManager.T("POS_ColUnitPrice");
+            if (GridViewCart.Columns["LineTotal"] != null) GridViewCart.Columns["LineTotal"].Caption = LocalizationManager.T("Shared_ColTotal");
             GridViewCart.OptionsBehavior.Editable = false;
 
             RefreshTotal();

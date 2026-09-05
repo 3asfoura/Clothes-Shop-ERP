@@ -18,16 +18,54 @@ using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP
 {
-    public partial class FrmMain : DevExpress.XtraBars.FluentDesignSystem.FluentDesignForm
+    public partial class FrmMain : DevExpress.XtraBars.FluentDesignSystem.FluentDesignForm, IMessageFilter
     {
+        // Auto-lock: re-shows the login screen after this many minutes with no
+        // mouse/keyboard activity anywhere in the app.
+        private const int IdleLockMinutes = 5;
+        private DateTime _lastActivity = DateTime.Now;
+        private readonly Timer _idleTimer = new Timer { Interval = 5000 };
+        private bool _isLocked;
+
         public FrmMain()
         {
-           
+
             InitializeComponent();
             DarkModeToggle();
             ComboLanguage.EditValue = LocalizationManager.CurrentLanguage.ToString();
             ApplyLanguage();
 
+            Application.AddMessageFilter(this);
+            this.FormClosed += (s, e) => Application.RemoveMessageFilter(this);
+            _idleTimer.Tick += IdleTimer_Tick;
+            _idleTimer.Start();
+        }
+
+        // IMessageFilter: sees every Windows message for the whole app, so any
+        // mouse move/click or key press anywhere resets the idle clock - not
+        // just activity on FrmMain itself.
+        public bool PreFilterMessage(ref Message m)
+        {
+            const int WM_MOUSEMOVE = 0x0200, WM_LBUTTONDOWN = 0x0201, WM_RBUTTONDOWN = 0x0204,
+                      WM_KEYDOWN = 0x0100, WM_MOUSEWHEEL = 0x020A;
+            if (m.Msg == WM_MOUSEMOVE || m.Msg == WM_LBUTTONDOWN || m.Msg == WM_RBUTTONDOWN
+                || m.Msg == WM_KEYDOWN || m.Msg == WM_MOUSEWHEEL)
+            {
+                _lastActivity = DateTime.Now;
+            }
+            return false;
+        }
+
+        private void IdleTimer_Tick(object sender, EventArgs e)
+        {
+            if (_isLocked) return;
+            if ((DateTime.Now - _lastActivity).TotalMinutes >= IdleLockMinutes)
+            {
+                _isLocked = true;
+                new FrmLogin().ShowDialog(this);
+                _lastActivity = DateTime.Now;
+                _isLocked = false;
+            }
         }
         public void ApplyLanguage()
         {
@@ -55,18 +93,26 @@ namespace Clothes_Shop_ERP
             ElementSalesReport1.Text = LocalizationManager.T("Main_SalesReport");
             ElementStockReport.Text = LocalizationManager.T("Main_StockReport");
             ElementProfitReport.Text = LocalizationManager.T("Main_ProfitReport");
+            ElementAccountStatement.Text = LocalizationManager.T("Main_AccountStatement");
+            ElementDayClosingReport.Text = LocalizationManager.T("Main_DayClosingReport");
             ElementSettings.Text = LocalizationManager.T("Main_Settings");
             ElementBranches.Text = LocalizationManager.T("Main_Branches");
             ElementUsers_Roles.Text = LocalizationManager.T("Main_UsersRoles");
             ElementPaymentMethods.Text = LocalizationManager.T("Main_PaymentMethods");
             ElementAuditLogs.Text = LocalizationManager.T("Main_AuditLogs");
+            ElementBackupSettings.Text = LocalizationManager.T("Main_BackupSettings");
         }
         private void FrmMain_Load(object sender, EventArgs e)
         {
             new FrmLogin().ShowDialog();
-           
+
             UcDashboard dash = new UcDashboard();
             setTabPage(dash, "Dashboard", null);
+
+            // Runs on a background thread so a slow backup never freezes the UI;
+            // BackupManager itself no-ops quietly if no folder is configured yet
+            // or a backup already ran today.
+            System.Threading.Tasks.Task.Run(() => BackupManager.RunBackupIfDue());
 
         }
         void setTabPage(UserControl formObject, string FrmText, SvgImage image)
@@ -235,6 +281,18 @@ namespace Clothes_Shop_ERP
             setTabPage(frm, ElementSalesReport1.Text, ElementSalesReport1.ImageOptions.SvgImage);
 
         }
+
+        private void ElementAccountStatement_Click(object sender, EventArgs e)
+        {
+            UcAccountStatement frm = new UcAccountStatement();
+            setTabPage(frm, ElementAccountStatement.Text, ElementAccountStatement.ImageOptions.SvgImage);
+        }
+
+        private void ElementDayClosingReport_Click(object sender, EventArgs e)
+        {
+            UcDayClosingReport frm = new UcDayClosingReport();
+            setTabPage(frm, ElementDayClosingReport.Text, ElementDayClosingReport.ImageOptions.SvgImage);
+        }
         bool DarkMode = false;
         private void ToggleDarkMode_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -252,6 +310,12 @@ namespace Clothes_Shop_ERP
             UcAuditLogs frm = new UcAuditLogs();
             setTabPage(frm, ElementAuditLogs.Text, ElementAuditLogs.ImageOptions.SvgImage);
 
+        }
+
+        private void ElementBackupSettings_Click(object sender, EventArgs e)
+        {
+            UcBackupSettings frm = new UcBackupSettings();
+            setTabPage(frm, ElementBackupSettings.Text, ElementBackupSettings.ImageOptions.SvgImage);
         }
 
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -297,9 +361,7 @@ namespace Clothes_Shop_ERP
             LocalizationManager.SaveLanguagePreference();
 
             string title = LocalizationManager.T("Common_ConfirmTitle");
-            string message = newLanguage == AppLanguage.English
-                ? "The app needs to restart to apply the new language. Restart now?"
-                : "لازم نعيد تشغيل البرنامج عشان اللغة الجديدة تتطبق. هل عاوز اعاده تشغيل دلوقتي؟";
+            string message = LocalizationManager.T("Common_RestartForLanguage");
 
             var result = XtraMessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
