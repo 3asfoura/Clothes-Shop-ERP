@@ -45,6 +45,7 @@ namespace Clothes_Shop_ERP.modlestore
                 gridView1.GridControl.DataSource = db.PurchaseInvoices
                     .Include(x => x.Supplier)
                     .Include(x => x.Branch)
+                    .Where(x => !PermissionManager.BranchRestricted || x.BranchId == FrmLogin.CurrentBranchId)
                     .OrderByDescending(x => x.InvoiceDate)
                     .Select(x => new
                     {
@@ -191,6 +192,7 @@ namespace Clothes_Shop_ERP.modlestore
                 //menu.Items.Add("Activate/Deactivate", null, (s, ev) => ToggleActive());
                 //menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
             }
+            menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_PurchaseInvoices")));
         }
     }
 }

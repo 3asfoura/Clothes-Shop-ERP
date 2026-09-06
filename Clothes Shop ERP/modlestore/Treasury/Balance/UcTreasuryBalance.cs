@@ -66,6 +66,13 @@ namespace Clothes_Shop_ERP.modlestore
             GridViewResult.OptionsView.ShowGroupPanel = false;
             GridViewResult.OptionsCustomization.AllowSort = false;
             Sett.CenterColumns(GridViewResult);
+            GridResult.MouseUp += (s, e) =>
+            {
+                if (e.Button != MouseButtons.Right) return;
+                var menu = new ContextMenuStrip();
+                menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s2, ev) => Sett.ExportGrid(GridResult, LocalizationManager.T("Main_TreasuryBalance")));
+                menu.Show(GridResult, e.Location);
+            };
             this.Controls.Add(btnRefresh);
             this.Controls.Add(LblTotalBalance);
             this.Controls.Add(LblTotalsBreakdown);
@@ -78,6 +85,7 @@ namespace Clothes_Shop_ERP.modlestore
             {
                 var rows = db.TreasuryTransactions
                     .Include(x => x.Branch)
+                    .Where(x => !PermissionManager.BranchRestricted || x.BranchId == FrmLogin.CurrentBranchId)
                     .Select(x => new
                     {
                         Branch = x.Branch.Name,

@@ -82,6 +82,7 @@ namespace Clothes_Shop_ERP
                 { "PointOfSale", ElementPoint_of_Sale },
                 { "SalesInvoices", ElementSales_Invoices },
                 { "Returns", ElementReturns },
+                { "CashierShifts", ElementCashierShifts },
                 { "Customers", ElementCustomers },
                 { "PurchaseInvoices", ElementPurchase },
                 { "PurchaseReturns", ElementPurchaseReturns },
@@ -107,6 +108,7 @@ namespace Clothes_Shop_ERP
         }
         public void ApplyLanguage()
         {
+            ElementDashboard.Text = LocalizationManager.T("Main_Dashboard");
             ElementInventory.Text = LocalizationManager.T("Main_Inventory");
             ElementProducts.Text = LocalizationManager.T("Main_Products");
             ElementProductVariants.Text = LocalizationManager.T("Main_ProductVariants");
@@ -120,6 +122,7 @@ namespace Clothes_Shop_ERP
             ElementPoint_of_Sale.Text = LocalizationManager.T("Main_PointOfSale");
             ElementSales_Invoices.Text = LocalizationManager.T("Main_SalesInvoices");
             ElementReturns.Text = LocalizationManager.T("Main_Returns");
+            ElementCashierShifts.Text = LocalizationManager.T("Main_CashierShifts");
             ElementCustomers.Text = LocalizationManager.T("Main_Customers");
             ElementPurchasing.Text = LocalizationManager.T("Main_Purchasing");
             ElementPurchase.Text = LocalizationManager.T("Main_PurchaseInvoices");
@@ -143,11 +146,19 @@ namespace Clothes_Shop_ERP
         }
         private void FrmMain_Load(object sender, EventArgs e)
         {
+            // Guard the very first login the same way idle re-locks are
+            // guarded: ShowDialog() pumps messages while it's open, so the
+            // idle timer (already running from InitializeComponent) keeps
+            // ticking underneath it. Without this, taking more than
+            // IdleLockMinutes to type your password on first launch popped a
+            // second FrmLogin on top of the first - two logins back to back.
+            _isLocked = true;
             new FrmLogin().ShowDialog();
+            _isLocked = false;
+
             ApplyPermissions();
 
-            UcDashboard dash = new UcDashboard();
-            setTabPage(dash, "Dashboard", null);
+            ElementDashboard_Click(this, EventArgs.Empty);
 
             // Runs on a background thread so a slow backup never freezes the UI;
             // BackupManager itself no-ops quietly if no folder is configured yet
@@ -283,6 +294,18 @@ namespace Clothes_Shop_ERP
         {
             Clothes_Shop_ERP.modlestore.UcPurchaseReturns frm = new Clothes_Shop_ERP.modlestore.UcPurchaseReturns();
             setTabPage(frm, ElementPurchaseReturns.Text, ElementPurchaseReturns.ImageOptions.SvgImage);
+        }
+
+        private void ElementDashboard_Click(object sender, EventArgs e)
+        {
+            UcDashboard frm = new UcDashboard();
+            setTabPage(frm, ElementDashboard.Text, ElementDashboard.ImageOptions.SvgImage);
+        }
+
+        private void ElementCashierShifts_Click(object sender, EventArgs e)
+        {
+            Clothes_Shop_ERP.modlestore.UcCashierShifts frm = new Clothes_Shop_ERP.modlestore.UcCashierShifts();
+            setTabPage(frm, ElementCashierShifts.Text, ElementCashierShifts.ImageOptions.SvgImage);
         }
 
         private void ElementPoint_of_Sale_Click(object sender, EventArgs e)

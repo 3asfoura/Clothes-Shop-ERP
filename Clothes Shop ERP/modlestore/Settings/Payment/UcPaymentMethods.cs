@@ -27,13 +27,14 @@ namespace Clothes_Shop_ERP.modlestore
         public void ApplyLanguage()
         {
             ColName.Caption = LocalizationManager.T("Shared_Name");
+            ColIsCash.Caption = LocalizationManager.T("PaymentMethods_ColIsCash");
         }
         public void GetData()
         {
             using (var db = new ClothesShopDBContext())
             {
                 gridView1.GridControl.DataSource = db.PaymentMethods
-                    .Select(x => new { x.Id, x.Name })
+                    .Select(x => new { x.Id, x.Name, x.IsCash })
                     .ToList();
             }
         }
@@ -62,9 +63,11 @@ namespace Clothes_Shop_ERP.modlestore
             string name = XtraInputBox.Show(LocalizationManager.T("PaymentMethods_NamePrompt"), LocalizationManager.T("PaymentMethods_NewTitle"), "");
             if (string.IsNullOrWhiteSpace(name)) return;
 
+            bool isCash = XtraMessageBox.Show(LocalizationManager.T("PaymentMethods_IsCashPrompt"), LocalizationManager.T("PaymentMethods_NewTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+
             using (var db = new ClothesShopDBContext())
             {
-                db.PaymentMethods.Add(new PaymentMethodEntity { Name = name });
+                db.PaymentMethods.Add(new PaymentMethodEntity { Name = name, IsCash = isCash });
                 db.SaveChanges();
             }
             Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("PaymentMethods_EntityName")));
@@ -80,11 +83,14 @@ namespace Clothes_Shop_ERP.modlestore
             string newName = XtraInputBox.Show(LocalizationManager.T("PaymentMethods_EditNamePrompt"), string.Format(LocalizationManager.T("PaymentMethods_EditingTitleFmt"), currentName), currentName);
             if (string.IsNullOrWhiteSpace(newName)) return;
 
+            bool isCash = XtraMessageBox.Show(LocalizationManager.T("PaymentMethods_IsCashPrompt"), string.Format(LocalizationManager.T("PaymentMethods_EditingTitleFmt"), currentName), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+
             using (var db = new ClothesShopDBContext())
             {
                 var method = db.PaymentMethods.Where(x => x.Id == id).FirstOrDefault();
                 if (method == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("PaymentMethods_EntityName"), id)); return; }
                 method.Name = newName;
+                method.IsCash = isCash;
                 db.SaveChanges();
             }
             Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("PaymentMethods_EntityName")));

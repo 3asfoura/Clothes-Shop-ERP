@@ -31,6 +31,7 @@ namespace Clothes_Shop_ERP
             { "PointOfSale", "Main_PointOfSale" },
             { "SalesInvoices", "Main_SalesInvoices" },
             { "Returns", "Main_Returns" },
+            { "CashierShifts", "Main_CashierShifts" },
             { "Customers", "Main_Customers" },
             { "PurchaseInvoices", "Main_PurchaseInvoices" },
             { "PurchaseReturns", "Main_PurchaseReturns" },
@@ -84,5 +85,10 @@ namespace Clothes_Shop_ERP
         public static bool CanView(string screenName) => GetLevel(screenName) != LevelNone;
 
         public static bool CanEdit(string screenName) => GetLevel(screenName) == LevelWrite;
+
+        // Any role other than the full-access one only ever sees data for the
+        // branch it logged into (FrmLogin.CurrentBranchId) in cross-branch
+        // lists/reports, so a cashier at Branch A can't browse Branch B's sales.
+        public static bool BranchRestricted => !_fullAccess;
     }
 }

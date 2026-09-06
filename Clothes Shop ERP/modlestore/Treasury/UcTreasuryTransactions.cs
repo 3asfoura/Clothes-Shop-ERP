@@ -39,6 +39,7 @@ namespace Clothes_Shop_ERP.modlestore
             {
                 gridView1.GridControl.DataSource = db.TreasuryTransactions
                     .Include(x => x.Branch)
+                    .Where(x => !PermissionManager.BranchRestricted || x.BranchId == FrmLogin.CurrentBranchId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new
                     {
@@ -158,6 +159,7 @@ namespace Clothes_Shop_ERP.modlestore
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
+            menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_TreasuryTransactions")));
         }
     }
 }

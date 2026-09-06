@@ -31,6 +31,7 @@
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.ColName = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.ColIsCash = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             this.SuspendLayout();
@@ -49,7 +50,8 @@
             // gridView1
             // 
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
-            this.ColName});
+            this.ColName,
+            this.ColIsCash});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsCustomization.AllowSort = false;
@@ -62,7 +64,15 @@
             this.ColName.Name = "ColName";
             this.ColName.Visible = true;
             this.ColName.VisibleIndex = 0;
-            // 
+            //
+            // ColIsCash
+            //
+            this.ColIsCash.Caption = "Cash";
+            this.ColIsCash.FieldName = "IsCash";
+            this.ColIsCash.Name = "ColIsCash";
+            this.ColIsCash.Visible = true;
+            this.ColIsCash.VisibleIndex = 1;
+            //
             // UcPaymentMethods
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -81,5 +91,6 @@
         private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private DevExpress.XtraGrid.Columns.GridColumn ColName;
+        private DevExpress.XtraGrid.Columns.GridColumn ColIsCash;
     }
 }

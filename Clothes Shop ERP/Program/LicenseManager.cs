@@ -34,8 +34,25 @@ namespace Clothes_Shop_ERP
     public static class LicenseManager
     {
         private const string Secret = "ClothesShopERP-2026-ChangeThisSecretBeforeRealDistribution";
-        private static readonly string LicenseFilePath =
-            Path.Combine(Application.StartupPath, "license.dat");
+        private static readonly string LicenseFilePath = ResolveLicenseFilePath();
+
+        // Moved from the exe's own folder into Sett.AppDataFolder so it lives
+        // next to backup.settings in one recoverable place - but an install
+        // that's already activated (license.dat next to the exe) keeps
+        // working, it gets copied over the first time this runs rather than
+        // silently losing activation.
+        private static string ResolveLicenseFilePath()
+        {
+            string newPath = Path.Combine(Sett.AppDataFolder, "license.dat");
+            string oldPath = Path.Combine(Application.StartupPath, "license.dat");
+            try
+            {
+                if (!File.Exists(newPath) && File.Exists(oldPath))
+                    File.Copy(oldPath, newPath);
+            }
+            catch { }
+            return newPath;
+        }
 
         /// <summary>A short, stable code identifying this PC. Shown to the shop owner to send to the vendor.</summary>
         public static string GetMachineId()

@@ -33,5 +33,17 @@ namespace Clothes_Shop_ERP.Properties {
                 return ((string)(this["cnDB"]));
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RecentUsernames {
+            get {
+                return ((string)(this["RecentUsernames"]));
+            }
+            set {
+                this["RecentUsernames"] = value;
+            }
+        }
     }
 }

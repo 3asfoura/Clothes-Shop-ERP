@@ -12,6 +12,7 @@ namespace Clothes_Shop_ERP.DAL
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool IsCash { get; set; }
 
         public ICollection<SalesInvoices> SalesInvoices { get; set; }
     }

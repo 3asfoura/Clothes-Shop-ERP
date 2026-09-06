@@ -144,6 +144,7 @@ namespace Clothes_Shop_ERP.modlestore
             var menu = new ContextMenuStrip();
             if (PermissionManager.CanEdit("PurchaseReturns")) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
+            menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_PurchaseReturns")));
         }
     }
 }

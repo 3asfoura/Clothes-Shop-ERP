@@ -144,7 +144,6 @@
             this.TXT_Password.Size = new System.Drawing.Size(482, 32);
             this.TXT_Password.StyleController = this.layoutControl1;
             this.TXT_Password.TabIndex = 6;
-            this.TXT_Password.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.TXT_Password_ButtonClick);
             this.TXT_Password.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TXT_Password_KeyDown);
             // 
             // TXT_Username
@@ -162,6 +161,7 @@
             this.TXT_Username.Size = new System.Drawing.Size(482, 32);
             this.TXT_Username.StyleController = this.layoutControl1;
             this.TXT_Username.TabIndex = 6;
+            this.TXT_Username.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.TXT_Username_ButtonClick);
             // 
             // BTN_Login
             // 
@@ -176,9 +176,9 @@
             this.BTN_Login.TabIndex = 7;
             this.BTN_Login.Text = "Login";
             this.BTN_Login.Click += new System.EventHandler(this.BTN_Login_Click);
-            // 
+            //
             // Root
-            // 
+            //
             this.Root.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.Root.GroupBordersVisible = false;
             this.Root.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
@@ -281,7 +281,7 @@
             this.layoutControlItem3.Size = new System.Drawing.Size(486, 48);
             this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
-            // 
+            //
             // COL_Id
             // 
             this.COL_Id.Caption = "ID";
@@ -317,6 +317,7 @@
             this.Text = "NOVA ERP - Login";
             this.KeyPreview = true;
             this.Load += new System.EventHandler(this.FrmLogin_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmLogin_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmLogin_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
             this.layoutControl1.ResumeLayout(false);

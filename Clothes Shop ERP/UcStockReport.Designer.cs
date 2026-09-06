@@ -164,6 +164,7 @@
             this.GridViewResult.Name = "GridViewResult";
             this.GridViewResult.OptionsBehavior.Editable = false;
             this.GridViewResult.RowCellStyle += new DevExpress.XtraGrid.Views.Grid.RowCellStyleEventHandler(this.GridViewResult_RowCellStyle);
+            this.GridViewResult.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GridViewResult_MouseUp);
             // 
             // layoutControlGroup2
             // 

@@ -32,6 +32,7 @@ namespace Clothes_Shop_ERP
                 var stock = db.BranchStock
                     .Include(x => x.ProductVariant).ThenInclude(v => v.Product)
                     .Include(x => x.Branch)
+                    .Where(x => !PermissionManager.BranchRestricted || x.BranchId == FrmLogin.CurrentBranchId)
                     .Select(x => new
                     {
                         Product = x.ProductVariant.Product.Name,
@@ -95,6 +96,14 @@ namespace Clothes_Shop_ERP
                 e.Appearance.BackColor = System.Drawing.Color.MistyRose;
                 e.Appearance.ForeColor = System.Drawing.Color.DarkRed;
             }
+        }
+
+        private void GridViewResult_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(GridResult, LocalizationManager.T("Main_StockReport")));
+            menu.Show(GridResult, e.Location);
         }
     }
 }

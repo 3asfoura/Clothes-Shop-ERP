@@ -22,6 +22,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Shared_Branch", "Branch" },
             { "Shared_CreatedAt", "CreatedAt" },
             { "Shared_Description", "Description" },
+            { "Shared_Notes", "Notes" },
             { "Shared_Amount", "Amount" },
             { "Shared_TotalAmount", "TotalAmount" },
             { "Shared_Code", "Code" },
@@ -79,12 +80,14 @@ namespace Clothes_Shop_ERP.Localization
             { "Login_ColId", "ID" },
             { "Login_Branch", "Branch" },
             { "Login_ColName", "Branch Name" },
+            { "Login_ConfirmRemoveUsernameFmt", "Remove '{0}' from the remembered list?" },
 
 
             // ==================================================
             // ===== Main =======================================
             // ==================================================
 
+            { "Main_Dashboard", "Dashboard" },
             { "Main_Inventory", "Inventory" },
             { "Main_Products", "Products" },
             { "Main_ProductVariants", "Product Variants" },
@@ -98,6 +101,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Main_PointOfSale", "Point of Sale" },
             { "Main_SalesInvoices", "Sales Invoices" },
             { "Main_Returns", "Returns" },
+            { "Main_CashierShifts", "Cashier Shifts" },
             { "Main_Customers", "Customers" },
             { "Main_Purchasing", "Purchases" },
             { "Main_PurchaseInvoices", "Purchase Invoices" },
@@ -318,6 +322,11 @@ namespace Clothes_Shop_ERP.Localization
             // ----- POS -----
             { "POS_EmptyCartMsg", "Please add at least one item before checking out." },
             { "POS_DiscountExceedsTotal", "The discount can't be more than the cart total." },
+            { "POS_MenuHoldSale", "Hold Sale" },
+            { "POS_MenuResumeSale", "Resume Held Sale" },
+            { "POS_SaleHeld", "Sale held. Pick it up again from the cart's right-click menu." },
+            { "POS_HeldSaleLabelFmt", "{0} - {1} items - {2:n2}" },
+            { "POS_ResumeWillReplaceCart", "This will replace what's currently in the cart. Continue?" },
             { "POS_SaleFailed", "Could not complete the sale. Nothing was charged. {0}" },
             { "POS_ProductNotFoundByBarcode", "No active product with barcode {0}" },
             { "POS_NotEnoughStockFor", "Not enough stock for {0}. Please refresh and try again." },
@@ -493,6 +502,8 @@ namespace Clothes_Shop_ERP.Localization
             { "Shared_MenuEdit", "Edit" },
             { "Shared_MenuActivateDeactivate", "Activate/Deactivate" },
             { "Shared_MenuDelete", "Delete" },
+            { "Shared_MenuExport", "Export (Excel / PDF)..." },
+            { "Export_Done", "Exported successfully." },
 
             // ----- Categories (inline name prompt) -----
             { "Categories_NamePrompt", "Category name:" },
@@ -615,6 +626,9 @@ namespace Clothes_Shop_ERP.Localization
             { "Backup_BtnSave", "Save Folder" },
             { "Backup_BtnBackupNow", "Backup Now" },
             { "Backup_BtnSaveAs", "Save Database As..." },
+            { "ProductVariants_MenuPrintLabel", "Print Barcode Label..." },
+            { "ProductVariants_PrintLabelTitle", "Print Barcode Label" },
+            { "ProductVariants_LabelQtyPrompt", "How many labels?" },
             { "Backup_FileFilter", "Backup Files (*.bak)|*.bak|All Files (*.*)|*.*" },
             { "Backup_LastBackupFmt", "Last backup: {0:g}" },
             { "Backup_NeverBackedUp", "Last backup: never" },
@@ -657,7 +671,37 @@ namespace Clothes_Shop_ERP.Localization
             { "LicenseGen_ResultKey", "License Key (send this to the customer):" },
             { "LicenseGen_BtnCopy", "Copy" },
             { "LicenseGen_EnterIdFirst", "Please paste the customer's Machine ID first." },
-            { "LicenseGen_Copied", "License key copied to the clipboard." }
+            { "LicenseGen_Copied", "License key copied to the clipboard." },
+
+            // ==================================================
+            // ===== Cashier Shifts ===============================
+            // ==================================================
+            { "Shift_OpenTitle", "Open Shift" },
+            { "Shift_OpeningFloat", "Opening cash float:" },
+            { "Shift_BtnOpen", "Open Shift" },
+            { "Shift_CloseTitle", "Close Shift" },
+            { "Shift_CountedCash", "Cash counted in drawer:" },
+            { "Shift_ExpectedCashFmt", "Expected cash: {0:n2}" },
+            { "Shift_DifferenceFmt", "Difference: {0:n2}" },
+            { "Shift_BtnClose", "Close Shift" },
+            { "Shift_NoOpenShift", "You have no open shift." },
+            { "Shift_OpenSinceFmt", "Shift open since {0:g}, opening float {1:n2}" },
+            { "Shift_AlreadyOpen", "You already have an open shift." },
+            { "Shift_Opened", "Shift opened." },
+            { "Shift_Closed", "Shift closed." },
+            { "Shift_ColCashier", "Cashier" },
+            { "Shift_ColOpenedAt", "Opened At" },
+            { "Shift_ColOpeningFloat", "Opening Float" },
+            { "Shift_ColClosedAt", "Closed At" },
+            { "Shift_ColExpectedCash", "Expected Cash" },
+            { "Shift_ColCountedCash", "Counted Cash" },
+            { "Shift_ColDifference", "Difference" },
+
+            // ==================================================
+            // ===== Payment Methods - Cash flag =================
+            // ==================================================
+            { "PaymentMethods_IsCashPrompt", "Is this a cash payment method? (used for cashier shift reconciliation)" },
+            { "PaymentMethods_ColIsCash", "Cash" }
         };
     }
 }

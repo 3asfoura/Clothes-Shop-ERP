@@ -24,9 +24,11 @@ namespace Clothes_Shop_ERP.DAL
         public int? BranchId { get; set; }
         public bool? IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string Pin { get; set; }
 
         public Branches Branch { get; set; }
         public Roles Role { get; set; }
+        public CashierShifts CashierShifts { get; set; }
         public ICollection<PurchaseInvoices> PurchaseInvoices { get; set; }
         public ICollection<PurchaseReturns> PurchaseReturns { get; set; }
         public ICollection<SalesInvoices> SalesInvoices { get; set; }

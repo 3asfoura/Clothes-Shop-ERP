@@ -40,7 +40,8 @@ namespace Clothes_Shop_ERP.modlestore
             {
                 var invoices = db.SalesInvoices
                     .Include(x => x.Branch)
-                    .Where(x => x.InvoiceDate >= from && x.InvoiceDate <= to)
+                    .Where(x => x.InvoiceDate >= from && x.InvoiceDate <= to
+                             && (!PermissionManager.BranchRestricted || x.BranchId == FrmLogin.CurrentBranchId))
                     .OrderByDescending(x => x.InvoiceDate)
                     .Select(x => new
                     {
@@ -66,6 +67,14 @@ namespace Clothes_Shop_ERP.modlestore
         private void btnRun_Click(object sender, EventArgs e)
         {
             RunReport();
+        }
+
+        private void GridViewResult_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(GridResult, LocalizationManager.T("Main_SalesReport")));
+            menu.Show(GridResult, e.Location);
         }
     }
 }

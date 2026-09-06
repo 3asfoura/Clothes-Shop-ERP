@@ -31,6 +31,7 @@ namespace Clothes_Shop_ERP.modlestore
                 gridView1.GridControl.DataSource = db.SalesInvoices
                     .Include(x => x.Customer)
                     .Include(x => x.Branch)
+                    .Where(x => !PermissionManager.BranchRestricted || x.BranchId == FrmLogin.CurrentBranchId)
                     .OrderByDescending(x => x.InvoiceDate)
                     .Select(x => new
                     {
@@ -72,6 +73,7 @@ namespace Clothes_Shop_ERP.modlestore
                 menu.Items.Add(LocalizationManager.T("Shared_MenuPrintReceipt"), null, (s, ev) => PrintReceipt());
 
             }
+            menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_SalesInvoices")));
         }
         private void PrintReceipt()
         {

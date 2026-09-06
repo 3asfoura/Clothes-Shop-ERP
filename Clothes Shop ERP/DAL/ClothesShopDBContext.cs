@@ -19,6 +19,7 @@ namespace Clothes_Shop_ERP.DAL
         public virtual DbSet<Branches> Branches { get; set; }
         public virtual DbSet<BranchStock> BranchStock { get; set; }
         public virtual DbSet<Brands> Brands { get; set; }
+        public virtual DbSet<CashierShifts> CashierShifts { get; set; }
         public virtual DbSet<Categories> Categories { get; set; }
         public virtual DbSet<Colors> Colors { get; set; }
         public virtual DbSet<Customers> Customers { get; set; }
@@ -50,7 +51,6 @@ namespace Clothes_Shop_ERP.DAL
                 optionsBuilder.UseSqlServer(Sett.cn);
             }
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AuditLogs>(entity =>
@@ -115,6 +115,35 @@ namespace Clothes_Shop_ERP.DAL
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<CashierShifts>(entity =>
+            {
+                entity.HasIndex(e => e.UserId)
+                    .HasName("UQ_CashierShifts_OneOpenPerUser")
+                    .IsUnique()
+                    .HasFilter("([Status]='Open')");
+
+                entity.Property(e => e.Notes).HasMaxLength(500);
+
+                entity.Property(e => e.OpenedAt).HasDefaultValueSql("(sysutcdatetime())");
+
+                entity.Property(e => e.Status)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasDefaultValueSql("('Open')");
+
+                entity.HasOne(d => d.Branch)
+                    .WithMany(p => p.CashierShifts)
+                    .HasForeignKey(d => d.BranchId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CashierShifts_Branch");
+
+                entity.HasOne(d => d.User)
+                    .WithOne(p => p.CashierShifts)
+                    .HasForeignKey<CashierShifts>(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CashierShifts_User");
             });
 
             modelBuilder.Entity<Categories>(entity =>
@@ -614,6 +643,8 @@ namespace Clothes_Shop_ERP.DAL
                 entity.Property(e => e.PasswordHash)
                     .IsRequired()
                     .HasMaxLength(200);
+
+                entity.Property(e => e.Pin).HasMaxLength(200);
 
                 entity.Property(e => e.Username)
                     .IsRequired()

@@ -41,6 +41,9 @@ namespace Clothes_Shop_ERP.modlestore
                 gridView1.GridControl.DataSource = db.StockTransfers
                     .Include(x => x.FromBranch)
                     .Include(x => x.ToBranch)
+                    .Where(x => !PermissionManager.BranchRestricted
+                             || x.FromBranchId == FrmLogin.CurrentBranchId
+                             || x.ToBranchId == FrmLogin.CurrentBranchId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new
                     {
@@ -228,6 +231,7 @@ namespace Clothes_Shop_ERP.modlestore
                 }
             }
 
+            menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_BranchTransfer")));
             menu.Show(gridControl1, e.Location);
         }
     }

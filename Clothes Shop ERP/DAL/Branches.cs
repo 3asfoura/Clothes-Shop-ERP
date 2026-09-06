@@ -8,6 +8,7 @@ namespace Clothes_Shop_ERP.DAL
         public Branches()
         {
             BranchStock = new HashSet<BranchStock>();
+            CashierShifts = new HashSet<CashierShifts>();
             PurchaseInvoices = new HashSet<PurchaseInvoices>();
             PurchaseReturns = new HashSet<PurchaseReturns>();
             SalesInvoices = new HashSet<SalesInvoices>();
@@ -26,6 +27,7 @@ namespace Clothes_Shop_ERP.DAL
         public bool? IsActive { get; set; }
 
         public ICollection<BranchStock> BranchStock { get; set; }
+        public ICollection<CashierShifts> CashierShifts { get; set; }
         public ICollection<PurchaseInvoices> PurchaseInvoices { get; set; }
         public ICollection<PurchaseReturns> PurchaseReturns { get; set; }
         public ICollection<SalesInvoices> SalesInvoices { get; set; }

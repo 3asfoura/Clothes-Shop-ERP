@@ -158,6 +158,34 @@ namespace Clothes_Shop_ERP
             GetData();
         }
 
+        private void PrintBarcodeLabel()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+
+            BarcodeLabelData label;
+            using (var db = new ClothesShopDBContext())
+            {
+                var v = db.ProductVariants.Include(x => x.Product).Include(x => x.Color).Include(x => x.Size)
+                    .FirstOrDefault(x => x.Id == id);
+                if (v == null) return;
+
+                label = new BarcodeLabelData
+                {
+                    ProductName = v.Product.Name,
+                    VariantInfo = $"{v.Color.Name} - {v.Size.Name}",
+                    Barcode = v.Barcode,
+                    Price = v.SalePrice
+                };
+            }
+
+            string qtyText = XtraInputBox.Show(LocalizationManager.T("ProductVariants_LabelQtyPrompt"), LocalizationManager.T("ProductVariants_PrintLabelTitle"), "1");
+            if (string.IsNullOrWhiteSpace(qtyText)) return;
+            if (!int.TryParse(qtyText, out int qty) || qty < 1) qty = 1;
+
+            BarcodeLabelPrinter.Preview(label, qty);
+        }
+
         private void gridControl1_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right) return;
@@ -171,10 +199,14 @@ namespace Clothes_Shop_ERP
             if (canEdit) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
 
-            if (hit.InRow && canEdit)
+            if (hit.InRow)
             {
-                menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
-                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
+                menu.Items.Add(LocalizationManager.T("ProductVariants_MenuPrintLabel"), null, (s, ev) => PrintBarcodeLabel());
+                if (canEdit)
+                {
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
+                }
             }
         }
     }

@@ -432,9 +432,10 @@
             this.GridCart.TabIndex = 4;
             this.GridCart.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.GridViewCart});
-            // 
+            this.GridCart.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GridCart_MouseUp);
+            //
             // GridViewCart
-            // 
+            //
             this.GridViewCart.DetailHeight = 458;
             this.GridViewCart.GridControl = this.GridCart;
             this.GridViewCart.Name = "GridViewCart";

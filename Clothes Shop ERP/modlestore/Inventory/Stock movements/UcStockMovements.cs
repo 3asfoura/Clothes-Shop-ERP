@@ -22,6 +22,7 @@ namespace Clothes_Shop_ERP.modlestore
                 gridView1.GridControl.DataSource = db.StockMovements
                     .Include(x => x.ProductVariant).ThenInclude(v => v.Product)
                     .Include(x => x.Branch)
+                    .Where(x => !PermissionManager.BranchRestricted || x.BranchId == FrmLogin.CurrentBranchId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new
                     {
@@ -67,7 +68,10 @@ namespace Clothes_Shop_ERP.modlestore
 
         private void gridControl1_MouseUp(object sender, MouseEventArgs e)
         {
-
+            if (e.Button != MouseButtons.Right) return;
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_StockMovements")));
+            menu.Show(gridControl1, e.Location);
         }
     }
 }

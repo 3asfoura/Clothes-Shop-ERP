@@ -12,13 +12,29 @@ using System.Security.Principal;
 using System.Windows.Forms;
 using static System.Console;
 using DevExpress.Utils;
+using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
+using LocalizationManager = Clothes_Shop_ERP.Localization.LocalizationManager;
 
 namespace Clothes_Shop_ERP
 {
     public class Sett
     {
         public static SqlConnection cn = new SqlConnection(Properties.Settings.Default.cnDB);
+
+        // One shared, well-known folder for everything the app saves outside
+        // the database itself (license file, backup configuration) - so
+        // there's a single place to point a backup/recovery tool at, or to
+        // find by hand if a PC needs to be rebuilt. ProgramData (not the exe's
+        // own folder) because it survives a reinstall/relocation and stays
+        // writable even when the app is installed under Program Files.
+        public static readonly string AppDataFolder =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Clothes Shop ERP");
+
+        static Sett()
+        {
+            try { Directory.CreateDirectory(AppDataFolder); } catch { }
+        }
 
         // Message Aler - Icon Code
         // Star = "\uf005" ,Bell = "\uf0f3" , refrwsh = "\uf021"
@@ -54,6 +70,35 @@ namespace Clothes_Shop_ERP
             view.Appearance.HeaderPanel.TextOptions.HAlignment = HorzAlignment.Center;
             foreach (DevExpress.XtraGrid.Columns.GridColumn col in view.Columns)
                 col.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+        }
+
+        // Shared "Export" action for every grid in the app - lets the user pick
+        // Excel (for further analysis/sharing with an accountant) or PDF (for a
+        // final, unchangeable printable copy) from the same Save dialog.
+        public static void ExportGrid(GridControl grid, string suggestedFileName)
+        {
+            using (var dlg = new SaveFileDialog
+            {
+                Filter = "Excel Workbook (*.xlsx)|*.xlsx|PDF Document (*.pdf)|*.pdf",
+                FileName = suggestedFileName
+            })
+            {
+                if (dlg.ShowDialog() != DialogResult.OK) return;
+
+                try
+                {
+                    if (dlg.FilterIndex == 1)
+                        grid.ExportToXlsx(dlg.FileName);
+                    else
+                        grid.ExportToPdf(dlg.FileName);
+
+                    MsgBlue(LocalizationManager.T("Shared_Success"), LocalizationManager.T("Export_Done"));
+                }
+                catch (Exception ex)
+                {
+                    MsgRed(LocalizationManager.T("Shared_Error"), ex.Message);
+                }
+            }
         }
 
     }

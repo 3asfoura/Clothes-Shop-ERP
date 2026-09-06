@@ -14,8 +14,24 @@ namespace Clothes_Shop_ERP
     public static class BackupManager
     {
         private const int KeepBackups = 14;
-        private static readonly string SettingsFilePath =
-            Path.Combine(Application.StartupPath, "backup.settings");
+        private static readonly string SettingsFilePath = ResolveSettingsFilePath();
+
+        // Moved from the exe's own folder into Sett.AppDataFolder so it lives
+        // next to license.dat in one recoverable place - but an install that
+        // already has the old file keeps working, its settings get copied
+        // over the first time this runs rather than silently reset.
+        private static string ResolveSettingsFilePath()
+        {
+            string newPath = Path.Combine(Sett.AppDataFolder, "backup.settings");
+            string oldPath = Path.Combine(Application.StartupPath, "backup.settings");
+            try
+            {
+                if (!File.Exists(newPath) && File.Exists(oldPath))
+                    File.Copy(oldPath, newPath);
+            }
+            catch { }
+            return newPath;
+        }
 
         public static string BackupFolder { get; set; }
         public static DateTime? LastBackupAt { get; set; }

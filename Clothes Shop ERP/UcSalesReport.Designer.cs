@@ -95,7 +95,8 @@
             this.GridViewResult.GridControl = this.GridResult;
             this.GridViewResult.Name = "GridViewResult";
             this.GridViewResult.OptionsBehavior.Editable = false;
-            // 
+            this.GridViewResult.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GridViewResult_MouseUp);
+            //
             // layoutControlGroup2
             // 
             this.layoutControlGroup2.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;

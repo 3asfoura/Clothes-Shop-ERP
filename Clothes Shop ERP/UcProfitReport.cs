@@ -43,7 +43,8 @@ namespace Clothes_Shop_ERP.modlestore
                     .Include(x => x.SalesInvoice)
                     .Include(x => x.ProductVariant).ThenInclude(v => v.Product)
                     .Where(x => x.SalesInvoice.InvoiceDate >= from && x.SalesInvoice.InvoiceDate <= to
-                             && x.SalesInvoice.Status == "Completed")
+                             && x.SalesInvoice.Status == "Completed"
+                             && (!PermissionManager.BranchRestricted || x.SalesInvoice.BranchId == FrmLogin.CurrentBranchId))
                     .ToList();
 
                 var grouped = soldLines
@@ -81,7 +82,8 @@ namespace Clothes_Shop_ERP.modlestore
                 // cost above. Net profit = gross profit from goods minus these overhead costs.
                 decimal generalExpenses = db.TreasuryTransactions
                     .Where(x => x.TransactionType == "Out" && x.RefType == "Manual"
-                             && x.CreatedAt >= from && x.CreatedAt <= to)
+                             && x.CreatedAt >= from && x.CreatedAt <= to
+                             && (!PermissionManager.BranchRestricted || x.BranchId == FrmLogin.CurrentBranchId))
                     .Sum(x => (decimal?)x.Amount) ?? 0;
                 decimal netProfit = grossProfit - generalExpenses;
 
@@ -93,6 +95,14 @@ namespace Clothes_Shop_ERP.modlestore
         private void btnRun_Click(object sender, EventArgs e)
         {
             RunReport();
+        }
+
+        private void GridViewResult_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(GridResult, LocalizationManager.T("Main_ProfitReport")));
+            menu.Show(GridResult, e.Location);
         }
     }
 }

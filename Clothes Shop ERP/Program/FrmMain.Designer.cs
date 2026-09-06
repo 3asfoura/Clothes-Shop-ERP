@@ -40,6 +40,7 @@
             this.fluentDesignFormContainer1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormContainer();
             this.TabsControls = new DevExpress.XtraTab.XtraTabControl();
             this.accordionControl1 = new DevExpress.XtraBars.Navigation.AccordionControl();
+            this.ElementDashboard = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementInventory = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementProducts = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementProductVariants = new DevExpress.XtraBars.Navigation.AccordionControlElement();
@@ -53,6 +54,7 @@
             this.ElementPoint_of_Sale = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementSales_Invoices = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementReturns = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            this.ElementCashierShifts = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementCustomers = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementPurchasing = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementPurchase = new DevExpress.XtraBars.Navigation.AccordionControlElement();
@@ -165,6 +167,7 @@
             this.accordionControl1.Appearance.Item.Default.Options.UseFont = true;
             this.accordionControl1.Dock = System.Windows.Forms.DockStyle.Left;
             this.accordionControl1.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] {
+            this.ElementDashboard,
             this.ElementInventory,
             this.ElementBranch_Sales,
             this.ElementPurchasing,
@@ -178,9 +181,16 @@
             this.accordionControl1.Size = new System.Drawing.Size(256, 777);
             this.accordionControl1.TabIndex = 1;
             this.accordionControl1.ViewType = DevExpress.XtraBars.Navigation.AccordionControlViewType.HamburgerMenu;
-            // 
+            //
+            // ElementDashboard
+            //
+            this.ElementDashboard.Name = "ElementDashboard";
+            this.ElementDashboard.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementDashboard.Text = "Dashboard";
+            this.ElementDashboard.Click += new System.EventHandler(this.ElementDashboard_Click);
+            //
             // ElementInventory
-            // 
+            //
             this.ElementInventory.Elements.AddRange(new DevExpress.XtraBars.Navigation.AccordionControlElement[] {
             this.ElementProducts,
             this.ElementProductVariants,
@@ -275,6 +285,7 @@
             this.ElementPoint_of_Sale,
             this.ElementSales_Invoices,
             this.ElementReturns,
+            this.ElementCashierShifts,
             this.ElementCustomers});
             this.ElementBranch_Sales.HeaderTemplate.AddRange(new DevExpress.XtraBars.Navigation.HeaderElementInfo[] {
             new DevExpress.XtraBars.Navigation.HeaderElementInfo(DevExpress.XtraBars.Navigation.HeaderElementType.Image),
@@ -312,7 +323,14 @@
             this.ElementReturns.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
             this.ElementReturns.Text = "Returns";
             this.ElementReturns.Click += new System.EventHandler(this.ElementReturns_Click);
-            // 
+            //
+            // ElementCashierShifts
+            //
+            this.ElementCashierShifts.Name = "ElementCashierShifts";
+            this.ElementCashierShifts.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementCashierShifts.Text = "Cashier Shifts";
+            this.ElementCashierShifts.Click += new System.EventHandler(this.ElementCashierShifts_Click);
+            //
             // ElementCustomers
             // 
             this.ElementCustomers.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
@@ -589,6 +607,7 @@
 
         private DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormContainer fluentDesignFormContainer1;
         private DevExpress.XtraBars.Navigation.AccordionControl accordionControl1;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement ElementDashboard;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementInventory;
         private DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl fluentDesignFormControl1;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementBranch_Sales;
@@ -609,6 +628,7 @@
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementCustomers;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementPurchase;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementPurchaseReturns;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement ElementCashierShifts;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementSuppliers;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementTreasury;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementSalesReport1;

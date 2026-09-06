@@ -79,12 +79,14 @@ namespace Clothes_Shop_ERP.Localization
             { "Login_ColId", "الرقم" },
             { "Login_Branch", "الفرع" },
             { "Login_ColName", "اسم الفرع" },
+            { "Login_ConfirmRemoveUsernameFmt", "تمسح '{0}' من القائمة المحفوظة؟" },
 
 
             // ==================================================
             // ===== Main =======================================
             // ==================================================
 
+            { "Main_Dashboard", "الرئيسية" },
             { "Main_Inventory", "المخزون" },
             { "Main_Products", "المنتجات" },
             { "Main_ProductVariants", "متغيرات المنتج" },
@@ -98,6 +100,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Main_PointOfSale", "نقطة البيع" },
             { "Main_SalesInvoices", "فواتير المبيعات" },
             { "Main_Returns", "المرتجعات" },
+            { "Main_CashierShifts", "ورديات الكاشير" },
             { "Main_Customers", "العملاء" },
             { "Main_Purchasing", "المشتريات" },
             { "Main_PurchaseInvoices", "فواتير المشتريات" },
@@ -318,6 +321,11 @@ namespace Clothes_Shop_ERP.Localization
             // ----- POS -----
             { "POS_EmptyCartMsg", "الرجاء إضافة عنصر واحد على الأقل قبل إتمام الشراء." },
             { "POS_DiscountExceedsTotal", "الخصم متقدرش يكون أكبر من إجمالي الفاتورة." },
+            { "POS_MenuHoldSale", "تعليق الفاتورة" },
+            { "POS_MenuResumeSale", "استرجاع فاتورة معلّقة" },
+            { "POS_SaleHeld", "اتعلقت الفاتورة. رجّعها تاني من قايمة الكليك يمين على السلة." },
+            { "POS_HeldSaleLabelFmt", "{0} - {1} صنف - {2:n2}" },
+            { "POS_ResumeWillReplaceCart", "ده هيمسح اللي موجود في السلة دلوقتي. تكمل؟" },
             { "POS_SaleFailed", "تعذر إتمام عملية البيع. لم يتم خصم أي مبلغ. {0}" },
             { "POS_ProductNotFoundByBarcode", "لا يوجد منتج نشط بالباركود {0}" },
             { "POS_NotEnoughStockFor", "الكمية غير كافية لـ {0}. الرجاء التحديث والمحاولة مرة أخرى." },
@@ -493,6 +501,8 @@ namespace Clothes_Shop_ERP.Localization
             { "Shared_MenuEdit", "تعديل" },
             { "Shared_MenuActivateDeactivate", "تفعيل/إلغاء تنشيط" },
             { "Shared_MenuDelete", "حذف" },
+            { "Shared_MenuExport", "تصدير (Excel / PDF)..." },
+            { "Export_Done", "تم التصدير بنجاح." },
 
             // ----- Categories (inline name prompt) -----
             { "Categories_NamePrompt", "اسم الفئة:" },
@@ -615,6 +625,9 @@ namespace Clothes_Shop_ERP.Localization
             { "Backup_BtnSave", "حفظ المجلد" },
             { "Backup_BtnBackupNow", "نسخ احتياطي الآن" },
             { "Backup_BtnSaveAs", "حفظ نسخة من الداتابيز باسم..." },
+            { "ProductVariants_MenuPrintLabel", "طباعة ملصق باركود..." },
+            { "ProductVariants_PrintLabelTitle", "طباعة ملصق باركود" },
+            { "ProductVariants_LabelQtyPrompt", "عدد الملصقات؟" },
             { "Backup_FileFilter", "ملفات النسخ الاحتياطي (*.bak)|*.bak|كل الملفات (*.*)|*.*" },
             { "Backup_LastBackupFmt", "آخر نسخة احتياطية: {0:g}" },
             { "Backup_NeverBackedUp", "آخر نسخة احتياطية: لا يوجد" },
@@ -657,7 +670,37 @@ namespace Clothes_Shop_ERP.Localization
             { "LicenseGen_ResultKey", "كود التفعيل (ابعته للعميل):" },
             { "LicenseGen_BtnCopy", "نسخ" },
             { "LicenseGen_EnterIdFirst", "الرجاء لصق كود جهاز العميل الأول." },
-            { "LicenseGen_Copied", "تم نسخ كود التفعيل." }
+            { "LicenseGen_Copied", "تم نسخ كود التفعيل." },
+
+            // ==================================================
+            // ===== ورديات الكاشير ===============================
+            // ==================================================
+            { "Shift_OpenTitle", "فتح الوردية" },
+            { "Shift_OpeningFloat", "المبلغ النقدي بداية الوردية:" },
+            { "Shift_BtnOpen", "فتح الوردية" },
+            { "Shift_CloseTitle", "قفل الوردية" },
+            { "Shift_CountedCash", "الكاش الموجود في الدرج:" },
+            { "Shift_ExpectedCashFmt", "الكاش المتوقع: {0:n2}" },
+            { "Shift_DifferenceFmt", "الفرق: {0:n2}" },
+            { "Shift_BtnClose", "قفل الوردية" },
+            { "Shift_NoOpenShift", "معندكش وردية مفتوحة." },
+            { "Shift_OpenSinceFmt", "الوردية مفتوحة من {0:g}، رأس المال {1:n2}" },
+            { "Shift_AlreadyOpen", "عندك وردية مفتوحة بالفعل." },
+            { "Shift_Opened", "تم فتح الوردية." },
+            { "Shift_Closed", "تم قفل الوردية." },
+            { "Shift_ColCashier", "الكاشير" },
+            { "Shift_ColOpenedAt", "وقت الفتح" },
+            { "Shift_ColOpeningFloat", "رأس المال" },
+            { "Shift_ColClosedAt", "وقت القفل" },
+            { "Shift_ColExpectedCash", "الكاش المتوقع" },
+            { "Shift_ColCountedCash", "الكاش الفعلي" },
+            { "Shift_ColDifference", "الفرق" },
+
+            // ==================================================
+            // ===== طرق الدفع - علامة الكاش =====================
+            // ==================================================
+            { "PaymentMethods_IsCashPrompt", "طريقة الدفع دي كاش؟ (بتتستخدم في تسوية ورديات الكاشير)" },
+            { "PaymentMethods_ColIsCash", "كاش" }
         };
     }
 }

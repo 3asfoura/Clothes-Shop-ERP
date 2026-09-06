@@ -10,5 +10,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=DESKTOP-5T9DQEU;Initial Catalog=ClothesShopDB;Integrated Security=True;Encrypt=False</Value>
     </Setting>
+    <Setting Name="RecentUsernames" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

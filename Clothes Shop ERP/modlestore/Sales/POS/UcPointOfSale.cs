@@ -26,6 +26,24 @@ namespace Clothes_Shop_ERP
             public decimal LineTotal => UnitPrice * Quantity;
         }
 
+        // A cart set aside mid-sale (customer stepped away, forgot their wallet...)
+        // so the cashier can serve someone else and come back to it later. Kept
+        // in memory only - static so it survives switching away from the POS tab
+        // and back, but it's cleared if the app closes (matches how a held sale
+        // works at a real till: short-lived, not a permanent record).
+        public class HeldSale
+        {
+            public DateTime HeldAt { get; set; }
+            public List<CartLine> Lines { get; set; }
+            public int CustomerIndex { get; set; }
+            public int PaymentMethodIndex { get; set; }
+            public decimal Discount { get; set; }
+            public string Label => string.Format(LocalizationManager.T("POS_HeldSaleLabelFmt"),
+                HeldAt.ToString("HH:mm"), Lines.Sum(l => l.Quantity), Lines.Sum(l => l.LineTotal));
+        }
+
+        private static List<HeldSale> _heldSales = new List<HeldSale>();
+
         private List<int> _variantIds = new List<int>();
         private List<int?> _customerIds = new List<int?>();
         private List<int> _paymentMethodIds = new List<int>();
@@ -316,6 +334,64 @@ namespace Clothes_Shop_ERP
             if (GridViewCart.FocusedRowHandle < 0) return;
             var line = GridViewCart.GetFocusedRow() as CartLine;
             if (line != null) { _cart.Remove(line); RefreshTotal(); }
+        }
+
+        private void HoldSale()
+        {
+            if (_cart.Count == 0)
+            {
+                Sett.MsgBlue(LocalizationManager.T("POS_EmptyCartTitle"), LocalizationManager.T("POS_EmptyCartMsg"));
+                return;
+            }
+
+            _heldSales.Add(new HeldSale
+            {
+                HeldAt = DateTime.Now,
+                Lines = _cart.ToList(),
+                CustomerIndex = CmbCustomer.SelectedIndex,
+                PaymentMethodIndex = CmbPaymentMethod.SelectedIndex,
+                Discount = (decimal)SpinDiscount.Value
+            });
+
+            _cart.Clear();
+            SpinDiscount.Value = 0;
+            if (CmbCustomer.Properties.Items.Count > 0) CmbCustomer.SelectedIndex = 0;
+            RefreshTotal();
+            Sett.MsgGreen(LocalizationManager.T("Shared_Success"), LocalizationManager.T("POS_SaleHeld"));
+        }
+
+        private void ResumeSale(HeldSale held)
+        {
+            if (_cart.Count > 0 &&
+                XtraMessageBox.Show(LocalizationManager.T("POS_ResumeWillReplaceCart"), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            _cart.Clear();
+            foreach (var line in held.Lines) _cart.Add(line);
+            if (held.CustomerIndex >= 0 && held.CustomerIndex < CmbCustomer.Properties.Items.Count) CmbCustomer.SelectedIndex = held.CustomerIndex;
+            if (held.PaymentMethodIndex >= 0 && held.PaymentMethodIndex < CmbPaymentMethod.Properties.Items.Count) CmbPaymentMethod.SelectedIndex = held.PaymentMethodIndex;
+            SpinDiscount.Value = held.Discount;
+            _heldSales.Remove(held);
+            RefreshTotal();
+        }
+
+        private void GridCart_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            if (!PermissionManager.CanEdit("PointOfSale")) return;
+
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(LocalizationManager.T("POS_MenuHoldSale"), null, (s, ev) => HoldSale());
+
+            if (_heldSales.Count > 0)
+            {
+                var resumeMenu = new ToolStripMenuItem(LocalizationManager.T("POS_MenuResumeSale"));
+                foreach (var held in _heldSales.ToList())
+                    resumeMenu.DropDownItems.Add(held.Label, null, (s, ev) => ResumeSale(held));
+                menu.Items.Add(resumeMenu);
+            }
+
+            menu.Show(GridCart, e.Location);
         }
         private void BuildUi()
         {
