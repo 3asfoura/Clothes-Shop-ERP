@@ -256,6 +256,10 @@ Generated_Code/
 # because we have git ;-)
 _UpgradeReport_Files/
 Backup*/
+# Exception: this app has its own "Backup Settings" feature module - its source
+# files were accidentally matched (and never committed) by the Backup*/ rule above.
+!Clothes Shop ERP/Core/Modules/Settings/Backup/
+!Clothes Shop ERP/Core/Modules/Settings/Backup/**
 UpgradeLog*.XML
 UpgradeLog*.htm
 ServiceFabricBackup/

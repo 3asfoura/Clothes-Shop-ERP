@@ -143,6 +143,8 @@ namespace Clothes_Shop_ERP
             ElementPaymentMethods.Text = LocalizationManager.T("Main_PaymentMethods");
             ElementAuditLogs.Text = LocalizationManager.T("Main_AuditLogs");
             ElementBackupSettings.Text = LocalizationManager.T("Main_BackupSettings");
+            barButtonItem1.Caption = LocalizationManager.T("Main_DarkMode");
+            ComboLanguage.Caption = LocalizationManager.T("Main_Language");
         }
         private void FrmMain_Load(object sender, EventArgs e)
         {

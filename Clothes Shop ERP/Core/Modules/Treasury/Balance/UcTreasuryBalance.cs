@@ -11,61 +11,13 @@ using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP.modlestore
 {
-    public class UcTreasuryBalance : DevExpress.XtraEditors.XtraUserControl
+    public partial class UcTreasuryBalance : DevExpress.XtraEditors.XtraUserControl
     {
-        private LabelControl LblTotalBalance;
-        private LabelControl LblTotalsBreakdown;
-        private GridControl GridResult;
-        private GridView GridViewResult;
-
         public UcTreasuryBalance()
         {
-            this.Dock = DockStyle.Fill;
-            BuildUi();
-            RunReport();
-
-        }
-
-        private void BuildUi()
-        {
-            var btnRefresh = new SimpleButton
-            {
-                Text = LocalizationManager.T("Shared_Refresh"),
-                Location = new Point(20, 15),
-                Width = 100
-            };
-            btnRefresh.Click += (s, e) => RunReport();
-
-            LblTotalBalance = new LabelControl
-            {
-                Text = LocalizationManager.T("TreasuryBalance_CurrentBalance"),
-                Location = new Point(140, 12),
-                AutoSizeMode = LabelAutoSizeMode.None,
-                Size = new Size(400, 30),
-                Font = new Font("Segoe UI", 14, FontStyle.Bold)
-            };
-
-            LblTotalsBreakdown = new LabelControl
-            {
-                Text = LocalizationManager.T("TreasuryBalance_InOutTotals"),
-                Location = new Point(20, 50),
-                AutoSizeMode = LabelAutoSizeMode.None,
-                Size = new Size(500, 20),
-                Font = new Font("Segoe UI", 9)
-            };
-
-            GridResult = new GridControl
-            {
-                Location = new Point(20, 85),
-                Size = new Size(700, 350),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
-            };
-            GridViewResult = new GridView(GridResult);
-            GridResult.MainView = GridViewResult;
-            GridViewResult.OptionsBehavior.Editable = false;
-            GridViewResult.OptionsView.ShowGroupPanel = false;
-            GridViewResult.OptionsCustomization.AllowSort = false;
-            Sett.CenterColumns(GridViewResult);
+            InitializeComponent();
+            BtnRefresh.Text = LocalizationManager.T("Shared_Refresh");
+            BtnRefresh.Click += (s, e) => RunReport();
             GridResult.MouseUp += (s, e) =>
             {
                 if (e.Button != MouseButtons.Right) return;
@@ -73,10 +25,8 @@ namespace Clothes_Shop_ERP.modlestore
                 menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s2, ev) => Sett.ExportGrid(GridResult, LocalizationManager.T("Main_TreasuryBalance")));
                 menu.Show(GridResult, e.Location);
             };
-            this.Controls.Add(btnRefresh);
-            this.Controls.Add(LblTotalBalance);
-            this.Controls.Add(LblTotalsBreakdown);
-            this.Controls.Add(GridResult);
+            Sett.CenterColumns(GridViewResult);
+            RunReport();
         }
 
         private void RunReport()
@@ -119,18 +69,11 @@ namespace Clothes_Shop_ERP.modlestore
                 decimal balance = totalIn - totalOut;
 
                 LblTotalBalance.Text = string.Format(LocalizationManager.T("TreasuryBalance_CurrentBalanceFmt"), balance);
-                LblTotalBalance.ForeColor = balance >= 0 ? Color.DarkGreen : Color.DarkRed;
+                LblTotalBalance.AppearanceItemCaption.ForeColor = balance >= 0 ? Color.DarkGreen : Color.DarkRed;
+                LblTotalBalance.AppearanceItemCaption.Options.UseForeColor = true;
 
                 LblTotalsBreakdown.Text = string.Format(LocalizationManager.T("TreasuryBalance_InOutTotalsFmt"), totalIn, totalOut);
             }
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            this.Name = "UcTreasuryBalance";
-            this.Size = new Size(760, 460);
-            this.ResumeLayout(false);
         }
     }
 }

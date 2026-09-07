@@ -19,53 +19,18 @@ namespace Clothes_Shop_ERP.modlestore
     // plus/minus manual treasury cash movements they made themselves. Purchase
     // invoice payments aren't included since purchases don't track payment
     // method - see the note in ComputeExpectedCash.
-    public class UcCashierShifts : DevExpress.XtraEditors.XtraUserControl
+    public partial class UcCashierShifts : DevExpress.XtraEditors.XtraUserControl
     {
-        private LabelControl LblStatus;
-        private SimpleButton BtnOpen;
-        private SimpleButton BtnClose;
-        private GridControl GridResult;
-        private GridView GridViewResult;
-
         public UcCashierShifts()
         {
-            this.Dock = DockStyle.Fill;
-            BuildUi();
-            RefreshStatus();
-            GetData();
-        }
-
-        private void BuildUi()
-        {
-            BtnOpen = new SimpleButton { Text = LocalizationManager.T("Shift_BtnOpen"), Location = new Point(20, 15), Width = 140 };
+            InitializeComponent();
+            BtnOpen.Text = LocalizationManager.T("Shift_BtnOpen");
+            BtnClose.Text = LocalizationManager.T("Shift_BtnClose");
             BtnOpen.Click += (s, e) => OpenShift();
-
-            BtnClose = new SimpleButton { Text = LocalizationManager.T("Shift_BtnClose"), Location = new Point(170, 15), Width = 140 };
             BtnClose.Click += (s, e) => CloseShift();
-
             bool canEdit = PermissionManager.CanEdit("CashierShifts");
             BtnOpen.Enabled = canEdit;
             BtnClose.Enabled = canEdit;
-
-            LblStatus = new LabelControl
-            {
-                Location = new Point(20, 50),
-                AutoSizeMode = LabelAutoSizeMode.None,
-                Size = new Size(600, 25),
-                Font = new Font("Segoe UI", 9.75f, FontStyle.Bold)
-            };
-
-            GridResult = new GridControl
-            {
-                Location = new Point(20, 85),
-                Size = new Size(700, 350),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
-            };
-            GridViewResult = new GridView(GridResult);
-            GridResult.MainView = GridViewResult;
-            GridViewResult.OptionsBehavior.Editable = false;
-            GridViewResult.OptionsView.ShowGroupPanel = false;
-            GridViewResult.OptionsCustomization.AllowSort = false;
             GridResult.MouseUp += (s, e) =>
             {
                 if (e.Button != MouseButtons.Right) return;
@@ -73,11 +38,8 @@ namespace Clothes_Shop_ERP.modlestore
                 menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s2, ev) => Sett.ExportGrid(GridResult, LocalizationManager.T("Main_CashierShifts")));
                 menu.Show(GridResult, e.Location);
             };
-
-            this.Controls.Add(BtnOpen);
-            this.Controls.Add(BtnClose);
-            this.Controls.Add(LblStatus);
-            this.Controls.Add(GridResult);
+            RefreshStatus();
+            GetData();
         }
 
         private CashierShiftEntity GetMyOpenShift(ClothesShopDBContext db)
@@ -95,14 +57,16 @@ namespace Clothes_Shop_ERP.modlestore
                 if (open == null)
                 {
                     LblStatus.Text = LocalizationManager.T("Shift_NoOpenShift");
-                    LblStatus.ForeColor = Color.DarkRed;
+                    LblStatus.AppearanceItemCaption.ForeColor = Color.DarkRed;
+                    LblStatus.AppearanceItemCaption.Options.UseForeColor = true;
                     BtnOpen.Enabled = canEdit;
                     BtnClose.Enabled = false;
                 }
                 else
                 {
                     LblStatus.Text = string.Format(LocalizationManager.T("Shift_OpenSinceFmt"), open.OpenedAt, open.OpeningFloat);
-                    LblStatus.ForeColor = Color.DarkGreen;
+                    LblStatus.AppearanceItemCaption.ForeColor = Color.DarkGreen;
+                    LblStatus.AppearanceItemCaption.Options.UseForeColor = true;
                     BtnOpen.Enabled = false;
                     BtnClose.Enabled = canEdit;
                 }
@@ -231,14 +195,6 @@ namespace Clothes_Shop_ERP.modlestore
                 if (GridViewResult.Columns["Difference"] != null) GridViewResult.Columns["Difference"].Caption = LocalizationManager.T("Shift_ColDifference");
                 if (GridViewResult.Columns["Status"] != null) GridViewResult.Columns["Status"].Caption = LocalizationManager.T("Shared_Status");
             }
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            this.Name = "UcCashierShifts";
-            this.Size = new Size(760, 460);
-            this.ResumeLayout(false);
         }
     }
 }

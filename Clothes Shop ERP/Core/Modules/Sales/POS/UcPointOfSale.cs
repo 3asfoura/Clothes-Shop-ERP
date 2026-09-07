@@ -105,7 +105,7 @@ namespace Clothes_Shop_ERP
                 }
                 CmbCustomer.SelectedIndex = 0;
 
-                foreach (var p in db.PaymentMethods.ToList())
+                foreach (var p in db.PaymentMethods.Where(x => x.IsActive == true).ToList())
                 {
                     CmbPaymentMethod.Properties.Items.Add(p.Name);
                     _paymentMethodIds.Add(p.Id);

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.EntityFrameworkCore.Design.2.1.0\build\net461\Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('..\packages\Microsoft.EntityFrameworkCore.Design.2.1.0\build\net461\Microsoft.EntityFrameworkCore.Design.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -193,343 +193,355 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArabicGridLocalizer.cs" />
-    <Compile Include="Clothesshopdbcontext.extensions.cs" />
-    <Compile Include="DAL\AuditLogs.cs" />
-    <Compile Include="DAL\Branches.cs" />
-    <Compile Include="DAL\BranchStock.cs" />
-    <Compile Include="DAL\Brands.cs" />
-    <Compile Include="DAL\CashierShifts.cs" />
-    <Compile Include="DAL\Categories.cs" />
-    <Compile Include="DAL\ClothesShopDBContext.cs" />
-    <Compile Include="DAL\Colors.cs" />
-    <Compile Include="DAL\Customers.cs" />
-    <Compile Include="DAL\PaymentMethods.cs" />
-    <Compile Include="DAL\Products.cs" />
-    <Compile Include="DAL\ProductVariants.cs" />
-    <Compile Include="DAL\PurchaseInvoiceDetails.cs" />
-    <Compile Include="DAL\PurchaseInvoices.cs" />
-    <Compile Include="DAL\PurchaseReturnDetails.cs" />
-    <Compile Include="DAL\PurchaseReturns.cs" />
-    <Compile Include="DAL\RolePermissions.cs" />
-    <Compile Include="DAL\Roles.cs" />
-    <Compile Include="DAL\SalesInvoiceDetails.cs" />
-    <Compile Include="DAL\SalesInvoices.cs" />
-    <Compile Include="DAL\SalesReturnDetails.cs" />
-    <Compile Include="DAL\SalesReturns.cs" />
-    <Compile Include="DAL\Sizes.cs" />
-    <Compile Include="DAL\StockMovements.cs" />
-    <Compile Include="DAL\StockTransferDetails.cs" />
-    <Compile Include="DAL\StockTransfers.cs" />
-    <Compile Include="DAL\Suppliers.cs" />
-    <Compile Include="DAL\TreasuryTransactions.cs" />
-    <Compile Include="DAL\Users.cs" />
-    <Compile Include="FileName.cs" />
-    <Compile Include="Lang.english.cs" />
-    <Compile Include="Lang.egyptian.cs" />
-    <Compile Include="LocalizationManager.cs" />
-    <Compile Include="modlestore\Purchases\FrmPurchaseInvoiceEdit.cs" />
-    <Compile Include="modlestore\Purchases\Return\FrmPurchaseReturnEdit.cs">
+    <Compile Include="Core\Common\ArabicGridLocalizer.cs" />
+    <Compile Include="Core\Common\Clothesshopdbcontext.extensions.cs" />
+    <Compile Include="Core\DAL\AuditLogs.cs" />
+    <Compile Include="Core\DAL\Branches.cs" />
+    <Compile Include="Core\DAL\BranchStock.cs" />
+    <Compile Include="Core\DAL\Brands.cs" />
+    <Compile Include="Core\DAL\CashierShifts.cs" />
+    <Compile Include="Core\DAL\Categories.cs" />
+    <Compile Include="Core\DAL\ClothesShopDBContext.cs" />
+    <Compile Include="ClothesShopSpecific\ColorsSizes\Colors.cs" />
+    <Compile Include="Core\DAL\Customers.cs" />
+    <Compile Include="Core\DAL\PaymentMethods.cs" />
+    <Compile Include="Core\DAL\Products.cs" />
+    <Compile Include="ClothesShopSpecific\ProductVariants\ProductVariants.cs" />
+    <Compile Include="Core\DAL\PurchaseInvoiceDetails.cs" />
+    <Compile Include="Core\DAL\PurchaseInvoices.cs" />
+    <Compile Include="Core\DAL\PurchaseReturnDetails.cs" />
+    <Compile Include="Core\DAL\PurchaseReturns.cs" />
+    <Compile Include="Core\DAL\RolePermissions.cs" />
+    <Compile Include="Core\DAL\Roles.cs" />
+    <Compile Include="Core\DAL\SalesInvoiceDetails.cs" />
+    <Compile Include="Core\DAL\SalesInvoices.cs" />
+    <Compile Include="Core\DAL\SalesReturnDetails.cs" />
+    <Compile Include="Core\DAL\SalesReturns.cs" />
+    <Compile Include="ClothesShopSpecific\ColorsSizes\Sizes.cs" />
+    <Compile Include="Core\DAL\StockMovements.cs" />
+    <Compile Include="Core\DAL\StockTransferDetails.cs" />
+    <Compile Include="Core\DAL\StockTransfers.cs" />
+    <Compile Include="Core\DAL\Suppliers.cs" />
+    <Compile Include="Core\DAL\TreasuryTransactions.cs" />
+    <Compile Include="Core\DAL\Users.cs" />
+    <Compile Include="Core\Common\FileName.cs" />
+    <Compile Include="Core\Common\Lang.english.cs" />
+    <Compile Include="Core\Common\Lang.egyptian.cs" />
+    <Compile Include="Core\Common\LocalizationManager.cs" />
+    <Compile Include="Core\Modules\Purchases\FrmPurchaseInvoiceEdit.cs" />
+    <Compile Include="Core\Modules\Purchases\Returns\FrmPurchaseReturnEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Purchases\Return\FrmPurchaseReturnEdit.Designer.cs">
+    <Compile Include="Core\Modules\Purchases\Returns\FrmPurchaseReturnEdit.Designer.cs">
       <DependentUpon>FrmPurchaseReturnEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\CashierShifts\UcCashierShifts.cs">
+    <Compile Include="Core\Modules\CashierShifts\UcCashierShifts.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\CashierShifts\FrmShiftOpen.cs">
+    <Compile Include="Core\Modules\CashierShifts\UcCashierShifts.Designer.cs">
+      <DependentUpon>UcCashierShifts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Modules\CashierShifts\FrmShiftOpen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\CashierShifts\FrmShiftOpen.Designer.cs">
+    <Compile Include="Core\Modules\CashierShifts\FrmShiftOpen.Designer.cs">
       <DependentUpon>FrmShiftOpen.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\CashierShifts\FrmShiftClose.cs">
+    <Compile Include="Core\Modules\CashierShifts\FrmShiftClose.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\CashierShifts\FrmShiftClose.Designer.cs">
+    <Compile Include="Core\Modules\CashierShifts\FrmShiftClose.Designer.cs">
       <DependentUpon>FrmShiftClose.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Sales\Return\FrmReturnEdit.cs">
+    <Compile Include="Core\Modules\Sales\Returns\FrmReturnEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Sales\Return\FrmReturnEdit.Designer.cs">
+    <Compile Include="Core\Modules\Sales\Returns\FrmReturnEdit.Designer.cs">
       <DependentUpon>FrmReturnEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Brach Transfer\FrmStockTransferEdit.cs" />
-    <Compile Include="modlestore\Settings\AuditLogs\UcAuditLogs.cs">
+    <Compile Include="Core\Modules\Inventory\BranchTransfer\FrmStockTransferEdit.cs" />
+    <Compile Include="Core\Modules\Settings\AuditLogs\UcAuditLogs.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Settings\AuditLogs\UcAuditLogs.Designer.cs">
+    <Compile Include="Core\Modules\Settings\AuditLogs\UcAuditLogs.Designer.cs">
       <DependentUpon>UcAuditLogs.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Settings\Backup\UcBackupSettings.cs">
+    <Compile Include="Core\Modules\Settings\Backup\UcBackupSettings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Settings\Backup\UcBackupSettings.Designer.cs">
+    <Compile Include="Core\Modules\Settings\Backup\UcBackupSettings.Designer.cs">
       <DependentUpon>UcBackupSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Settings\UcUsers_Roles\UcUsers_Roles.cs">
+    <Compile Include="Core\Modules\Settings\UsersRoles\UcUsers_Roles.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Settings\UcUsers_Roles\UcUsers_Roles.Designer.cs">
+    <Compile Include="Core\Modules\Settings\UsersRoles\UcUsers_Roles.Designer.cs">
       <DependentUpon>UcUsers_Roles.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Treasury\Balance\UcTreasuryBalance.cs">
+    <Compile Include="Core\Modules\Treasury\Balance\UcTreasuryBalance.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Treasury\FrmTreasuryEdit.cs">
+    <Compile Include="Core\Modules\Treasury\Balance\UcTreasuryBalance.Designer.cs">
+      <DependentUpon>UcTreasuryBalance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Modules\Treasury\FrmTreasuryEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Treasury\FrmTreasuryEdit.Designer.cs">
+    <Compile Include="Core\Modules\Treasury\FrmTreasuryEdit.Designer.cs">
       <DependentUpon>FrmTreasuryEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program\FrmActivation.cs">
+    <Compile Include="Core\Program\FrmActivation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Program\FrmActivation.Designer.cs">
+    <Compile Include="Core\Program\FrmActivation.Designer.cs">
       <DependentUpon>FrmActivation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program\FrmLicenseGenerator.cs">
+    <Compile Include="Core\Program\FrmLicenseGenerator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Program\FrmLicenseGenerator.Designer.cs">
+    <Compile Include="Core\Program\FrmLicenseGenerator.Designer.cs">
       <DependentUpon>FrmLicenseGenerator.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program\LicenseManager.cs" />
-    <Compile Include="modlestore\Customers &amp;  Suppilers\FrmPartyEdit.cs">
+    <Compile Include="Core\Program\LicenseManager.cs" />
+    <Compile Include="Core\Modules\CustomersSuppliers\FrmPartyEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Customers &amp;  Suppilers\FrmPartyEdit.Designer.cs">
+    <Compile Include="Core\Modules\CustomersSuppliers\FrmPartyEdit.Designer.cs">
       <DependentUpon>FrmPartyEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Stock Count\FrmStockCountEdit.cs">
+    <Compile Include="Core\Modules\Inventory\StockCount\FrmStockCountEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Stock Count\FrmStockCountEdit.Designer.cs">
+    <Compile Include="Core\Modules\Inventory\StockCount\FrmStockCountEdit.Designer.cs">
       <DependentUpon>FrmStockCountEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Product Variants\FrmVariantEdit.cs">
+    <Compile Include="ClothesShopSpecific\ProductVariants\FrmVariantEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Product Variants\FrmVariantEdit.Designer.cs">
+    <Compile Include="ClothesShopSpecific\ProductVariants\FrmVariantEdit.Designer.cs">
       <DependentUpon>FrmVariantEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Products\FrmProductEdit.cs">
+    <Compile Include="Core\Modules\Inventory\Products\FrmProductEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Products\FrmProductEdit.Designer.cs">
+    <Compile Include="Core\Modules\Inventory\Products\FrmProductEdit.Designer.cs">
       <DependentUpon>FrmProductEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Color &amp; Size\FrmColorEdit.cs">
+    <Compile Include="ClothesShopSpecific\ColorsSizes\FrmColorEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Color &amp; Size\FrmColorEdit.Designer.cs">
+    <Compile Include="ClothesShopSpecific\ColorsSizes\FrmColorEdit.Designer.cs">
       <DependentUpon>FrmColorEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program\FrmLogin.cs">
+    <Compile Include="Core\Program\FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Program\FrmLogin.Designer.cs">
+    <Compile Include="Core\Program\FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program\FrmMain.cs">
+    <Compile Include="Core\Program\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Program\FrmMain.Designer.cs">
+    <Compile Include="Core\Program\FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Color &amp; Size\FrmSizeEdit.cs">
+    <Compile Include="ClothesShopSpecific\ColorsSizes\FrmSizeEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Color &amp; Size\FrmSizeEdit.Designer.cs">
+    <Compile Include="ClothesShopSpecific\ColorsSizes\FrmSizeEdit.Designer.cs">
       <DependentUpon>FrmSizeEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Settings\Branches\FrmBranchEdit.cs">
+    <Compile Include="Core\Modules\Settings\Branches\FrmBranchEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Settings\Branches\FrmBranchEdit.Designer.cs">
+    <Compile Include="Core\Modules\Settings\Branches\FrmBranchEdit.Designer.cs">
       <DependentUpon>FrmBranchEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Settings\UcUsers_Roles\FrmUserEdit.cs">
+    <Compile Include="Core\Modules\Settings\UsersRoles\FrmUserEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Settings\UcUsers_Roles\FrmUserEdit.Designer.cs">
+    <Compile Include="Core\Modules\Settings\UsersRoles\FrmUserEdit.Designer.cs">
       <DependentUpon>FrmUserEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Settings\UcUsers_Roles\FrmRoleEdit.cs">
+    <Compile Include="Core\Modules\Settings\UsersRoles\FrmRoleEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="modlestore\Settings\UcUsers_Roles\FrmRoleEdit.Designer.cs">
+    <Compile Include="Core\Modules\Settings\UsersRoles\FrmRoleEdit.Designer.cs">
       <DependentUpon>FrmRoleEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Settings\Branches\UcBranches.cs">
+    <Compile Include="Core\Modules\Settings\Branches\UcBranches.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Settings\Branches\UcBranches.Designer.cs">
+    <Compile Include="Core\Modules\Settings\Branches\UcBranches.Designer.cs">
       <DependentUpon>UcBranches.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Brach Transfer\UcBranchTransfer.cs">
+    <Compile Include="Core\Modules\Inventory\BranchTransfer\UcBranchTransfer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Brach Transfer\UcBranchTransfer.Designer.cs">
+    <Compile Include="Core\Modules\Inventory\BranchTransfer\UcBranchTransfer.Designer.cs">
       <DependentUpon>UcBranchTransfer.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Brands\UcBrands.cs">
+    <Compile Include="Core\Modules\Inventory\Brands\UcBrands.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Brands\UcBrands.Designer.cs">
+    <Compile Include="Core\Modules\Inventory\Brands\UcBrands.Designer.cs">
       <DependentUpon>UcBrands.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Categories\UcCategories.cs">
+    <Compile Include="Core\Modules\Inventory\Categories\UcCategories.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Categories\UcCategories.Designer.cs">
+    <Compile Include="Core\Modules\Inventory\Categories\UcCategories.Designer.cs">
       <DependentUpon>UcCategories.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Color &amp; Size\UcColorsSizes.cs">
+    <Compile Include="ClothesShopSpecific\ColorsSizes\UcColorsSizes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Color &amp; Size\UcColorsSizes.Designer.cs">
+    <Compile Include="ClothesShopSpecific\ColorsSizes\UcColorsSizes.Designer.cs">
       <DependentUpon>UcColorsSizes.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Customers &amp;  Suppilers\UcCustomers.cs">
+    <Compile Include="Core\Modules\CustomersSuppliers\UcCustomers.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Customers &amp;  Suppilers\UcCustomers.Designer.cs">
+    <Compile Include="Core\Modules\CustomersSuppliers\UcCustomers.Designer.cs">
       <DependentUpon>UcCustomers.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Settings\Payment\UcPaymentMethods.cs">
+    <Compile Include="Core\Modules\Settings\Payment\UcPaymentMethods.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Settings\Payment\UcPaymentMethods.Designer.cs">
+    <Compile Include="Core\Modules\Settings\Payment\UcPaymentMethods.Designer.cs">
       <DependentUpon>UcPaymentMethods.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Products\UcProducts.cs">
+    <Compile Include="Core\Modules\Inventory\Products\UcProducts.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Products\UcProducts.Designer.cs">
+    <Compile Include="Core\Modules\Inventory\Products\UcProducts.Designer.cs">
       <DependentUpon>UcProducts.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Product Variants\UcProductVariants.cs">
+    <Compile Include="ClothesShopSpecific\ProductVariants\UcProductVariants.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Product Variants\UcProductVariants.Designer.cs">
+    <Compile Include="ClothesShopSpecific\ProductVariants\UcProductVariants.Designer.cs">
       <DependentUpon>UcProductVariants.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Sales\POS\UcPointOfSale.cs">
+    <Compile Include="Core\Modules\Sales\POS\UcPointOfSale.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Sales\POS\UcPointOfSale.Designer.cs">
+    <Compile Include="Core\Modules\Sales\POS\UcPointOfSale.Designer.cs">
       <DependentUpon>UcPointOfSale.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Purchases\UcPurchaseInvoices.cs">
+    <Compile Include="Core\Modules\Purchases\UcPurchaseInvoices.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Purchases\UcPurchaseInvoices.Designer.cs">
+    <Compile Include="Core\Modules\Purchases\UcPurchaseInvoices.Designer.cs">
       <DependentUpon>UcPurchaseInvoices.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Purchases\Return\UcPurchaseReturns.cs">
+    <Compile Include="Core\Modules\Purchases\Returns\UcPurchaseReturns.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Purchases\Return\UcPurchaseReturns.Designer.cs">
+    <Compile Include="Core\Modules\Purchases\Returns\UcPurchaseReturns.Designer.cs">
       <DependentUpon>UcPurchaseReturns.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Sales\Return\UcReturns.cs">
+    <Compile Include="Core\Modules\Sales\Returns\UcReturns.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Sales\Return\UcReturns.Designer.cs">
+    <Compile Include="Core\Modules\Sales\Returns\UcReturns.Designer.cs">
       <DependentUpon>UcReturns.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Sales\UcSalesInvoices.cs">
+    <Compile Include="Core\Modules\Sales\UcSalesInvoices.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Sales\UcSalesInvoices.Designer.cs">
+    <Compile Include="Core\Modules\Sales\UcSalesInvoices.Designer.cs">
       <DependentUpon>UcSalesInvoices.cs</DependentUpon>
     </Compile>
-    <Compile Include="UcDashboard.cs">
+    <Compile Include="Core\Reports\UcDashboard.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UcAccountStatement.cs">
+    <Compile Include="Core\Reports\UcAccountStatement.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UcAccountStatement.Designer.cs">
+    <Compile Include="Core\Reports\UcAccountStatement.Designer.cs">
       <DependentUpon>UcAccountStatement.cs</DependentUpon>
     </Compile>
-    <Compile Include="UcDayClosingReport.cs">
+    <Compile Include="Core\Reports\UcDayClosingReport.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UcDayClosingReport.Designer.cs">
+    <Compile Include="Core\Reports\UcDayClosingReport.Designer.cs">
       <DependentUpon>UcDayClosingReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="UcProfitReport.cs">
+    <Compile Include="Core\Reports\UcProfitReport.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UcProfitReport.Designer.cs">
+    <Compile Include="Core\Reports\UcProfitReport.Designer.cs">
       <DependentUpon>UcProfitReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="UcSalesReport.cs">
+    <Compile Include="Core\Reports\UcSalesReport.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UcSalesReport.Designer.cs">
+    <Compile Include="Core\Reports\UcSalesReport.Designer.cs">
       <DependentUpon>UcSalesReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Stock Count\UcStockCount.cs">
+    <Compile Include="Core\Modules\Inventory\StockCount\UcStockCount.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Stock Count\UcStockCount.Designer.cs">
+    <Compile Include="Core\Modules\Inventory\StockCount\UcStockCount.Designer.cs">
       <DependentUpon>UcStockCount.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Inventory\Stock movements\UcStockMovements.cs">
+    <Compile Include="Core\Modules\Inventory\StockMovements\UcStockMovements.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Inventory\Stock movements\UcStockMovements.Designer.cs">
+    <Compile Include="Core\Modules\Inventory\StockMovements\UcStockMovements.Designer.cs">
       <DependentUpon>UcStockMovements.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Customers &amp;  Suppilers\UcSuppliers.cs">
+    <Compile Include="Core\Modules\CustomersSuppliers\UcSuppliers.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Customers &amp;  Suppilers\UcSuppliers.Designer.cs">
+    <Compile Include="Core\Modules\CustomersSuppliers\UcSuppliers.Designer.cs">
       <DependentUpon>UcSuppliers.cs</DependentUpon>
     </Compile>
-    <Compile Include="modlestore\Treasury\UcTreasuryTransactions.cs">
+    <Compile Include="Core\Modules\Treasury\UcTreasuryTransactions.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="modlestore\Treasury\UcTreasuryTransactions.Designer.cs">
+    <Compile Include="Core\Modules\Treasury\UcTreasuryTransactions.Designer.cs">
       <DependentUpon>UcTreasuryTransactions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program\Program.cs" />
+    <Compile Include="Core\Program\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program\Sett.cs" />
-    <Compile Include="Program\BackupManager.cs" />
-    <Compile Include="Program\BarcodeLabelPrinter.cs" />
-    <Compile Include="Program\PermissionManager.cs" />
-    <Compile Include="Program\ReceiptPrinter.cs" />
-    <Compile Include="UcStockReport.cs">
+    <Compile Include="Core\Program\Sett.cs" />
+    <Compile Include="Core\Program\BackupManager.cs" />
+    <Compile Include="Core\Program\BarcodeLabelPrinter.cs" />
+    <Compile Include="Core\Program\PermissionManager.cs" />
+    <Compile Include="Core\Program\ReceiptPrinter.cs" />
+    <Compile Include="Core\Reports\UcStockReport.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UcStockReport.Designer.cs">
+    <Compile Include="Core\Reports\UcStockReport.Designer.cs">
       <DependentUpon>UcStockReport.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Program\FrmLogin.resx">
+    <EmbeddedResource Include="Core\Modules\CashierShifts\UcCashierShifts.resx">
+      <DependentUpon>UcCashierShifts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Modules\Treasury\Balance\UcTreasuryBalance.resx">
+      <DependentUpon>UcTreasuryBalance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Core\Program\FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Program\FrmMain.resx">
+    <EmbeddedResource Include="Core\Program\FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Inventory\Products\FrmProductEdit.resx">
+    <EmbeddedResource Include="Core\Modules\Inventory\Products\FrmProductEdit.resx">
       <DependentUpon>FrmProductEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Settings\Branches\UcBranches.resx">
+    <EmbeddedResource Include="Core\Modules\Settings\Branches\UcBranches.resx">
       <DependentUpon>UcBranches.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Inventory\Brands\UcBrands.resx">
+    <EmbeddedResource Include="Core\Modules\Inventory\Brands\UcBrands.resx">
       <DependentUpon>UcBrands.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Inventory\Categories\UcCategories.resx">
+    <EmbeddedResource Include="Core\Modules\Inventory\Categories\UcCategories.resx">
       <DependentUpon>UcCategories.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Settings\UcUsers_Roles\UcUsers_Roles.resx">
+    <EmbeddedResource Include="Core\Modules\Settings\UsersRoles\UcUsers_Roles.resx">
       <DependentUpon>UcUsers_Roles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
@@ -538,10 +550,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Settings\AuditLogs\UcAuditLogs.resx">
+    <EmbeddedResource Include="Core\Modules\Settings\AuditLogs\UcAuditLogs.resx">
       <DependentUpon>UcAuditLogs.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Settings\Backup\UcBackupSettings.resx">
+    <EmbeddedResource Include="Core\Modules\Settings\Backup\UcBackupSettings.resx">
       <DependentUpon>UcBackupSettings.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -549,69 +561,69 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="modlestore\Inventory\Color &amp; Size\UcColorsSizes.resx">
+    <EmbeddedResource Include="ClothesShopSpecific\ColorsSizes\UcColorsSizes.resx">
       <DependentUpon>UcColorsSizes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Inventory\Products\UcProducts.resx">
+    <EmbeddedResource Include="Core\Modules\Inventory\Products\UcProducts.resx">
       <DependentUpon>UcProducts.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Inventory\Brach Transfer\UcBranchTransfer.resx">
+    <EmbeddedResource Include="Core\Modules\Inventory\BranchTransfer\UcBranchTransfer.resx">
       <DependentUpon>UcBranchTransfer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Customers &amp;  Suppilers\UcCustomers.resx">
+    <EmbeddedResource Include="Core\Modules\CustomersSuppliers\UcCustomers.resx">
       <DependentUpon>UcCustomers.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Inventory\Product Variants\UcProductVariants.resx">
+    <EmbeddedResource Include="ClothesShopSpecific\ProductVariants\UcProductVariants.resx">
       <DependentUpon>UcProductVariants.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Inventory\Stock Count\UcStockCount.resx">
+    <EmbeddedResource Include="Core\Modules\Inventory\StockCount\UcStockCount.resx">
       <DependentUpon>UcStockCount.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Inventory\Stock movements\UcStockMovements.resx">
+    <EmbeddedResource Include="Core\Modules\Inventory\StockMovements\UcStockMovements.resx">
       <DependentUpon>UcStockMovements.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Customers &amp;  Suppilers\UcSuppliers.resx">
+    <EmbeddedResource Include="Core\Modules\CustomersSuppliers\UcSuppliers.resx">
       <DependentUpon>UcSuppliers.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Treasury\UcTreasuryTransactions.resx">
+    <EmbeddedResource Include="Core\Modules\Treasury\UcTreasuryTransactions.resx">
       <DependentUpon>UcTreasuryTransactions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Sales\POS\UcPointOfSale.resx">
+    <EmbeddedResource Include="Core\Modules\Sales\POS\UcPointOfSale.resx">
       <DependentUpon>UcPointOfSale.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Settings\Payment\UcPaymentMethods.resx">
+    <EmbeddedResource Include="Core\Modules\Settings\Payment\UcPaymentMethods.resx">
       <DependentUpon>UcPaymentMethods.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Purchases\UcPurchaseInvoices.resx">
+    <EmbeddedResource Include="Core\Modules\Purchases\UcPurchaseInvoices.resx">
       <DependentUpon>UcPurchaseInvoices.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Purchases\Return\UcPurchaseReturns.resx">
+    <EmbeddedResource Include="Core\Modules\Purchases\Returns\UcPurchaseReturns.resx">
       <DependentUpon>UcPurchaseReturns.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Sales\Return\UcReturns.resx">
+    <EmbeddedResource Include="Core\Modules\Sales\Returns\UcReturns.resx">
       <DependentUpon>UcReturns.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="modlestore\Sales\UcSalesInvoices.resx">
+    <EmbeddedResource Include="Core\Modules\Sales\UcSalesInvoices.resx">
       <DependentUpon>UcSalesInvoices.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UcAccountStatement.resx">
+    <EmbeddedResource Include="Core\Reports\UcAccountStatement.resx">
       <DependentUpon>UcAccountStatement.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UcDayClosingReport.resx">
+    <EmbeddedResource Include="Core\Reports\UcDayClosingReport.resx">
       <DependentUpon>UcDayClosingReport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UcProfitReport.resx">
+    <EmbeddedResource Include="Core\Reports\UcProfitReport.resx">
       <DependentUpon>UcProfitReport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UcSalesReport.resx">
+    <EmbeddedResource Include="Core\Reports\UcSalesReport.resx">
       <DependentUpon>UcSalesReport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UcStockReport.resx">
+    <EmbeddedResource Include="Core\Reports\UcStockReport.resx">
       <DependentUpon>UcStockReport.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Program\packages.config" />
+    <None Include="Core\Program\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -623,7 +635,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Program\App.config" />
+    <None Include="Core\Program\App.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\00fc28e2-e98a-4f57-b2d7-7153662cde78.png" />

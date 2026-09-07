@@ -196,6 +196,10 @@ namespace Clothes_Shop_ERP.DAL
                     .HasName("UQ__PaymentM__737584F654761E69")
                     .IsUnique();
 
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(30);

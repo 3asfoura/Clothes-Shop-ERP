@@ -118,6 +118,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Main_PaymentMethods", "طرق الدفع" },
             { "Main_AuditLogs", "سجل العمليات" },
             { "Main_DarkMode", "الوضع الليلي" },
+            { "Main_Language", "اللغة" },
 
 
             // ==================================================
@@ -489,6 +490,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Customers_EntityName", "العميل" },
             { "Suppliers_EntityName", "المورد" },
             { "PaymentMethods_EntityName", "طريقة الدفع" },
+            { "PaymentMethods_CannotDeactivateLast", "دي آخر طريقة دفع نشطة — لازم طريقة دفع واحدة نشطة على الأقل عشان البيع يشتغل." },
             { "UsersRoles_UserEntityName", "المستخدم" },
             { "UsersRoles_RoleEntityName", "الدور" },
             { "Branches_EntityName", "الفرع" },
@@ -700,7 +702,10 @@ namespace Clothes_Shop_ERP.Localization
             // ===== طرق الدفع - علامة الكاش =====================
             // ==================================================
             { "PaymentMethods_IsCashPrompt", "طريقة الدفع دي كاش؟ (بتتستخدم في تسوية ورديات الكاشير)" },
-            { "PaymentMethods_ColIsCash", "كاش" }
+            { "PaymentMethods_ColIsCash", "كاش" },
+            { "PaymentMethods_MenuToggleCash", "تعليم/إلغاء تعليم كـ Cash" },
+            { "PaymentMethods_MarkCash", "تعليم كطريقة كاش" },
+            { "PaymentMethods_UnmarkCash", "إلغاء تعليمها كطريقة كاش" }
         };
     }
 }

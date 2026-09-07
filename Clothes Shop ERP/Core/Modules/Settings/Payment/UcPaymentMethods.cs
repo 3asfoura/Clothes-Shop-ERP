@@ -28,13 +28,14 @@ namespace Clothes_Shop_ERP.modlestore
         {
             ColName.Caption = LocalizationManager.T("Shared_Name");
             ColIsCash.Caption = LocalizationManager.T("PaymentMethods_ColIsCash");
+            ColIsActive.Caption = LocalizationManager.T("Shared_IsActive");
         }
         public void GetData()
         {
             using (var db = new ClothesShopDBContext())
             {
                 gridView1.GridControl.DataSource = db.PaymentMethods
-                    .Select(x => new { x.Id, x.Name, x.IsCash })
+                    .Select(x => new { x.Id, x.Name, x.IsCash, x.IsActive })
                     .ToList();
             }
         }
@@ -53,6 +54,8 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
+                menu.Items.Add(LocalizationManager.T("PaymentMethods_MenuToggleCash"), null, (s, ev) => ToggleCash());
+                menu.Items.Add(LocalizationManager.T("Shared_MenuActivateDeactivate"), null, (s, ev) => ToggleActive());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
 
@@ -67,7 +70,7 @@ namespace Clothes_Shop_ERP.modlestore
 
             using (var db = new ClothesShopDBContext())
             {
-                db.PaymentMethods.Add(new PaymentMethodEntity { Name = name, IsCash = isCash });
+                db.PaymentMethods.Add(new PaymentMethodEntity { Name = name, IsCash = isCash, IsActive = true });
                 db.SaveChanges();
             }
             Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XAdded"), LocalizationManager.T("PaymentMethods_EntityName")));
@@ -94,6 +97,62 @@ namespace Clothes_Shop_ERP.modlestore
                 db.SaveChanges();
             }
             Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XUpdated"), LocalizationManager.T("PaymentMethods_EntityName")));
+            GetData();
+        }
+
+        private void ToggleCash()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+            string name = gridView1.GetFocusedRowCellValue("Name").ToString();
+            bool currentStatus = Convert.ToBoolean(gridView1.GetFocusedRowCellValue("IsCash"));
+            string action = currentStatus ? LocalizationManager.T("PaymentMethods_UnmarkCash") : LocalizationManager.T("PaymentMethods_MarkCash");
+
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmAction"), action, name), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            using (var db = new ClothesShopDBContext())
+            {
+                var method = db.PaymentMethods.Where(x => x.Id == id).FirstOrDefault();
+                if (method == null) return;
+                method.IsCash = !currentStatus;
+                db.SaveChanges();
+            }
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XActionedPastTense"), LocalizationManager.T("PaymentMethods_EntityName"), action.ToLower()));
+            GetData();
+        }
+
+        private void ToggleActive()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+            string name = gridView1.GetFocusedRowCellValue("Name").ToString();
+            bool currentStatus = Convert.ToBoolean(gridView1.GetFocusedRowCellValue("IsActive"));
+            string action = currentStatus ? LocalizationManager.T("Shared_Deactivate") : LocalizationManager.T("Shared_Activate");
+
+            if (currentStatus)
+            {
+                using (var db = new ClothesShopDBContext())
+                {
+                    if (db.PaymentMethods.Count(p => p.IsActive == true) <= 1)
+                    {
+                        Sett.MsgRed(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("PaymentMethods_CannotDeactivateLast"));
+                        return;
+                    }
+                }
+            }
+
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmAction"), action, name), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            using (var db = new ClothesShopDBContext())
+            {
+                var method = db.PaymentMethods.Where(x => x.Id == id).FirstOrDefault();
+                if (method == null) return;
+                method.IsActive = !currentStatus;
+                db.SaveChanges();
+            }
+            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XActionedPastTense"), LocalizationManager.T("PaymentMethods_EntityName"), action.ToLower()));
             GetData();
         }
 

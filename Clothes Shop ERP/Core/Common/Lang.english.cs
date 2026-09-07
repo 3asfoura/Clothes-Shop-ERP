@@ -119,6 +119,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Main_PaymentMethods", "Payment Methods" },
             { "Main_AuditLogs", "Audit Logs" },
             { "Main_DarkMode", "Dark Mode" },
+            { "Main_Language", "Language" },
 
 
             // ==================================================
@@ -490,6 +491,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Customers_EntityName", "Customer" },
             { "Suppliers_EntityName", "Supplier" },
             { "PaymentMethods_EntityName", "Payment method" },
+            { "PaymentMethods_CannotDeactivateLast", "This is the only active payment method left - at least one active method is needed for sales to work." },
             { "UsersRoles_UserEntityName", "User" },
             { "UsersRoles_RoleEntityName", "Role" },
             { "Branches_EntityName", "Branch" },
@@ -701,7 +703,10 @@ namespace Clothes_Shop_ERP.Localization
             // ===== Payment Methods - Cash flag =================
             // ==================================================
             { "PaymentMethods_IsCashPrompt", "Is this a cash payment method? (used for cashier shift reconciliation)" },
-            { "PaymentMethods_ColIsCash", "Cash" }
+            { "PaymentMethods_ColIsCash", "Cash" },
+            { "PaymentMethods_MenuToggleCash", "Mark/Unmark as Cash" },
+            { "PaymentMethods_MarkCash", "Mark as cash" },
+            { "PaymentMethods_UnmarkCash", "Unmark as cash" }
         };
     }
 }
