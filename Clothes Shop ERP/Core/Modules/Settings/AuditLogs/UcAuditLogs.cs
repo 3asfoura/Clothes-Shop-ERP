@@ -10,13 +10,30 @@ namespace Clothes_Shop_ERP.modlestore
 {
     public partial class UcAuditLogs : DevExpress.XtraEditors.XtraUserControl
     {
+        // CmbTable shows translated table names, but filtering/DB comparison
+        // needs the original English names - this keeps them in the same
+        // order as the combo's items (index 0 is "All", with no raw name).
+        private readonly System.Collections.Generic.List<string> _rawTableNames = new System.Collections.Generic.List<string>();
+
         public UcAuditLogs()
         {
             InitializeComponent();
             DtFrom.DateTime = DateTime.Today.AddDays(-7);
             DtTo.DateTime = DateTime.Today;
+            GridViewResult.CustomColumnDisplayText += (s, e) =>
+            {
+                if (e.Column.FieldName == "Action")
+                    e.DisplayText = LocalizationManager.TranslateStatusCode(e.Value as string);
+                else if (e.Column.FieldName == "TableName")
+                    e.DisplayText = LocalizationManager.TranslateTableName(e.Value as string);
+            };
+            Sett.FixCellTooltips(GridViewResult);
             ApplyLanguage();
-            RunReport();
+            // Deferred to Load: PopulateColumns() (inside RunReport) needs the grid
+            // to already have a window handle to reliably generate columns - calling
+            // it directly from the constructor left the grid with zero columns until
+            // the next manual refresh, showing raw English property names meanwhile.
+            this.Load += (s, e) => RunReport();
         }
 
         public void ApplyLanguage()
@@ -52,7 +69,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                 if (CmbTable.SelectedIndex > 0)
                 {
-                    string selectedTable = CmbTable.Text;
+                    string selectedTable = _rawTableNames[CmbTable.SelectedIndex - 1];
                     data = data.Where(x => x.TableName == selectedTable).ToList();
                 }
 
@@ -68,8 +85,12 @@ namespace Clothes_Shop_ERP.modlestore
                 if (CmbTable.Properties.Items.Count == 0)
                 {
                     CmbTable.Properties.Items.Add(LocalizationManager.T("txtAll"));
+                    _rawTableNames.Clear();
                     foreach (var t in db.AuditLogs.Select(x => x.TableName).Distinct().OrderBy(x => x))
-                        CmbTable.Properties.Items.Add(t);
+                    {
+                        _rawTableNames.Add(t);
+                        CmbTable.Properties.Items.Add(LocalizationManager.TranslateTableName(t));
+                    }
                     CmbTable.SelectedIndex = 0;
                 }
             }
@@ -84,6 +105,8 @@ namespace Clothes_Shop_ERP.modlestore
         {
             if (e.Column.FieldName != "Action") return;
             var row = GridViewResult.GetRow(e.RowHandle);
+            if (row == null) return;   // group/band rows have no underlying data object
+
             var actionProp = row.GetType().GetProperty("Action");
             string action = actionProp?.GetValue(row) as string;
 

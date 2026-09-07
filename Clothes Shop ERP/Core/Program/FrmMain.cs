@@ -143,7 +143,7 @@ namespace Clothes_Shop_ERP
             ElementPaymentMethods.Text = LocalizationManager.T("Main_PaymentMethods");
             ElementAuditLogs.Text = LocalizationManager.T("Main_AuditLogs");
             ElementBackupSettings.Text = LocalizationManager.T("Main_BackupSettings");
-            barButtonItem1.Caption = LocalizationManager.T("Main_DarkMode");
+            UpdateDarkModeCaption();
             ComboLanguage.Caption = LocalizationManager.T("Main_Language");
         }
         private void FrmMain_Load(object sender, EventArgs e)
@@ -164,8 +164,13 @@ namespace Clothes_Shop_ERP
 
             // Runs on a background thread so a slow backup never freezes the UI;
             // BackupManager itself no-ops quietly if no folder is configured yet
-            // or a backup already ran today.
-            System.Threading.Tasks.Task.Run(() => BackupManager.RunBackupIfDue());
+            // or a backup already ran today. Wrapped in try/catch since this is
+            // fire-and-forget - an unhandled exception here would otherwise be
+            // an unobserved task exception nobody ever finds out about.
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                try { BackupManager.RunBackupIfDue(); } catch { }
+            });
 
         }
         void setTabPage(UserControl formObject, string FrmText, SvgImage image)
@@ -408,6 +413,15 @@ namespace Clothes_Shop_ERP
                 barButtonItem1.ImageOptions.SvgImage = Properties.Resources.icons8_sun_50;
                 DarkMode = true;
             }
+            UpdateDarkModeCaption();
+        }
+
+        // The caption names the action the button performs, not the current
+        // state - so while dark mode is ON it reads "Light Mode" (click to
+        // switch back), and vice versa.
+        void UpdateDarkModeCaption()
+        {
+            barButtonItem1.Caption = DarkMode ? LocalizationManager.T("Main_LightMode") : LocalizationManager.T("Main_DarkMode");
         }
 
         

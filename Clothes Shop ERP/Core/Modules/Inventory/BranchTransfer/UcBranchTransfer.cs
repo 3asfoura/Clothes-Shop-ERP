@@ -21,8 +21,15 @@ namespace Clothes_Shop_ERP.modlestore
         public UcBranchTransfer()
         {
             InitializeComponent();
+            gridView1.CustomColumnDisplayText += (s, e) =>
+            {
+                if (e.Column.FieldName == "Status")
+                    e.DisplayText = LocalizationManager.TranslateStatusCode(e.Value as string);
+            };
+            Sett.FixCellTooltips(gridView1);
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
+            gridView1.OptionsBehavior.Editable = false;
             Sett.CenterColumns(gridView1);
             ApplyLanguage();
         }

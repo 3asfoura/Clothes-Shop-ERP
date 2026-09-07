@@ -33,19 +33,8 @@ namespace Clothes_Shop_ERP.modlestore
                 : LocalizationManager.T("Backup_NeverBackedUp");
         }
 
-        private void btnBrowse_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new FolderBrowserDialog())
-            {
-                if (!string.IsNullOrWhiteSpace(TxtFolder.Text))
-                    dialog.SelectedPath = TxtFolder.Text;
 
-                if (dialog.ShowDialog() == DialogResult.OK)
-                    TxtFolder.Text = dialog.SelectedPath;
-            }
-        }
-
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnSaveAs_Click(object sender, EventArgs e)
         {
             if (!PermissionManager.CanEdit("BackupSettings"))
             {
@@ -53,15 +42,23 @@ namespace Clothes_Shop_ERP.modlestore
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(TxtFolder.Text))
+            using (var dialog = new SaveFileDialog
             {
-                Sett.MsgRed(LocalizationManager.T("Shared_Warning"), LocalizationManager.T("Backup_FolderRequired"));
-                return;
-            }
+                Filter = LocalizationManager.T("Backup_FileFilter"),
+                FileName = BackupManager.SuggestedFileName()
+            })
+            {
+                if (dialog.ShowDialog() != DialogResult.OK) return;
 
-            BackupManager.BackupFolder = TxtFolder.Text;
-            BackupManager.SaveSettings();
-            Sett.MsgGreen(LocalizationManager.T("Shared_Success"), LocalizationManager.T("Backup_FolderSaved"));
+                Cursor.Current = Cursors.WaitCursor;
+                bool ok = BackupManager.BackupToFile(dialog.FileName, out string error);
+                Cursor.Current = Cursors.Default;
+
+                if (ok)
+                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), LocalizationManager.T("Backup_Success"));
+                else
+                    Sett.MsgRed(LocalizationManager.T("Shared_Error"), LocalizationManager.T("Backup_Failed") + "\n\n" + error);
+            }
         }
 
         private void btnBackupNow_Click(object sender, EventArgs e)
@@ -93,10 +90,7 @@ namespace Clothes_Shop_ERP.modlestore
                 Sett.MsgRed(LocalizationManager.T("Shared_Error"), LocalizationManager.T("Backup_Failed") + "\n\n" + error);
         }
 
-        // Manual, one-off copy: the user picks the exact file and folder right now
-        // (a USB drive, Desktop, anywhere) via the normal Windows save dialog -
-        // independent of the configured backup folder and the daily schedule above.
-        private void btnSaveAs_Click(object sender, EventArgs e)
+        private void btnSave_Click_1(object sender, EventArgs e)
         {
             if (!PermissionManager.CanEdit("BackupSettings"))
             {
@@ -104,23 +98,32 @@ namespace Clothes_Shop_ERP.modlestore
                 return;
             }
 
-            using (var dialog = new SaveFileDialog
+            if (string.IsNullOrWhiteSpace(TxtFolder.Text))
             {
-                Filter = LocalizationManager.T("Backup_FileFilter"),
-                FileName = BackupManager.SuggestedFileName()
-            })
+                Sett.MsgRed(LocalizationManager.T("Shared_Warning"), LocalizationManager.T("Backup_FolderRequired"));
+                return;
+            }
+
+            BackupManager.BackupFolder = TxtFolder.Text;
+            BackupManager.SaveSettings();
+            Sett.MsgGreen(LocalizationManager.T("Shared_Success"), LocalizationManager.T("Backup_FolderSaved"));
+        }
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog())
             {
-                if (dialog.ShowDialog() != DialogResult.OK) return;
+                if (!string.IsNullOrWhiteSpace(TxtFolder.Text))
+                    dialog.SelectedPath = TxtFolder.Text;
 
-                Cursor.Current = Cursors.WaitCursor;
-                bool ok = BackupManager.BackupToFile(dialog.FileName, out string error);
-                Cursor.Current = Cursors.Default;
-
-                if (ok)
-                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), LocalizationManager.T("Backup_Success"));
-                else
-                    Sett.MsgRed(LocalizationManager.T("Shared_Error"), LocalizationManager.T("Backup_Failed") + "\n\n" + error);
+                if (dialog.ShowDialog() == DialogResult.OK)
+                    TxtFolder.Text = dialog.SelectedPath;
             }
         }
+
+        // Manual, one-off copy: the user picks the exact file and folder right now
+        // (a USB drive, Desktop, anywhere) via the normal Windows save dialog -
+        // independent of the configured backup folder and the daily schedule above.
+
     }
 }

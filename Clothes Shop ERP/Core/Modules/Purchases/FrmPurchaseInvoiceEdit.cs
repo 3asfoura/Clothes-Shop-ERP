@@ -117,8 +117,11 @@ namespace Clothes_Shop_ERP
                 }
             }
             if (_supplierIds.Count > 0) CmbSupplier.SelectedIndex = 0;
-            int branchIdx = _branchIds.IndexOf(FrmLogin.CurrentBranchId);
-            CmbBranch.SelectedIndex = branchIdx >= 0 ? branchIdx : 0;
+            if (_branchIds.Count > 0)
+            {
+                int branchIdx = _branchIds.IndexOf(FrmLogin.CurrentBranchId);
+                CmbBranch.SelectedIndex = branchIdx >= 0 ? branchIdx : 0;
+            }
 
             // ---- Lines grid ----
             GridLines = new GridControl { Location = new System.Drawing.Point(20, 125), Size = new System.Drawing.Size(560, 220) };
@@ -171,6 +174,12 @@ namespace Clothes_Shop_ERP
             var btnSave = new SimpleButton { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_BtnSaveInvoice"), Location = new System.Drawing.Point(340, 460), Width = 120, DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
+                if (CmbSupplier.SelectedIndex < 0 || CmbBranch.SelectedIndex < 0)
+                {
+                    XtraMessageBox.Show(LocalizationManager.T("Purchases_MustHaveSupplierAndBranch"));
+                    this.DialogResult = DialogResult.None;
+                    return;
+                }
                 if (_lines.Count == 0)
                 {
                     XtraMessageBox.Show(LocalizationManager.T("Purchases_AddAtLeastOneInvoiceItem"));

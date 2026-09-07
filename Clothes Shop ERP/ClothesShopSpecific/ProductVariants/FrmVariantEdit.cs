@@ -105,12 +105,21 @@ namespace Clothes_Shop_ERP
                 }
             }
 
-            int pIdx = _productIds.IndexOf(currentProductId);
-            CmbProduct.SelectedIndex = pIdx >= 0 ? pIdx : 0;
-            int cIdx = _colorIds.IndexOf(currentColorId);
-            CmbColor.SelectedIndex = cIdx >= 0 ? cIdx : 0;
-            int sIdx = _sizeIds.IndexOf(currentSizeId);
-            CmbSize.SelectedIndex = sIdx >= 0 ? sIdx : 0;
+            if (_productIds.Count > 0)
+            {
+                int pIdx = _productIds.IndexOf(currentProductId);
+                CmbProduct.SelectedIndex = pIdx >= 0 ? pIdx : 0;
+            }
+            if (_colorIds.Count > 0)
+            {
+                int cIdx = _colorIds.IndexOf(currentColorId);
+                CmbColor.SelectedIndex = cIdx >= 0 ? cIdx : 0;
+            }
+            if (_sizeIds.Count > 0)
+            {
+                int sIdx = _sizeIds.IndexOf(currentSizeId);
+                CmbSize.SelectedIndex = sIdx >= 0 ? sIdx : 0;
+            }
 
             var lblBarcode = new LabelControl { Text = LocalizationManager.T("FrmVariantEdit_Barcode"), Location = new System.Drawing.Point(20, 130) };
             TxtBarcode = new TextEdit { Text = barcode, Location = new System.Drawing.Point(20, 150), Width = 320 };
@@ -134,6 +143,12 @@ namespace Clothes_Shop_ERP
                 {
                     XtraMessageBox.Show(LocalizationManager.T("ProductVariants_BarcodeRequired"));
                     this.DialogResult = DialogResult.None;
+                    return;
+                }
+                if (CmbProduct.SelectedIndex < 0 || CmbColor.SelectedIndex < 0 || CmbSize.SelectedIndex < 0)
+                {
+                    XtraMessageBox.Show(LocalizationManager.T("ProductVariants_MustHaveProductColorSize"));
+                    this.DialogResult = DialogResult.None;
                 }
             };
 
@@ -154,6 +169,8 @@ namespace Clothes_Shop_ERP
         
             CmbProduct.SelectedIndexChanged += (s, e) =>
             {
+                if (CmbProduct.SelectedIndex < 0) return;
+
                 if (!_isEditMode)
                     TxtBarcode.Text = GenerateNextBarcode();
 

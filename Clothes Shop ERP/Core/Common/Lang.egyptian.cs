@@ -19,6 +19,43 @@ namespace Clothes_Shop_ERP.Localization
             { "Shared_Address", "العنوان" },
             { "Shared_IsActive", "نشط" },
             { "Shared_Status", "الحالة" },
+            { "Status_Completed", "مكتمل" },
+            { "Status_Pending", "معلّق" },
+            { "Status_Cancelled", "ملغي" },
+            { "Status_Open", "مفتوحة" },
+            { "Status_Closed", "مقفولة" },
+            { "Status_In", "وارد" },
+            { "Status_Out", "صادر" },
+            { "Status_Insert", "إضافة" },
+            { "Status_Update", "تعديل" },
+            { "Status_Delete", "حذف" },
+            { "Status_Sale", "بيع" },
+            { "Status_Purchase", "شراء" },
+            { "Status_Return", "مرتجع" },
+            { "Status_PurchaseReturn", "مرتجع شراء" },
+            { "Status_TransferIn", "تحويل وارد" },
+            { "Status_TransferOut", "تحويل صادر" },
+            { "Status_SalesInvoice", "فاتورة بيع" },
+            { "Status_PurchaseInvoice", "فاتورة شراء" },
+            { "Status_SalesReturn", "مرتجع بيع" },
+            { "Status_StockTransfer", "تحويل مخزون" },
+            { "Status_Manual", "يدوي" },
+            { "TableName_Products", "المنتجات" },
+            { "TableName_ProductVariants", "متغيرات المنتج" },
+            { "TableName_Users", "المستخدمين" },
+            { "TableName_SalesInvoices", "فواتير المبيعات" },
+            { "TableName_PurchaseInvoices", "فواتير المشتريات" },
+            { "TableName_Branches", "الفروع" },
+            { "TableName_BranchStock", "مخزون الفروع" },
+            { "TableName_SalesInvoiceDetails", "تفاصيل فواتير المبيعات" },
+            { "TableName_SalesReturns", "مرتجعات المبيعات" },
+            { "TableName_SalesReturnDetails", "تفاصيل مرتجعات المبيعات" },
+            { "TableName_StockMovements", "حركات المخزون" },
+            { "TableName_TreasuryTransactions", "حركات الخزينة" },
+            { "TreasuryDesc_PurchaseReturn", "مرتجع شراء" },
+            { "TreasuryDesc_SalesReturn", "مرتجع بيع" },
+            { "TreasuryDesc_SalePrefix", "بيع - " },
+            { "TreasuryDesc_PaymentToSupplierPrefix", "دفع لمورد - فاتورة رقم " },
             { "Shared_Branch", "الفرع" },
             { "Shared_CreatedAt", "تاريخ الإنشاء" },
             { "Shared_Description", "الوصف" },
@@ -118,6 +155,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Main_PaymentMethods", "طرق الدفع" },
             { "Main_AuditLogs", "سجل العمليات" },
             { "Main_DarkMode", "الوضع الليلي" },
+            { "Main_LightMode", "الوضع النهاري" },
             { "Main_Language", "اللغة" },
 
 
@@ -292,6 +330,7 @@ namespace Clothes_Shop_ERP.Localization
             { "UsersRoles_RoleAssigned", "هذا الدور مسند إلى مستخدم واحد أو أكثر. أعد إسنادهم أولاً." },
             { "UsersRoles_FillUsernameFullName", "الرجاء إدخال اسم المستخدم والاسم الكامل." },
             { "UsersRoles_PasswordRequiredForNewUser", "الرجاء إدخال كلمة مرور للمستخدم الجديد." },
+            { "UsersRoles_MustHaveRole", "لازم يكون في دور واحد على الأقل قبل ما تضيف مستخدم." },
 
             // ----- Branches -----
             { "Branches_HasRelatedData", "هذا الفرع يحتوي على بيانات مرتبطة (مستخدمون، فواتير، مخزون...). قم بإزالتها أولاً." },
@@ -305,6 +344,7 @@ namespace Clothes_Shop_ERP.Localization
             // ----- Treasury -----
             { "Treasury_ConfirmDeleteEntry", "هل تريد حذف هذا القيد؟" },
             { "Treasury_AmountGreaterThanZero", "الرجاء إدخال مبلغ أكبر من صفر." },
+            { "Treasury_MustHaveBranch", "لازم يكون في فرع واحد على الأقل قبل ما تعمل قيد خزينة." },
 
             // ----- Returns -----
             { "Returns_SaveFailed", "تعذر حفظ المرتجع. لم يتم تغيير أي شيء. {0}" },
@@ -321,6 +361,7 @@ namespace Clothes_Shop_ERP.Localization
 
             // ----- POS -----
             { "POS_EmptyCartMsg", "الرجاء إضافة عنصر واحد على الأقل قبل إتمام الشراء." },
+            { "POS_NoPaymentMethod", "لازم تختار طريقة دفع قبل إتمام البيع. لو مفيش طرق دفع في القايمة، لازم تكون طريقة دفع واحدة على الأقل مفعّلة من الإعدادات." },
             { "POS_DiscountExceedsTotal", "الخصم متقدرش يكون أكبر من إجمالي الفاتورة." },
             { "POS_MenuHoldSale", "تعليق الفاتورة" },
             { "POS_MenuResumeSale", "استرجاع فاتورة معلّقة" },
@@ -341,6 +382,7 @@ namespace Clothes_Shop_ERP.Localization
             { "ProductVariants_CombinationExists", "هذا التوليف (نفس المنتج واللون والمقاس) موجود بالفعل." },
             { "ProductVariants_HasStockOrSales", "هذا المتغير مرتبط بمخزون أو مبيعات. قم بإلغاء تنشيطه بدلاً من ذلك." },
             { "ProductVariants_BarcodeRequired", "الرجاء إدخال باركود." },
+            { "ProductVariants_MustHaveProductColorSize", "لازم تضيف منتج ولون ومقاس على الأقل قبل ما تضيف متغير." },
 
             // ----- Categories -----
             { "Categories_HasChildren", "هذه الفئة تحتوي على منتجات أو فئات فرعية مرتبطة بها. قم بإزالتها أولاً." },
@@ -370,11 +412,13 @@ namespace Clothes_Shop_ERP.Localization
             // ----- Products -----
             { "Products_HasVariantsOrSales", "هذا المنتج مرتبط بمتغيرات أو مبيعات. قم بإلغاء تنشيطه بدلاً من ذلك." },
             { "Products_CodeNameRequired", "الرجاء إدخال الكود والاسم." },
+            { "Products_MustHaveCategory", "لازم تضيف تصنيف واحد على الأقل قبل ما تضيف منتج." },
 
             // ----- Purchases -----
             { "Purchases_SaveFailed", "تعذر حفظ الفاتورة. لم يتم تغيير أي شيء. {0}" },
             { "Purchases_SavedStatus", "تم حفظ الفاتورة — {0}." },
             { "Purchases_AddAtLeastOneInvoiceItem", "الرجاء إضافة عنصر واحد على الأقل إلى الفاتورة." },
+            { "Purchases_MustHaveSupplierAndBranch", "لازم تضيف مورد وفرع على الأقل قبل ما تعمل فاتورة مشتريات." },
 
             // ----- Sales Invoices -----
             { "SalesInvoices_DetailsTitle", "تفاصيل الفاتورة" },
@@ -416,6 +460,7 @@ namespace Clothes_Shop_ERP.Localization
             { "FrmStockCountEdit_ProductVariant", "متغير المنتج:" },
             { "FrmStockCountEdit_Quantity", "الكمية:" },
             { "FrmStockCountEdit_MinQuantityHint", "الحد الأدنى للكمية (تنبيه إعادة الطلب):" },
+            { "StockCount_MustHaveVariantAndBranch", "لازم تضيف متغير منتج وفرع على الأقل قبل ما تعمل جرد." },
 
             // ----- Frmstocktransferedit -----
             { "StockTransferEdit_FromBranch", "من فرع:" },
@@ -615,7 +660,13 @@ namespace Clothes_Shop_ERP.Localization
             { "DayClosing_Date", "التاريخ:" },
             { "DayClosing_ColMethod", "طريقة الدفع" },
             { "DayClosing_ColCount", "العدد" },
-            { "DayClosing_SummaryFmt", "عدد الفواتير: {0}   |   إجمالي المبيعات: {1:n2}\nعدد المرتجعات: {2}   |   إجمالي المرتجعات: {3:n2}\nصافي المبيعات: {4:n2}\n\nالوارد - من المبيعات: {5:n2}   |   وارد آخر: {6:n2}   |   إجمالي الوارد: {7:n2}\nالمنصرف - للموردين: {8:n2}   |   مرتجعات: {9:n2}   |   مصاريف عامة: {10:n2}   |   إجمالي المنصرف: {11:n2}\n\nصافي حركة النقدية اليوم: {12:n2}" },
+            { "DayClosing_CardInvoiceCount", "عدد الفواتير" },
+            { "DayClosing_CardReturnCount", "عدد المرتجعات" },
+            { "DayClosing_CardNetSales", "صافي المبيعات" },
+            { "DayClosing_CardTotalIn", "إجمالي الوارد" },
+            { "DayClosing_CardTotalOut", "إجمالي المنصرف" },
+            { "DayClosing_CardNetCash", "صافي الحركة النقدية" },
+            { "DayClosing_BreakdownFmt", "الوارد: من المبيعات {0:n2}  •  وارد آخر {1:n2}          المنصرف: للموردين {2:n2}  •  مرتجعات {3:n2}  •  مصاريف عامة {4:n2}" },
 
             // ==================================================
             // ===== Backup Settings =============================

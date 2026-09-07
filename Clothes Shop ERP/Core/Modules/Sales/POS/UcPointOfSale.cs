@@ -186,6 +186,12 @@ namespace Clothes_Shop_ERP
                 return;
             }
 
+            if (CmbPaymentMethod.SelectedIndex < 0)
+            {
+                Sett.MsgBlue(LocalizationManager.T("Shared_Warning"), LocalizationManager.T("POS_NoPaymentMethod"));
+                return;
+            }
+
             decimal subTotal = _cart.Sum(l => l.LineTotal);
             decimal discount = (decimal)SpinDiscount.Value;
 
@@ -396,28 +402,54 @@ namespace Clothes_Shop_ERP
         private void BuildUi()
         {
 
+            // Auto-population from the bound type's properties is what was silently
+            // showing "Product Variant Id" etc. in English no matter what - it only
+            // (re)runs once DevExpress feels like it (typically once the grid gets a
+            // window handle), so anything set beforehand could get discarded, and
+            // there was no way to keep the internal ProductVariantId column out of
+            // it either. Declaring the exact columns wanted, with auto-population
+            // switched off, removes that ambiguity entirely.
+            GridViewCart.OptionsBehavior.AutoPopulateColumns = false;
             GridCart.DataSource = _cart;
-            if (GridViewCart.Columns["Quantity"] != null)
+
+            var colProduct = new DevExpress.XtraGrid.Columns.GridColumn
             {
-                GridViewCart.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                GridViewCart.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
-                GridViewCart.Columns["Quantity"].Caption = LocalizationManager.T("StockCount_ColQuantity");
-            }
-            if (GridViewCart.Columns["ProductDisplay"] != null)
+                FieldName = "ProductDisplay",
+                Caption = LocalizationManager.T("StockCount_ColProduct"),
+                Visible = true,
+                VisibleIndex = 0
+            };
+            colProduct.OptionsColumn.AllowEdit = false;
+
+            var colUnitPrice = new DevExpress.XtraGrid.Columns.GridColumn
             {
-                GridViewCart.Columns["ProductDisplay"].Caption = LocalizationManager.T("StockCount_ColProduct");
-                GridViewCart.Columns["ProductDisplay"].OptionsColumn.AllowEdit = false;
-            }
-            if (GridViewCart.Columns["UnitPrice"] != null)
+                FieldName = "UnitPrice",
+                Caption = LocalizationManager.T("POS_ColUnitPrice"),
+                Visible = true,
+                VisibleIndex = 1
+            };
+            colUnitPrice.OptionsColumn.AllowEdit = false;
+
+            var colQuantity = new DevExpress.XtraGrid.Columns.GridColumn
             {
-                GridViewCart.Columns["UnitPrice"].Caption = LocalizationManager.T("POS_ColUnitPrice");
-                GridViewCart.Columns["UnitPrice"].OptionsColumn.AllowEdit = false;
-            }
-            if (GridViewCart.Columns["LineTotal"] != null)
+                FieldName = "Quantity",
+                Caption = LocalizationManager.T("StockCount_ColQuantity"),
+                Visible = true,
+                VisibleIndex = 2
+            };
+            colQuantity.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            colQuantity.DisplayFormat.FormatString = "0.###";
+
+            var colLineTotal = new DevExpress.XtraGrid.Columns.GridColumn
             {
-                GridViewCart.Columns["LineTotal"].Caption = LocalizationManager.T("Shared_ColTotal");
-                GridViewCart.Columns["LineTotal"].OptionsColumn.AllowEdit = false;
-            }
+                FieldName = "LineTotal",
+                Caption = LocalizationManager.T("Shared_ColTotal"),
+                Visible = true,
+                VisibleIndex = 3
+            };
+            colLineTotal.OptionsColumn.AllowEdit = false;
+
+            GridViewCart.Columns.AddRange(new[] { colProduct, colUnitPrice, colQuantity, colLineTotal });
 
             // The grid itself is editable so a scanned/added line's quantity can be
             // corrected directly (e.g. scanned once but meant 3) - every other

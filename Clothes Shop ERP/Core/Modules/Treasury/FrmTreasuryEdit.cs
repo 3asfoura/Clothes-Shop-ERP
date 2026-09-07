@@ -58,8 +58,11 @@ namespace Clothes_Shop_ERP
                     _branchIds.Add(b.Id);
                 }
             }
-            int bIdx = _branchIds.IndexOf(currentBranchId != 0 ? currentBranchId : FrmLogin.CurrentBranchId);
-            CmbBranch.SelectedIndex = bIdx >= 0 ? bIdx : 0;
+            if (_branchIds.Count > 0)
+            {
+                int bIdx = _branchIds.IndexOf(currentBranchId != 0 ? currentBranchId : FrmLogin.CurrentBranchId);
+                CmbBranch.SelectedIndex = bIdx >= 0 ? bIdx : 0;
+            }
 
             var lblAmount = new LabelControl { Text = LocalizationManager.T("FrmTreasuryEdit_Amount"), Location = new System.Drawing.Point(20, 130) };
             SpinAmount = new SpinEdit { Value = amount, Location = new System.Drawing.Point(20, 150), Width = 320 };
@@ -75,6 +78,12 @@ namespace Clothes_Shop_ERP
                 if (SpinAmount.Value <= 0)
                 {
                     XtraMessageBox.Show(LocalizationManager.T("Treasury_AmountGreaterThanZero"));
+                    this.DialogResult = DialogResult.None;
+                    return;
+                }
+                if (CmbBranch.SelectedIndex < 0)
+                {
+                    XtraMessageBox.Show(LocalizationManager.T("Treasury_MustHaveBranch"));
                     this.DialogResult = DialogResult.None;
                 }
             };

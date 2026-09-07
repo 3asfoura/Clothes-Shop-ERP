@@ -25,8 +25,14 @@ namespace Clothes_Shop_ERP.modlestore
                 menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s2, ev) => Sett.ExportGrid(GridResult, LocalizationManager.T("Main_TreasuryBalance")));
                 menu.Show(GridResult, e.Location);
             };
-            Sett.CenterColumns(GridViewResult);
-            RunReport();
+            // Deferred to Load - see UcAuditLogs for why (PopulateColumns needs a
+            // real window handle to reliably generate columns; CenterColumns has to
+            // come after RunReport() too, since it needs those same columns to exist).
+            this.Load += (s, e) =>
+            {
+                RunReport();
+                Sett.CenterColumns(GridViewResult);
+            };
         }
 
         private void RunReport()

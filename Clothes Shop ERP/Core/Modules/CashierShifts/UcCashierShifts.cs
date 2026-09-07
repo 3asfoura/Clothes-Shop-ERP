@@ -38,6 +38,12 @@ namespace Clothes_Shop_ERP.modlestore
                 menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s2, ev) => Sett.ExportGrid(GridResult, LocalizationManager.T("Main_CashierShifts")));
                 menu.Show(GridResult, e.Location);
             };
+            GridViewResult.CustomColumnDisplayText += (s, e) =>
+            {
+                if (e.Column.FieldName == "Status")
+                    e.DisplayText = LocalizationManager.TranslateStatusCode(e.Value as string);
+            };
+            Sett.FixCellTooltips(GridViewResult);
             RefreshStatus();
             GetData();
         }

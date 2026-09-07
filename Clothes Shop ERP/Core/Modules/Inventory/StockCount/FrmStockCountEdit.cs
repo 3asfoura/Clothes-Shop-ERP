@@ -65,10 +65,16 @@ namespace Clothes_Shop_ERP
                     _branchIds.Add(b.Id);
                 }
             }
-            int vIdx = _variantIds.IndexOf(currentVariantId);
-            CmbVariant.SelectedIndex = vIdx >= 0 ? vIdx : 0;
-            int bIdx = _branchIds.IndexOf(currentBranchId);
-            CmbBranch.SelectedIndex = bIdx >= 0 ? bIdx : 0;
+            if (_variantIds.Count > 0)
+            {
+                int vIdx = _variantIds.IndexOf(currentVariantId);
+                CmbVariant.SelectedIndex = vIdx >= 0 ? vIdx : 0;
+            }
+            if (_branchIds.Count > 0)
+            {
+                int bIdx = _branchIds.IndexOf(currentBranchId);
+                CmbBranch.SelectedIndex = bIdx >= 0 ? bIdx : 0;
+            }
 
             var lblQty = new LabelControl { Text = LocalizationManager.T("FrmStockCountEdit_Quantity"), Location = new System.Drawing.Point(20, 130) };
             SpinQuantity = new SpinEdit { Value = quantity, Location = new System.Drawing.Point(20, 150), Width = 320 };
@@ -79,6 +85,14 @@ namespace Clothes_Shop_ERP
             SpinMinQuantity.Properties.MaxValue = 999999;
 
             var btnSave = new SimpleButton { Text = LocalizationManager.T("Shared_BtnSave"), Location = new System.Drawing.Point(160, 240), DialogResult = DialogResult.OK };
+            btnSave.Click += (s, e) =>
+            {
+                if (CmbVariant.SelectedIndex < 0 || CmbBranch.SelectedIndex < 0)
+                {
+                    XtraMessageBox.Show(LocalizationManager.T("StockCount_MustHaveVariantAndBranch"));
+                    this.DialogResult = DialogResult.None;
+                }
+            };
             var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(240, 240), DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblVariant); this.Controls.Add(CmbVariant);

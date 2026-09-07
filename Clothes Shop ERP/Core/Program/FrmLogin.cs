@@ -69,8 +69,10 @@ namespace Clothes_Shop_ERP
         {
             using (var db = new ClothesShopDBContext())
             {
-                TXT_Branch.Properties.DataSource = db.Branches.ToList();
-                TXT_Branch.EditValue = TXT_Branch.Properties.GetKeyValue(0);
+                var branches = db.Branches.ToList();
+                TXT_Branch.Properties.DataSource = branches;
+                if (branches.Count > 0)
+                    TXT_Branch.EditValue = TXT_Branch.Properties.GetKeyValue(0);
             }
 
             var recent = GetRecentUsernames();

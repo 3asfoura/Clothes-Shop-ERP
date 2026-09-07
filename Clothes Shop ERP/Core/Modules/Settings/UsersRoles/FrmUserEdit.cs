@@ -72,8 +72,11 @@ namespace Clothes_Shop_ERP
                     _roleIds.Add(r.Id);
                 }
             }
-            int idx = _roleIds.IndexOf(currentRoleId);
-            CmbRole.SelectedIndex = idx >= 0 ? idx : 0;
+            if (_roleIds.Count > 0)
+            {
+                int idx = _roleIds.IndexOf(currentRoleId);
+                CmbRole.SelectedIndex = idx >= 0 ? idx : 0;
+            }
 
             ChkIsActive = new CheckEdit { Text = LocalizationManager.T("Shared_Active"), Checked = isActive, Location = new System.Drawing.Point(20, 240) };
 
@@ -89,6 +92,12 @@ namespace Clothes_Shop_ERP
                 if (!_isEditMode && string.IsNullOrWhiteSpace(TxtPassword.Text))
                 {
                     XtraMessageBox.Show(LocalizationManager.T("UsersRoles_PasswordRequiredForNewUser"));
+                    this.DialogResult = DialogResult.None;
+                    return;
+                }
+                if (CmbRole.SelectedIndex < 0)
+                {
+                    XtraMessageBox.Show(LocalizationManager.T("UsersRoles_MustHaveRole"));
                     this.DialogResult = DialogResult.None;
                 }
             };

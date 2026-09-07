@@ -23,8 +23,6 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsCustomization.AllowSort = false;
             gridView2.OptionsView.ShowGroupPanel = false;
             gridView2.OptionsCustomization.AllowSort = false;
-            Sett.CenterColumns(gridView1);
-            Sett.CenterColumns(gridView2);
             ApplyLanguage();
         }
         public void ApplyLanguage()
@@ -52,6 +50,11 @@ namespace Clothes_Shop_ERP.modlestore
             }
             if (gridView2.Columns["Name"] != null) gridView2.Columns["Name"].Caption = LocalizationManager.T("Shared_Name");
             if (gridView2.Columns["SortOrder"] != null) gridView2.Columns["SortOrder"].Caption = LocalizationManager.T("ColorsSizes_ColSortOrder");
+            // Columns are auto-populated from the anonymous projections above, so
+            // centering has to run after every load (constructor time is too early -
+            // GetData() is deferred to Load, meaning no columns exist yet then).
+            Sett.CenterColumns(gridView1);
+            Sett.CenterColumns(gridView2);
         }
         private void UcColorsSizes_Load(object sender, EventArgs e)
         {

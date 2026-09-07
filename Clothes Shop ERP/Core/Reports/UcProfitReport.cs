@@ -17,11 +17,17 @@ namespace Clothes_Shop_ERP.modlestore
             InitializeComponent();
             DtFrom.DateTime = DateTime.Today.AddDays(-30);
             DtTo.DateTime = DateTime.Today;
-            RunReport();
             ApplyLanguage();
             GridViewResult.OptionsView.ShowGroupPanel = false;
             GridViewResult.OptionsCustomization.AllowSort = false;
-            Sett.CenterColumns(GridViewResult);
+            // Deferred to Load - see UcAuditLogs for why (PopulateColumns needs a
+            // real window handle to reliably generate columns; CenterColumns has to
+            // come after RunReport() too, since it needs those same columns to exist).
+            this.Load += (s, e) =>
+            {
+                RunReport();
+                Sett.CenterColumns(GridViewResult);
+            };
         }
         public void ApplyLanguage()
         {

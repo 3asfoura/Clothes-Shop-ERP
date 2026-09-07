@@ -1,8 +1,11 @@
 using Clothes_Shop_ERP.DAL;
 using Clothes_Shop_ERP.Localization;
+using DevExpress.XtraEditors;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP.modlestore
 {
@@ -11,12 +14,98 @@ namespace Clothes_Shop_ERP.modlestore
     // broken down by where it came from or went to.
     public partial class UcDayClosingReport : DevExpress.XtraEditors.XtraUserControl
     {
+        private TableLayoutPanel _cardsPanel;
+        private LabelControl _lblBreakdown;
+
         public UcDayClosingReport()
         {
             InitializeComponent();
             DtDate.DateTime = DateTime.Today;
             ApplyLanguage();
-            RunReport();
+            // DevExpress's LayoutControl won't vertically align btnRun's item with
+            // DtDate's row no matter what Padding/ControlAlignment combination is
+            // tried (its item has no caption above it, unlike lblDate's, and the
+            // engine keeps parking the control near the item's top regardless) -
+            // so just pin it to DtDate's actual row directly, every time the
+            // toolbar re-lays-out, instead of fighting the engine for it.
+            btnRun.LocationChanged += (s, e) => SyncButtonToDateRow();
+            btnRun.SizeChanged += (s, e) => SyncButtonToDateRow();
+            SyncButtonToDateRow();
+            // Deferred to Load - see UcAuditLogs for why (PopulateColumns needs a
+            // real window handle to reliably generate columns).
+            this.Load += (s, e) => { BuildSummaryUi(); RunReport(); };
+        }
+
+        private void SyncButtonToDateRow()
+        {
+            if (btnRun.Top == DtDate.Top && btnRun.Height == DtDate.Height) return;
+            btnRun.Top = DtDate.Top;
+            btnRun.Height = DtDate.Height;
+        }
+
+        // Same "KPI tile" look as the Dashboard cards (white tile, small gray
+        // caption, big bold colored value) so this screen reads consistently
+        // with the rest of the app instead of a plain wall of text.
+        private void BuildSummaryUi()
+        {
+            // AutoSize instead of a fixed height: the panel's Designer-set Size
+            // gets DPI-autoscaled, but the children's heights are set in code
+            // below (not autoscaled), so a fixed height would drift out of sync
+            // with them on a different system font/DPI.
+            pnlSummaryHost.AutoSize = true;
+            pnlSummaryHost.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            _cardsPanel = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                Height = 160,
+                ColumnCount = 3,
+                RowCount = 2
+            };
+            for (int i = 0; i < 3; i++) _cardsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / 3));
+            for (int i = 0; i < 2; i++) _cardsPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
+            pnlSummaryHost.Controls.Add(_cardsPanel);
+
+            _lblBreakdown = new LabelControl
+            {
+                Dock = DockStyle.Top,
+                Height = 40,
+                Font = new Font("Segoe UI", 8.5f),
+                ForeColor = Color.Gray,
+                Padding = new Padding(12, 6, 12, 0)
+            };
+            pnlSummaryHost.Controls.Add(_lblBreakdown);
+            _lblBreakdown.BringToFront();
+        }
+
+        private static PanelControl MakeCard(string title, string value, Color accentColor)
+        {
+            var card = new PanelControl
+            {
+                Dock = DockStyle.Fill,
+                Margin = new Padding(6),
+                BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.Simple
+            };
+            card.Appearance.BackColor = Color.White;
+            card.Appearance.Options.UseBackColor = true;
+
+            var lblTitle = new LabelControl
+            {
+                Text = title,
+                Location = new Point(12, 10),
+                Font = new Font("Segoe UI", 9),
+                ForeColor = Color.Gray
+            };
+            var lblValue = new LabelControl
+            {
+                Text = value,
+                Location = new Point(12, 30),
+                Font = new Font("Segoe UI", 14, FontStyle.Bold),
+                ForeColor = accentColor
+            };
+            card.Controls.Add(lblTitle);
+            card.Controls.Add(lblValue);
+            return card;
         }
 
         public void ApplyLanguage()
@@ -64,11 +153,18 @@ namespace Clothes_Shop_ERP.modlestore
 
                 decimal netCashMovement = totalCashIn - totalCashOut;
 
-                LblSummary.Text = string.Format(LocalizationManager.T("DayClosing_SummaryFmt"),
-                    invoiceCount, totalSales, returnCount, totalReturns, netSales,
-                    cashInFromSales, otherCashIn, totalCashIn,
-                    cashOutToSuppliers, refunds, generalExpenses, totalCashOut,
-                    netCashMovement);
+                _cardsPanel.Controls.Clear();
+                Color netCashColor = netCashMovement >= 0 ? Color.SeaGreen : Color.Crimson;
+
+                _cardsPanel.Controls.Add(MakeCard(LocalizationManager.T("DayClosing_CardInvoiceCount"), invoiceCount.ToString("n0"), Color.MediumPurple), 0, 0);
+                _cardsPanel.Controls.Add(MakeCard(LocalizationManager.T("DayClosing_CardReturnCount"), returnCount.ToString("n0"), Color.DarkOrange), 1, 0);
+                _cardsPanel.Controls.Add(MakeCard(LocalizationManager.T("DayClosing_CardNetSales"), netSales.ToString("n2"), Color.MediumPurple), 2, 0);
+                _cardsPanel.Controls.Add(MakeCard(LocalizationManager.T("DayClosing_CardTotalIn"), totalCashIn.ToString("n2"), Color.SeaGreen), 0, 1);
+                _cardsPanel.Controls.Add(MakeCard(LocalizationManager.T("DayClosing_CardTotalOut"), totalCashOut.ToString("n2"), Color.Crimson), 1, 1);
+                _cardsPanel.Controls.Add(MakeCard(LocalizationManager.T("DayClosing_CardNetCash"), netCashMovement.ToString("n2"), netCashColor), 2, 1);
+
+                _lblBreakdown.Text = string.Format(LocalizationManager.T("DayClosing_BreakdownFmt"),
+                    cashInFromSales, otherCashIn, cashOutToSuppliers, refunds, generalExpenses);
 
                 var byMethod = sales
                     .GroupBy(x => x.PaymentMethod != null ? x.PaymentMethod.Name : "-")
@@ -85,7 +181,9 @@ namespace Clothes_Shop_ERP.modlestore
             }
         }
 
-        private void btnRun_Click(object sender, EventArgs e)
+     
+
+        private void btnRun_Click_1(object sender, EventArgs e)
         {
             RunReport();
         }

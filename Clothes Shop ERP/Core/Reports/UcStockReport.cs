@@ -17,9 +17,15 @@ namespace Clothes_Shop_ERP
         public UcStockReport()
         {
             InitializeComponent();
-            RunReport();
             ApplyLanguage();
-            Sett.CenterColumns(GridViewResult);
+            // Deferred to Load - see UcAuditLogs for why (PopulateColumns needs a
+            // real window handle to reliably generate columns; CenterColumns has to
+            // come after RunReport() too, since it needs those same columns to exist).
+            this.Load += (s, e) =>
+            {
+                RunReport();
+                Sett.CenterColumns(GridViewResult);
+            };
         }
         public void ApplyLanguage()
         {
@@ -84,6 +90,8 @@ namespace Clothes_Shop_ERP
             if (e.Column.FieldName != "Quantity") return;
 
             var row = GridViewResult.GetRow(e.RowHandle);
+            if (row == null) return;   // group/band rows have no underlying data object
+
             var qtyProp = row.GetType().GetProperty("Quantity");
             var minProp = row.GetType().GetProperty("MinQuantity");
             if (qtyProp == null || minProp == null) return;

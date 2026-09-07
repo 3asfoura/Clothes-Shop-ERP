@@ -88,7 +88,18 @@ namespace Clothes_Shop_ERP
                 try
                 {
                     if (dlg.FilterIndex == 1)
-                        grid.ExportToXlsx(dlg.FileName);
+                    {
+                        // Default export mode writes each cell's raw bound value, not
+                        // the CustomColumnDisplayText override - so a translated grid
+                        // (Status/Action/TableName/etc.) exports the original English
+                        // instead of what's on screen. TextExportMode.Text makes it
+                        // export what's actually displayed.
+                        var xlsxOptions = new DevExpress.XtraPrinting.XlsxExportOptions
+                        {
+                            TextExportMode = DevExpress.XtraPrinting.TextExportMode.Text
+                        };
+                        grid.ExportToXlsx(dlg.FileName, xlsxOptions);
+                    }
                     else
                         grid.ExportToPdf(dlg.FileName);
 
@@ -99,6 +110,41 @@ namespace Clothes_Shop_ERP
                     MsgRed(LocalizationManager.T("Shared_Error"), ex.Message);
                 }
             }
+        }
+
+        // Same root cause as the export fix above: the grid's automatic tooltip
+        // for a truncated cell reads the raw bound value, not the translated
+        // CustomColumnDisplayText - so a cell showing Arabic flips to English the
+        // moment you hover it. Routing tooltips through GetRowCellDisplayText
+        // (the same call the cell's own painting already uses) keeps them in
+        // sync with whatever language is actually on screen.
+        public static void FixCellTooltips(GridView view)
+        {
+            var controller = new ToolTipController();
+            controller.GetActiveObjectInfo += (s, e) =>
+            {
+                if (e.Info != null) return;
+                var hitInfo = view.CalcHitInfo(e.ControlMousePosition);
+                if (!hitInfo.InRowCell || hitInfo.Column == null) return;
+
+                string text = view.GetRowCellDisplayText(hitInfo.RowHandle, hitInfo.Column);
+                e.Info = new ToolTipControlInfo(new GridCellId(hitInfo.RowHandle, hitInfo.Column), text);
+            };
+            view.GridControl.ToolTipController = controller;
+        }
+
+        private struct GridCellId : IEquatable<GridCellId>
+        {
+            private readonly int _rowHandle;
+            private readonly DevExpress.XtraGrid.Columns.GridColumn _column;
+            public GridCellId(int rowHandle, DevExpress.XtraGrid.Columns.GridColumn column)
+            {
+                _rowHandle = rowHandle;
+                _column = column;
+            }
+            public bool Equals(GridCellId other) => _rowHandle == other._rowHandle && _column == other._column;
+            public override bool Equals(object obj) => obj is GridCellId other && Equals(other);
+            public override int GetHashCode() => _rowHandle.GetHashCode() ^ (_column?.GetHashCode() ?? 0);
         }
 
     }

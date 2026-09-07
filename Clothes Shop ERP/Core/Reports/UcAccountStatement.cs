@@ -18,6 +18,12 @@ namespace Clothes_Shop_ERP.modlestore
         public UcAccountStatement()
         {
             InitializeComponent();
+            GridViewResult.CustomColumnDisplayText += (s, e) =>
+            {
+                if (e.Column.FieldName == "Status")
+                    e.DisplayText = LocalizationManager.TranslateStatusCode(e.Value as string);
+            };
+            Sett.FixCellTooltips(GridViewResult);
             DtFrom.DateTime = DateTime.Today.AddMonths(-3);
             DtTo.DateTime = DateTime.Today;
 
@@ -27,7 +33,9 @@ namespace Clothes_Shop_ERP.modlestore
 
             ApplyLanguage();
             LoadParties();
-            RunReport();
+            // Deferred to Load - see UcAuditLogs for why (PopulateColumns needs a
+            // real window handle to reliably generate columns).
+            this.Load += (s, e) => RunReport();
         }
 
         public void ApplyLanguage()

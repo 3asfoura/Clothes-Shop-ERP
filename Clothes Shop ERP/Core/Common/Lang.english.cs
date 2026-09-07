@@ -19,6 +19,43 @@ namespace Clothes_Shop_ERP.Localization
             { "Shared_Address", "Address" },
             { "Shared_IsActive", "IsActive" },
             { "Shared_Status", "Status" },
+            { "Status_Completed", "Completed" },
+            { "Status_Pending", "Pending" },
+            { "Status_Cancelled", "Cancelled" },
+            { "Status_Open", "Open" },
+            { "Status_Closed", "Closed" },
+            { "Status_In", "In" },
+            { "Status_Out", "Out" },
+            { "Status_Insert", "Insert" },
+            { "Status_Update", "Update" },
+            { "Status_Delete", "Delete" },
+            { "Status_Sale", "Sale" },
+            { "Status_Purchase", "Purchase" },
+            { "Status_Return", "Return" },
+            { "Status_PurchaseReturn", "Purchase Return" },
+            { "Status_TransferIn", "Transfer In" },
+            { "Status_TransferOut", "Transfer Out" },
+            { "Status_SalesInvoice", "Sales Invoice" },
+            { "Status_PurchaseInvoice", "Purchase Invoice" },
+            { "Status_SalesReturn", "Sales Return" },
+            { "Status_StockTransfer", "Stock Transfer" },
+            { "Status_Manual", "Manual" },
+            { "TableName_Products", "Products" },
+            { "TableName_ProductVariants", "Product Variants" },
+            { "TableName_Users", "Users" },
+            { "TableName_SalesInvoices", "Sales Invoices" },
+            { "TableName_PurchaseInvoices", "Purchase Invoices" },
+            { "TableName_Branches", "Branches" },
+            { "TableName_BranchStock", "Branch Stock" },
+            { "TableName_SalesInvoiceDetails", "Sales Invoice Details" },
+            { "TableName_SalesReturns", "Sales Returns" },
+            { "TableName_SalesReturnDetails", "Sales Return Details" },
+            { "TableName_StockMovements", "Stock Movements" },
+            { "TableName_TreasuryTransactions", "Treasury Transactions" },
+            { "TreasuryDesc_PurchaseReturn", "Purchase return" },
+            { "TreasuryDesc_SalesReturn", "Sales return" },
+            { "TreasuryDesc_SalePrefix", "Sale - " },
+            { "TreasuryDesc_PaymentToSupplierPrefix", "Payment to supplier - Invoice #" },
             { "Shared_Branch", "Branch" },
             { "Shared_CreatedAt", "CreatedAt" },
             { "Shared_Description", "Description" },
@@ -119,6 +156,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Main_PaymentMethods", "Payment Methods" },
             { "Main_AuditLogs", "Audit Logs" },
             { "Main_DarkMode", "Dark Mode" },
+            { "Main_LightMode", "Light Mode" },
             { "Main_Language", "Language" },
 
 
@@ -293,6 +331,7 @@ namespace Clothes_Shop_ERP.Localization
             { "UsersRoles_RoleAssigned", "This role is assigned to one or more users. Reassign them first." },
             { "UsersRoles_FillUsernameFullName", "Please fill in username and full name." },
             { "UsersRoles_PasswordRequiredForNewUser", "Please enter a password for the new user." },
+            { "UsersRoles_MustHaveRole", "You need at least one role before adding a user." },
 
             // ----- Branches -----
             { "Branches_HasRelatedData", "This branch has related data (users, invoices, stock...). Remove those first." },
@@ -306,6 +345,7 @@ namespace Clothes_Shop_ERP.Localization
             // ----- Treasury -----
             { "Treasury_ConfirmDeleteEntry", "Delete this entry?" },
             { "Treasury_AmountGreaterThanZero", "Please enter an amount greater than zero." },
+            { "Treasury_MustHaveBranch", "You need at least one branch before creating a treasury entry." },
 
             // ----- Returns -----
             { "Returns_SaveFailed", "Could not save the return. Nothing was changed. {0}" },
@@ -322,6 +362,7 @@ namespace Clothes_Shop_ERP.Localization
 
             // ----- POS -----
             { "POS_EmptyCartMsg", "Please add at least one item before checking out." },
+            { "POS_NoPaymentMethod", "Please select a payment method before checking out. If none is listed, at least one payment method must be active in Settings." },
             { "POS_DiscountExceedsTotal", "The discount can't be more than the cart total." },
             { "POS_MenuHoldSale", "Hold Sale" },
             { "POS_MenuResumeSale", "Resume Held Sale" },
@@ -342,6 +383,7 @@ namespace Clothes_Shop_ERP.Localization
             { "ProductVariants_CombinationExists", "This exact combination (same product, color, and size) already exists." },
             { "ProductVariants_HasStockOrSales", "This variant has stock or sales linked to it. Deactivate instead." },
             { "ProductVariants_BarcodeRequired", "Please enter a barcode." },
+            { "ProductVariants_MustHaveProductColorSize", "You need at least one product, color, and size before adding a variant." },
 
             // ----- Categories -----
             { "Categories_HasChildren", "This category has products or sub-categories linked to it. Remove those first." },
@@ -371,11 +413,13 @@ namespace Clothes_Shop_ERP.Localization
             // ----- Products -----
             { "Products_HasVariantsOrSales", "This product has variants or sales linked to it. Deactivate instead." },
             { "Products_CodeNameRequired", "Please fill in the code and name." },
+            { "Products_MustHaveCategory", "You need to add at least one category before adding a product." },
 
             // ----- Purchases -----
             { "Purchases_SaveFailed", "Could not save the invoice. Nothing was changed. {0}" },
             { "Purchases_SavedStatus", "Invoice saved — {0}." },
             { "Purchases_AddAtLeastOneInvoiceItem", "Please add at least one item to the invoice." },
+            { "Purchases_MustHaveSupplierAndBranch", "You need at least one supplier and one branch before creating a purchase invoice." },
 
             // ----- Sales Invoices -----
             { "SalesInvoices_DetailsTitle", "Invoice Details" },
@@ -417,6 +461,7 @@ namespace Clothes_Shop_ERP.Localization
             { "FrmStockCountEdit_ProductVariant", "Product Variant:" },
             { "FrmStockCountEdit_Quantity", "Quantity:" },
             { "FrmStockCountEdit_MinQuantityHint", "Minimum Quantity (reorder alert):" },
+            { "StockCount_MustHaveVariantAndBranch", "You need at least one product variant and one branch before doing a stock count." },
 
             // ----- Frmstocktransferedit -----
             { "StockTransferEdit_FromBranch", "From Branch:" },
@@ -616,7 +661,13 @@ namespace Clothes_Shop_ERP.Localization
             { "DayClosing_Date", "Date:" },
             { "DayClosing_ColMethod", "Payment Method" },
             { "DayClosing_ColCount", "Count" },
-            { "DayClosing_SummaryFmt", "Invoices: {0}   |   Total Sales: {1:n2}\nReturns: {2}   |   Total Returns: {3:n2}\nNet Sales: {4:n2}\n\nCash In - From Sales: {5:n2}   |   Other: {6:n2}   |   Total In: {7:n2}\nCash Out - To Suppliers: {8:n2}   |   Refunds: {9:n2}   |   General Expenses: {10:n2}   |   Total Out: {11:n2}\n\nNet Cash Movement Today: {12:n2}" },
+            { "DayClosing_CardInvoiceCount", "Invoices" },
+            { "DayClosing_CardReturnCount", "Returns" },
+            { "DayClosing_CardNetSales", "Net Sales" },
+            { "DayClosing_CardTotalIn", "Total Cash In" },
+            { "DayClosing_CardTotalOut", "Total Cash Out" },
+            { "DayClosing_CardNetCash", "Net Cash Movement" },
+            { "DayClosing_BreakdownFmt", "In: From Sales {0:n2}  •  Other {1:n2}          Out: To Suppliers {2:n2}  •  Refunds {3:n2}  •  General Expenses {4:n2}" },
 
             // ==================================================
             // ===== Backup Settings =============================

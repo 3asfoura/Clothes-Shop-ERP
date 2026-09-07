@@ -299,11 +299,9 @@ namespace Clothes_Shop_ERP.modlestore
             //
             this.layoutControlItemRun.Control = this.btnRun;
             this.layoutControlItemRun.Location = new System.Drawing.Point(826, 0);
-            this.layoutControlItemRun.MaxSize = new System.Drawing.Size(181, 66);
-            this.layoutControlItemRun.MinSize = new System.Drawing.Size(181, 66);
             this.layoutControlItemRun.Name = "layoutControlItemRun";
             this.layoutControlItemRun.Size = new System.Drawing.Size(181, 66);
-            this.layoutControlItemRun.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
+            this.layoutControlItemRun.Padding = new DevExpress.XtraLayout.Utils.Padding(0, 32, 0, 2);
             this.layoutControlItemRun.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItemRun.TextVisible = false;
             //

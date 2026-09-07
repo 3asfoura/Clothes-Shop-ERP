@@ -19,10 +19,16 @@ namespace Clothes_Shop_ERP.modlestore
         public UcSalesInvoices()
         {
             InitializeComponent();
+            gridView1.CustomColumnDisplayText += (s, e) =>
+            {
+                if (e.Column.FieldName == "Status")
+                    e.DisplayText = LocalizationManager.TranslateStatusCode(e.Value as string);
+            };
+            Sett.FixCellTooltips(gridView1);
             GetData();
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
-            Sett.CenterColumns(gridView1);
+            gridView1.OptionsBehavior.Editable = false;
         }
         public void GetData()
         {
@@ -54,6 +60,11 @@ namespace Clothes_Shop_ERP.modlestore
             if (gridView1.Columns["NetAmount"] != null) gridView1.Columns["NetAmount"].Caption = LocalizationManager.T("SalesInvoices_ColNetAmount");
             if (gridView1.Columns["PaidAmount"] != null) gridView1.Columns["PaidAmount"].Caption = LocalizationManager.T("Purchases_ColPaidAmount");
             if (gridView1.Columns["Status"] != null) gridView1.Columns["Status"].Caption = LocalizationManager.T("Shared_Status");
+            // PopulateColumns() above rebuilds the whole Columns collection from
+            // scratch every time GetData() runs, wiping any previously-applied
+            // alignment - so centering has to be re-applied here, not just once
+            // in the constructor.
+            Sett.CenterColumns(gridView1);
         }
 
         private void gridControl1_MouseUp(object sender, MouseEventArgs e)

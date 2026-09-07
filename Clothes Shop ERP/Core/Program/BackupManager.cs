@@ -89,19 +89,20 @@ namespace Clothes_Shop_ERP
                 return false;
             }
 
+            string dbName;
+            string fullPath;
             try
             {
                 Directory.CreateDirectory(BackupFolder);
+                dbName = Sett.cn.Database;
+                string fileName = $"{dbName}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+                fullPath = Path.Combine(BackupFolder, fileName);
             }
             catch (Exception ex)
             {
                 error = ex.Message;
                 return false;
             }
-
-            string dbName = Sett.cn.Database;
-            string fileName = $"{dbName}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
-            string fullPath = Path.Combine(BackupFolder, fileName);
 
             if (!BackupToFile(fullPath, out error)) return false;
 

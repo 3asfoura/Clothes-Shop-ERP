@@ -96,7 +96,7 @@
             this.GridViewResult.Name = "GridViewResult";
             this.GridViewResult.OptionsBehavior.Editable = false;
             this.GridViewResult.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GridViewResult_MouseUp);
-            //
+            // 
             // layoutControlGroup2
             // 
             this.layoutControlGroup2.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -168,10 +168,11 @@
             // 
             // btnRun
             // 
-            this.btnRun.Location = new System.Drawing.Point(880, 54);
+            this.btnRun.Location = new System.Drawing.Point(878, 53);
             this.btnRun.Margin = new System.Windows.Forms.Padding(4);
             this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(283, 22);
+            this.btnRun.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.btnRun.Size = new System.Drawing.Size(240, 25);
             this.btnRun.StyleController = this.layoutControl1;
             this.btnRun.TabIndex = 6;
             this.btnRun.Text = "Generate Report";
@@ -256,8 +257,9 @@
             this.layoutControlItem3.Control = this.btnRun;
             this.layoutControlItem3.Location = new System.Drawing.Point(868, 0);
             this.layoutControlItem3.Name = "layoutControlItem3";
+            this.layoutControlItem3.Padding = new DevExpress.XtraLayout.Utils.Padding(0, 47, 0, 13);
             this.layoutControlItem3.Size = new System.Drawing.Size(287, 92);
-            this.layoutControlItem3.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 42, 0);
+            this.layoutControlItem3.Spacing = new DevExpress.XtraLayout.Utils.Padding(0, 0, 43, 0);
             this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
             // 

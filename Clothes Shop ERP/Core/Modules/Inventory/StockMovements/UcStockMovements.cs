@@ -42,6 +42,11 @@ namespace Clothes_Shop_ERP.modlestore
                 gridView1.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
             }
             ApplyLanguage();
+            // Columns here are auto-populated from the anonymous projection above
+            // (no Designer-declared columns to fall back on), so centering has to
+            // be (re-)applied after every load, not just once in the constructor -
+            // at construction time the grid has no columns yet to center.
+            Sett.CenterColumns(gridView1);
         }
         public void ApplyLanguage()
         {
@@ -56,9 +61,15 @@ namespace Clothes_Shop_ERP.modlestore
         public UcStockMovements()
         {
             InitializeComponent();
+            gridView1.CustomColumnDisplayText += (s, e) =>
+            {
+                if (e.Column.FieldName == "MovementType" || e.Column.FieldName == "RefType")
+                    e.DisplayText = LocalizationManager.TranslateStatusCode(e.Value as string);
+            };
+            Sett.FixCellTooltips(gridView1);
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsCustomization.AllowSort = false;
-            Sett.CenterColumns(gridView1);
+            gridView1.OptionsBehavior.Editable = false;
         }
 
         private void UcStockMovements_Load(object sender, EventArgs e)

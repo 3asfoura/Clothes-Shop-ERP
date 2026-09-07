@@ -77,8 +77,11 @@ namespace Clothes_Shop_ERP
                     _brandIds.Add(b.Id);
                 }
             }
-            int catIdx = _categoryIds.IndexOf(currentCategoryId);
-            CmbCategory.SelectedIndex = catIdx >= 0 ? catIdx : 0;
+            if (_categoryIds.Count > 0)
+            {
+                int catIdx = _categoryIds.IndexOf(currentCategoryId);
+                CmbCategory.SelectedIndex = catIdx >= 0 ? catIdx : 0;
+            }
 
             int brandIdx = currentBrandId.HasValue ? _brandIds.IndexOf(currentBrandId.Value) : -1;
             CmbBrand.SelectedIndex = brandIdx >= 0 ? brandIdx + 1 : 0;
@@ -96,6 +99,12 @@ namespace Clothes_Shop_ERP
                 if (string.IsNullOrWhiteSpace(TxtCode.Text) || string.IsNullOrWhiteSpace(TxtName.Text))
                 {
                     XtraMessageBox.Show(LocalizationManager.T("Products_CodeNameRequired"));
+                    this.DialogResult = DialogResult.None;
+                    return;
+                }
+                if (CmbCategory.SelectedIndex < 0)
+                {
+                    XtraMessageBox.Show(LocalizationManager.T("Products_MustHaveCategory"));
                     this.DialogResult = DialogResult.None;
                 }
             };
