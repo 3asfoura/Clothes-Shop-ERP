@@ -1,7 +1,6 @@
+using DeviceId;
 using System;
 using System.IO;
-using System.Linq;
-using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
@@ -11,8 +10,9 @@ namespace Clothes_Shop_ERP
     // Offline activation: no internet and no license server involved.
     //
     // How it works, in plain terms:
-    //  1. Each PC has a "Machine ID" computed from a couple of hardware serial
-    //     numbers (motherboard + processor), so it's specific to that PC.
+    //  1. Each PC has a "Machine ID" computed from a few hardware/OS serial
+    //     numbers (processor, motherboard, system drive - via the DeviceId
+    //     library), so it's specific to that PC.
     //  2. A "License Key" is just that Machine ID plus an optional expiry date,
     //     signed with a secret password (HMAC-SHA256) that only lives in this
     //     source code. Anyone with a Machine ID and that secret can produce a
@@ -33,7 +33,7 @@ namespace Clothes_Shop_ERP
     // vendor keeps privately, so the secret never ships inside the app at all.
     public static class LicenseManager
     {
-        private const string Secret = "ClothesShopERP-2026-ChangeThisSecretBeforeRealDistribution";
+        private const string Secret = "Belnix-2026-ChangeThisSecretBeforeRealDistribution";
         private static readonly string LicenseFilePath = ResolveLicenseFilePath();
 
         // Moved from the exe's own folder into Sett.AppDataFolder so it lives
@@ -57,37 +57,12 @@ namespace Clothes_Shop_ERP
         /// <summary>A short, stable code identifying this PC. Shown to the shop owner to send to the vendor.</summary>
         public static string GetMachineId()
         {
-            string raw;
-            try
-            {
-                raw = ReadWmiValue("Win32_BaseBoard", "SerialNumber")
-                    + "|" + ReadWmiValue("Win32_Processor", "ProcessorId");
-            }
-            catch
-            {
-                // WMI can be blocked in some locked-down/virtualized environments -
-                // fall back to something still reasonably machine-specific.
-                raw = Environment.MachineName + "|" + Environment.UserDomainName;
-            }
-
-            byte[] hash = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(raw));
-            // Short, readable, groups of 5: xxxxx-xxxxx-xxxxx-xxxxx
-            string code = Convert.ToBase64String(hash).Replace("+", "").Replace("/", "").Replace("=", "").ToUpper();
-            code = code.Substring(0, Math.Min(20, code.Length));
-            return string.Join("-", Enumerable.Range(0, code.Length / 5).Select(i => code.Substring(i * 5, 5)));
-        }
-
-        private static string ReadWmiValue(string wmiClass, string property)
-        {
-            using (var searcher = new ManagementObjectSearcher($"SELECT {property} FROM {wmiClass}"))
-            {
-                foreach (ManagementObject obj in searcher.Get())
-                {
-                    var value = obj[property]?.ToString();
-                    if (!string.IsNullOrWhiteSpace(value)) return value;
-                }
-            }
-            return "";
+            return new DeviceIdBuilder()
+                .AddProcessorId()
+                .AddMotherboardSerialNumber()
+                .AddSystemDriveSerialNumber()
+                .ToString()
+                .ToUpper();
         }
 
         /// <summary>Vendor-only: produces a license key for a given Machine ID, optionally expiring on a date.</summary>
@@ -150,11 +125,18 @@ namespace Clothes_Shop_ERP
 
         public static bool IsActivated()
         {
+            return IsActivated(out _);
+        }
+
+        /// <summary>Like IsActivated(), but also reports the license's expiry date (null = no expiry).</summary>
+        public static bool IsActivated(out DateTime? expiryDate)
+        {
+            expiryDate = null;
             if (!File.Exists(LicenseFilePath)) return false;
             try
             {
                 string licenseKey = File.ReadAllText(LicenseFilePath).Trim();
-                return ValidateLicenseKey(GetMachineId(), licenseKey, out _, out _);
+                return ValidateLicenseKey(GetMachineId(), licenseKey, out expiryDate, out _);
             }
             catch
             {

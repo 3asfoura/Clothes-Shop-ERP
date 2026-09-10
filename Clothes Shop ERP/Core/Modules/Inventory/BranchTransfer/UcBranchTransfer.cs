@@ -200,7 +200,7 @@ namespace Clothes_Shop_ERP.modlestore
                     db.SaveChanges();
                     transaction.Commit();
 
-                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("BranchTransfer_StatusChanged"), newStatus));
+                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("BranchTransfer_StatusChanged"), LocalizationManager.TranslateStatusCode(newStatus)));
                     GetData();
                 }
                 catch (Exception ex)

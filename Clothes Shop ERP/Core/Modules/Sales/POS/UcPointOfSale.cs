@@ -48,6 +48,12 @@ namespace Clothes_Shop_ERP
         private List<int?> _customerIds = new List<int?>();
         private List<int> _paymentMethodIds = new List<int>();
         private BindingList<CartLine> _cart = new BindingList<CartLine>();
+
+        // Set only when the cashier explicitly stages a partial/credit payment
+        // via the cart's right-click menu; null means "pay the full amount",
+        // which is the untouched, default checkout path.
+        private decimal? _stagedPartialPayment = null;
+
         public UcPointOfSale()
         {
 
@@ -92,7 +98,7 @@ namespace Clothes_Shop_ERP
                 {
                     var v = stock.ProductVariant;
                     CmbVariant.Properties.Items.Add(
-                        $"{v.Product.Name} - {v.Color.Name} - {v.Size.Name} - {v.Barcode} (Qty: {stock.Quantity})");
+                        $"{v.Product.Name} - {v.Color.Name} - {v.Size.Name} - {v.Barcode} " + string.Format(LocalizationManager.T("Shared_QtyShortFmt"), stock.Quantity));
                     _variantIds.Add(v.Id);
                 }
 
@@ -142,6 +148,7 @@ namespace Clothes_Shop_ERP
         }
         private void AddToCart(int variantId, decimal quantity)
         {
+            _stagedPartialPayment = null;
             var existing = _cart.FirstOrDefault(l => l.ProductVariantId == variantId);
             if (existing != null)
             {
@@ -170,6 +177,9 @@ namespace Clothes_Shop_ERP
             decimal subTotal = _cart.Sum(l => l.LineTotal);
             decimal net = subTotal - (decimal)SpinDiscount.Value;
             LblTotal.Text = string.Format(LocalizationManager.T("POS_TotalFmt"), net);
+
+            if (_stagedPartialPayment.HasValue)
+                LblTotal.Text += string.Format(LocalizationManager.T("POS_PartialPaymentStagedFmt"), _stagedPartialPayment.Value);
         }
 
         private void SimpleButton_Click(object sender, EventArgs e)
@@ -204,6 +214,9 @@ namespace Clothes_Shop_ERP
             decimal netTotal = subTotal - discount;
             int branchId = FrmLogin.CurrentBranchId;
 
+            decimal paidNow = _stagedPartialPayment.HasValue && _stagedPartialPayment.Value < netTotal ? _stagedPartialPayment.Value : netTotal;
+            string invoiceStatus = paidNow >= netTotal ? "Completed" : "Pending";
+
             using (var db = new ClothesShopDBContext())
             using (var transaction = db.Database.BeginTransaction())
             {
@@ -236,9 +249,9 @@ namespace Clothes_Shop_ERP
                         DiscountAmount = discount,
                         TaxAmount = 0,
                         NetAmount = netTotal,
-                        PaidAmount = netTotal,
+                        PaidAmount = paidNow,
                         PaymentMethodId = _paymentMethodIds[CmbPaymentMethod.SelectedIndex],
-                        Status = "Completed",
+                        Status = invoiceStatus,
                         CreatedByUserId = FrmLogin.CurrentUserId
                     };
                     db.SalesInvoices.Add(invoice);
@@ -269,22 +282,31 @@ namespace Clothes_Shop_ERP
                         });
                     }
 
-                    db.TreasuryTransactions.Add(new TreasuryEntity
+                    // Only the amount actually collected right now becomes cash in
+                    // the till - matches how Purchase Invoices only records a
+                    // Treasury entry for the portion paid at that moment.
+                    if (paidNow > 0)
                     {
-                        BranchId = branchId,
-                        TransactionType = "In",
-                        Amount = netTotal,
-                        Description = $"Sale - {invoice.InvoiceNumber}",
-                        RefType = "SalesInvoice",
-                        RefId = invoice.Id,
-                        CreatedAt = DateTime.Now,
-                        CreatedByUserId = FrmLogin.CurrentUserId
-                    });
+                        db.TreasuryTransactions.Add(new TreasuryEntity
+                        {
+                            BranchId = branchId,
+                            TransactionType = "In",
+                            Amount = paidNow,
+                            Description = $"Sale - {invoice.InvoiceNumber}",
+                            RefType = "SalesInvoice",
+                            RefId = invoice.Id,
+                            CreatedAt = DateTime.Now,
+                            CreatedByUserId = FrmLogin.CurrentUserId
+                        });
+                    }
 
                     db.SaveChanges();
                     transaction.Commit();
 
-                    Sett.MsgGreen(LocalizationManager.T("POS_SaleCompletedTitle"), string.Format(LocalizationManager.T("POS_SaleCompletedMsg"), invoice.InvoiceNumber, netTotal));
+                    string completedMsg = string.Format(LocalizationManager.T("POS_SaleCompletedMsg"), invoice.InvoiceNumber, netTotal);
+                    if (paidNow < netTotal)
+                        completedMsg += string.Format(LocalizationManager.T("POS_PartialPaymentSuffixFmt"), paidNow, netTotal - paidNow);
+                    Sett.MsgGreen(LocalizationManager.T("POS_SaleCompletedTitle"), completedMsg);
 
                     var branchInfo = db.Branches.Where(b => b.Id == branchId)
                         .Select(b => new { b.Name, b.Address, b.Phone }).FirstOrDefault();
@@ -313,6 +335,7 @@ namespace Clothes_Shop_ERP
 
                     _cart.Clear();
                     SpinDiscount.Value = 0;
+                    _stagedPartialPayment = null;
                     RefreshTotal();
                     TxtBarcode.Focus();
                 }
@@ -339,7 +362,7 @@ namespace Clothes_Shop_ERP
         {
             if (GridViewCart.FocusedRowHandle < 0) return;
             var line = GridViewCart.GetFocusedRow() as CartLine;
-            if (line != null) { _cart.Remove(line); RefreshTotal(); }
+            if (line != null) { _stagedPartialPayment = null; _cart.Remove(line); RefreshTotal(); }
         }
 
         private void HoldSale()
@@ -361,6 +384,7 @@ namespace Clothes_Shop_ERP
 
             _cart.Clear();
             SpinDiscount.Value = 0;
+            _stagedPartialPayment = null;
             if (CmbCustomer.Properties.Items.Count > 0) CmbCustomer.SelectedIndex = 0;
             RefreshTotal();
             Sett.MsgGreen(LocalizationManager.T("Shared_Success"), LocalizationManager.T("POS_SaleHeld"));
@@ -373,6 +397,7 @@ namespace Clothes_Shop_ERP
                 return;
 
             _cart.Clear();
+            _stagedPartialPayment = null;
             foreach (var line in held.Lines) _cart.Add(line);
             if (held.CustomerIndex >= 0 && held.CustomerIndex < CmbCustomer.Properties.Items.Count) CmbCustomer.SelectedIndex = held.CustomerIndex;
             if (held.PaymentMethodIndex >= 0 && held.PaymentMethodIndex < CmbPaymentMethod.Properties.Items.Count) CmbPaymentMethod.SelectedIndex = held.PaymentMethodIndex;
@@ -397,8 +422,31 @@ namespace Clothes_Shop_ERP
                 menu.Items.Add(resumeMenu);
             }
 
+            if (_cart.Count > 0)
+                menu.Items.Add(LocalizationManager.T("POS_MenuPartialPayment"), null, (s, ev) => StagePartialPayment());
+
             menu.Show(GridCart, e.Location);
         }
+
+        // Lets the cashier record a credit sale: pay less than the full total
+        // now, with the rest tracked as due on the invoice (same "amount owed"
+        // concept Purchase Invoices already has) - staged here rather than a
+        // permanent field on the main screen so the default, fastest checkout
+        // path (pay in full) stays completely untouched.
+        private void StagePartialPayment()
+        {
+            if (_cart.Count == 0) return;
+            decimal subTotal = _cart.Sum(l => l.LineTotal);
+            decimal net = subTotal - (decimal)SpinDiscount.Value;
+            if (net <= 0) return;
+
+            var form = new FrmCompletePayment(LocalizationManager.T("POS_PartialPaymentTitle"), net, 0);
+            if (form.ShowDialog() != DialogResult.OK) return;
+
+            _stagedPartialPayment = form.AmountToPay >= net ? (decimal?)null : form.AmountToPay;
+            RefreshTotal();
+        }
+
         private void BuildUi()
         {
 
@@ -457,12 +505,12 @@ namespace Clothes_Shop_ERP
             GridViewCart.OptionsBehavior.Editable = true;
             GridViewCart.CellValueChanged += (s, e) =>
             {
-                if (e.Column == GridViewCart.Columns["Quantity"]) RefreshTotal();
+                if (e.Column == GridViewCart.Columns["Quantity"]) { _stagedPartialPayment = null; RefreshTotal(); }
             };
 
             RefreshTotal();
 
-            SpinDiscount.ValueChanged += (s, e) => RefreshTotal();
+            SpinDiscount.ValueChanged += (s, e) => { _stagedPartialPayment = null; RefreshTotal(); };
 
         }
         private void Loop_Tick(object sender, EventArgs e)

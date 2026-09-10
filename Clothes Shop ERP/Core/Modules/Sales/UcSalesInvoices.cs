@@ -83,8 +83,74 @@ namespace Clothes_Shop_ERP.modlestore
                 menu.Items.Add(LocalizationManager.T("Shared_MenuViewDetails"), null, (s, ev) => ViewDetails());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuPrintReceipt"), null, (s, ev) => PrintReceipt());
 
+                if (PermissionManager.CanEdit("SalesInvoices"))
+                {
+                    decimal net = Convert.ToDecimal(gridView1.GetFocusedRowCellValue("NetAmount"));
+                    decimal paid = Convert.ToDecimal(gridView1.GetFocusedRowCellValue("PaidAmount"));
+                    if (paid < net)
+                        menu.Items.Add(LocalizationManager.T("Payment_MenuCompletePayment"), null, (s, ev) => CompletePayment());
+                }
             }
             menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_SalesInvoices")));
+        }
+
+        private void CompletePayment()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+
+            SalesInvoices invoice;
+            using (var db = new ClothesShopDBContext())
+                invoice = db.SalesInvoices.FirstOrDefault(x => x.Id == id);
+            if (invoice == null) return;
+
+            if (invoice.PaidAmount >= invoice.NetAmount)
+            {
+                Sett.MsgBlue(LocalizationManager.T("Shared_Info"), LocalizationManager.T("Payment_AlreadyFullyPaid"));
+                return;
+            }
+
+            var form = new FrmCompletePayment(LocalizationManager.T("Payment_CompletePaymentTitle"), invoice.NetAmount, invoice.PaidAmount);
+            if (form.ShowDialog() != DialogResult.OK) return;
+
+            using (var db = new ClothesShopDBContext())
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var dbInvoice = db.SalesInvoices.FirstOrDefault(x => x.Id == id);
+                    if (dbInvoice == null) return;
+
+                    dbInvoice.PaidAmount += form.AmountToPay;
+                    dbInvoice.Status = dbInvoice.PaidAmount >= dbInvoice.NetAmount ? "Completed" : "Pending";
+
+                    // A new, separate Treasury entry for just this payment - same
+                    // convention as POS checkout and as Returns: never mutate a
+                    // past Treasury row, only ever add new ones.
+                    db.TreasuryTransactions.Add(new TreasuryTransactions
+                    {
+                        BranchId = dbInvoice.BranchId,
+                        TransactionType = "In",
+                        Amount = form.AmountToPay,
+                        Description = $"Sale - {dbInvoice.InvoiceNumber}",
+                        RefType = "SalesInvoice",
+                        RefId = dbInvoice.Id,
+                        CreatedAt = DateTime.Now,
+                        CreatedByUserId = FrmLogin.CurrentUserId
+                    });
+
+                    db.SaveChanges();
+                    transaction.Commit();
+
+                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), LocalizationManager.T("Payment_Recorded"));
+                    GetData();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), ex.Message);
+                }
+            }
         }
         private void PrintReceipt()
         {

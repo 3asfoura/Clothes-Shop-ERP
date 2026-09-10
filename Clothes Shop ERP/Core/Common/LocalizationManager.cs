@@ -12,7 +12,7 @@ namespace Clothes_Shop_ERP.Localization
       
         public static AppLanguage CurrentLanguage = AppLanguage.Egyptian;
         private static readonly string SettingsFilePath =
-            Path.Combine(Application.StartupPath, "lang.settings");
+            Path.Combine(Clothes_Shop_ERP.Sett.AppDataFolder, "lang.settings");
         public static void LoadLanguagePreference()
         {
             try

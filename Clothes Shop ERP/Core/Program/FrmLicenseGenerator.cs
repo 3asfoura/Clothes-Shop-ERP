@@ -11,7 +11,7 @@ namespace Clothes_Shop_ERP
     public partial class FrmLicenseGenerator : DevExpress.XtraEditors.XtraForm
     {
         private TextEdit TxtMachineId;
-        private CheckEdit ChkExpiry;
+        private RadioGroup RadioExpiry;
         private DateEdit DtExpiry;
         private MemoEdit TxtResult;
 
@@ -20,7 +20,7 @@ namespace Clothes_Shop_ERP
             InitializeComponent();
             this.Text = LocalizationManager.T("LicenseGen_Title");
             this.Width = 460;
-            this.Height = 400;
+            this.Height = 440;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -29,12 +29,19 @@ namespace Clothes_Shop_ERP
             var lblMachineId = new LabelControl { Text = LocalizationManager.T("LicenseGen_MachineId"), Location = new System.Drawing.Point(20, 15) };
             TxtMachineId = new TextEdit { Location = new System.Drawing.Point(20, 35), Width = 400 };
 
-            ChkExpiry = new CheckEdit { Text = LocalizationManager.T("LicenseGen_SetExpiry"), Location = new System.Drawing.Point(20, 70) };
-            DtExpiry = new DateEdit { Location = new System.Drawing.Point(160, 68), Width = 150, Enabled = false };
-            DtExpiry.DateTime = DateTime.Today.AddYears(1);
-            ChkExpiry.CheckedChanged += (s, e) => DtExpiry.Enabled = ChkExpiry.Checked;
+            // Explicit choice instead of an easy-to-miss checkbox: lifetime is
+            // the default (index 0), so generating a key with no further
+            // clicks already produces a never-expiring license.
+            RadioExpiry = new RadioGroup { Location = new System.Drawing.Point(20, 70), Width = 400, Height = 54 };
+            RadioExpiry.Properties.Items.Add(new DevExpress.XtraEditors.Controls.RadioGroupItem(false, LocalizationManager.T("LicenseGen_Lifetime")));
+            RadioExpiry.Properties.Items.Add(new DevExpress.XtraEditors.Controls.RadioGroupItem(true, LocalizationManager.T("LicenseGen_HasExpiry")));
+            RadioExpiry.SelectedIndex = 0;
 
-            var btnGenerate = new SimpleButton { Text = LocalizationManager.T("LicenseGen_BtnGenerate"), Location = new System.Drawing.Point(20, 105), Width = 400 };
+            DtExpiry = new DateEdit { Location = new System.Drawing.Point(20, 130), Width = 150, Enabled = false };
+            DtExpiry.DateTime = DateTime.Today.AddYears(1);
+            RadioExpiry.SelectedIndexChanged += (s, e) => DtExpiry.Enabled = (bool)RadioExpiry.EditValue;
+
+            var btnGenerate = new SimpleButton { Text = LocalizationManager.T("LicenseGen_BtnGenerate"), Location = new System.Drawing.Point(20, 165), Width = 400 };
             btnGenerate.Click += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(TxtMachineId.Text))
@@ -43,15 +50,15 @@ namespace Clothes_Shop_ERP
                     return;
                 }
 
-                DateTime? expiry = ChkExpiry.Checked ? DtExpiry.DateTime.Date : (DateTime?)null;
+                DateTime? expiry = (bool)RadioExpiry.EditValue ? DtExpiry.DateTime.Date : (DateTime?)null;
                 TxtResult.Text = LicenseManager.GenerateLicenseKey(TxtMachineId.Text, expiry);
             };
 
-            var lblResult = new LabelControl { Text = LocalizationManager.T("LicenseGen_ResultKey"), Location = new System.Drawing.Point(20, 145) };
-            TxtResult = new MemoEdit { Location = new System.Drawing.Point(20, 165), Width = 400, Height = 100 };
+            var lblResult = new LabelControl { Text = LocalizationManager.T("LicenseGen_ResultKey"), Location = new System.Drawing.Point(20, 205) };
+            TxtResult = new MemoEdit { Location = new System.Drawing.Point(20, 225), Width = 400, Height = 100 };
             TxtResult.Properties.ReadOnly = true;
 
-            var btnCopy = new SimpleButton { Text = LocalizationManager.T("LicenseGen_BtnCopy"), Location = new System.Drawing.Point(20, 275), Width = 400 };
+            var btnCopy = new SimpleButton { Text = LocalizationManager.T("LicenseGen_BtnCopy"), Location = new System.Drawing.Point(20, 335), Width = 400 };
             btnCopy.Click += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(TxtResult.Text)) return;
@@ -60,7 +67,7 @@ namespace Clothes_Shop_ERP
             };
 
             this.Controls.Add(lblMachineId); this.Controls.Add(TxtMachineId);
-            this.Controls.Add(ChkExpiry); this.Controls.Add(DtExpiry);
+            this.Controls.Add(RadioExpiry); this.Controls.Add(DtExpiry);
             this.Controls.Add(btnGenerate);
             this.Controls.Add(lblResult); this.Controls.Add(TxtResult);
             this.Controls.Add(btnCopy);

@@ -1,5 +1,7 @@
 ﻿using Clothes_Shop_ERP.Localization;
+using DevExpress.LookAndFeel;
 using DevExpress.Utils.Filtering.Internal;
+using DevExpress.Utils.Svg;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Localization;
 using System;
@@ -52,17 +54,18 @@ namespace Clothes_Shop_ERP
 
             //////////////////////
 
-            // Licensing is on hold for now - see LicenseManager.cs / FrmActivation.cs /
-            // FrmLicenseGenerator.cs, still there and working, just not wired in here.
-            // To turn it back on later, uncomment this block:
-            //
-            // if (!LicenseManager.IsActivated())
-            // {
-            //     var activation = new FrmActivation();
-            //     activation.ShowDialog();
-            //     if (!activation.Activated)
-            //         return;
-            // }
+            if (Sett.LoadDarkModePreference())
+                UserLookAndFeel.Default.SetSkinStyle(SkinSvgPalette.WXICompact.Darkness);
+
+            // See LicenseManager.cs / FrmActivation.cs / FrmLicenseGenerator.cs for
+            // how activation works.
+            if (!LicenseManager.IsActivated())
+            {
+                var activation = new FrmActivation();
+                activation.ShowDialog();
+                if (!activation.Activated)
+                    return;
+            }
 
             Application.Run(new FrmMain());
         }

@@ -75,6 +75,7 @@
             this.ElementPaymentMethods = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementAuditLogs = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.ElementBackupSettings = new DevExpress.XtraBars.Navigation.AccordionControlElement();
+            this.ElementAbout = new DevExpress.XtraBars.Navigation.AccordionControlElement();
             this.fluentDesignFormControl1 = new DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl();
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.ComboLanguage = new DevExpress.XtraBars.BarEditItem();
@@ -465,7 +466,8 @@
             this.ElementUsers_Roles,
             this.ElementPaymentMethods,
             this.ElementAuditLogs,
-            this.ElementBackupSettings});
+            this.ElementBackupSettings,
+            this.ElementAbout});
             this.ElementSettings.Expanded = true;
             this.ElementSettings.ImageOptions.ImageLayoutMode = DevExpress.XtraBars.Navigation.ImageLayoutMode.Squeeze;
             this.ElementSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("ElementSettings.ImageOptions.SvgImage")));
@@ -512,6 +514,13 @@
             this.ElementBackupSettings.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
             this.ElementBackupSettings.Text = "Backup";
             this.ElementBackupSettings.Click += new System.EventHandler(this.ElementBackupSettings_Click);
+            //
+            // ElementAbout
+            //
+            this.ElementAbout.Name = "ElementAbout";
+            this.ElementAbout.Style = DevExpress.XtraBars.Navigation.ElementStyle.Item;
+            this.ElementAbout.Text = "About";
+            this.ElementAbout.Click += new System.EventHandler(this.ElementAbout_Click);
             //
             // fluentDesignFormControl1
             //
@@ -644,6 +653,7 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementAuditLogs;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementBackupSettings;
+        private DevExpress.XtraBars.Navigation.AccordionControlElement ElementAbout;
         private DevExpress.XtraBars.Navigation.AccordionControlElement ElementTreasuryBalance;
         private System.Windows.Forms.Timer idleTimer;
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;

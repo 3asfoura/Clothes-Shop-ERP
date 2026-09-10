@@ -193,13 +193,73 @@ namespace Clothes_Shop_ERP.modlestore
             if (PermissionManager.CanEdit("PurchaseInvoices")) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
             menu.Show(gridControl1, e.Location);
 
-            if (hit.InRow)
+            if (hit.InRow && PermissionManager.CanEdit("PurchaseInvoices"))
             {
-                //menu.Items.Add("Edit", null, (s, ev) => EditSelected());
-                //menu.Items.Add("Activate/Deactivate", null, (s, ev) => ToggleActive());
-                //menu.Items.Add("Delete", null, (s, ev) => DeleteSelected());
+                decimal total = Convert.ToDecimal(gridView1.GetFocusedRowCellValue("TotalAmount"));
+                decimal paid = Convert.ToDecimal(gridView1.GetFocusedRowCellValue("PaidAmount"));
+                if (paid < total)
+                    menu.Items.Add(LocalizationManager.T("Payment_MenuCompletePayment"), null, (s, ev) => CompletePayment());
             }
             menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_PurchaseInvoices")));
+        }
+
+        private void CompletePayment()
+        {
+            if (gridView1.FocusedRowHandle < 0) return;
+            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
+
+            PurchaseInvoiceEntity invoice;
+            using (var db = new ClothesShopDBContext())
+                invoice = db.PurchaseInvoices.FirstOrDefault(x => x.Id == id);
+            if (invoice == null) return;
+
+            if (invoice.PaidAmount >= invoice.TotalAmount)
+            {
+                Sett.MsgBlue(LocalizationManager.T("Shared_Info"), LocalizationManager.T("Payment_AlreadyFullyPaid"));
+                return;
+            }
+
+            var form = new FrmCompletePayment(LocalizationManager.T("Payment_CompletePaymentTitle"), invoice.TotalAmount, invoice.PaidAmount);
+            if (form.ShowDialog() != DialogResult.OK) return;
+
+            using (var db = new ClothesShopDBContext())
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var dbInvoice = db.PurchaseInvoices.FirstOrDefault(x => x.Id == id);
+                    if (dbInvoice == null) return;
+
+                    dbInvoice.PaidAmount += form.AmountToPay;
+                    dbInvoice.Status = dbInvoice.PaidAmount >= dbInvoice.TotalAmount ? "Completed" : "Pending";
+
+                    // A new, separate Treasury entry for just this payment - same
+                    // convention as the original creation-time entry and as Returns:
+                    // never mutate a past Treasury row, only ever add new ones.
+                    db.TreasuryTransactions.Add(new TreasuryEntity
+                    {
+                        BranchId = dbInvoice.BranchId,
+                        TransactionType = "Out",
+                        Amount = form.AmountToPay,
+                        Description = $"Payment to supplier - Invoice #{dbInvoice.Id}",
+                        RefType = "PurchaseInvoice",
+                        RefId = dbInvoice.Id,
+                        CreatedAt = DateTime.Now,
+                        CreatedByUserId = FrmLogin.CurrentUserId
+                    });
+
+                    db.SaveChanges();
+                    transaction.Commit();
+
+                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), LocalizationManager.T("Payment_Recorded"));
+                    GetData();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    Sett.MsgBlue(LocalizationManager.T("Shared_Error"), ex.Message);
+                }
+            }
         }
     }
 }

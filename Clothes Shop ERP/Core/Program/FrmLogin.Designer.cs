@@ -314,7 +314,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "NOVA ERP - Login";
+            this.Text = "Belnix - Login";
             this.KeyPreview = true;
             this.Load += new System.EventHandler(this.FrmLogin_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmLogin_FormClosing);

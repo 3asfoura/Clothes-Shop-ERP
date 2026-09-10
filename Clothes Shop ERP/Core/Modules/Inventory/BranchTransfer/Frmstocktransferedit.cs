@@ -172,7 +172,7 @@ namespace Clothes_Shop_ERP
                 foreach (var stock in available)
                 {
                     CmbVariant.Properties.Items.Add(
-                        $"{stock.ProductVariant.Product.Name} - {stock.ProductVariant.Barcode} (Available: {stock.Quantity})");
+                        $"{stock.ProductVariant.Product.Name} - {stock.ProductVariant.Barcode} " + string.Format(LocalizationManager.T("Shared_AvailableFmt"), stock.Quantity));
                     _variantIds.Add(stock.ProductVariantId);
                 }
             }

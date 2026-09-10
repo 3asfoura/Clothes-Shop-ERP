@@ -14,6 +14,7 @@ namespace Clothes_Shop_ERP
 
         private TextEdit TxtMachineId;
         private MemoEdit TxtLicenseKey;
+        private DateTime _secretGPressedAt = DateTime.MinValue;
 
         public FrmActivation()
         {
@@ -93,12 +94,22 @@ namespace Clothes_Shop_ERP
             // Same hidden vendor-only shortcut as the login screen (see FrmLogin.cs) -
             // it also needs to work here, since this screen shows up *before* login on
             // a fresh install, which is exactly when the vendor needs to generate the
-            // very first key for that machine.
+            // very first key for that machine. Ctrl+Alt+G then, within 3 seconds,
+            // Ctrl+Alt+B opens the generator.
             this.KeyPreview = true;
             this.KeyDown += (s, e) =>
             {
                 if (e.Control && e.Alt && e.KeyCode == Keys.G)
                 {
+                    _secretGPressedAt = DateTime.Now;
+                    return;
+                }
+
+                if (e.Control && e.Alt && e.KeyCode == Keys.B
+                    && _secretGPressedAt != DateTime.MinValue
+                    && (DateTime.Now - _secretGPressedAt).TotalSeconds <= 3)
+                {
+                    _secretGPressedAt = DateTime.MinValue;
                     using (var gen = new FrmLicenseGenerator())
                     {
                         gen.ShowDialog(this);

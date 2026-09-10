@@ -23,18 +23,82 @@ namespace Clothes_Shop_ERP
         public static SqlConnection cn = new SqlConnection(Properties.Settings.Default.cnDB);
 
         // One shared, well-known folder for everything the app saves outside
-        // the database itself (license file, backup configuration) - so
-        // there's a single place to point a backup/recovery tool at, or to
-        // find by hand if a PC needs to be rebuilt. ProgramData (not the exe's
-        // own folder) because it survives a reinstall/relocation and stays
-        // writable even when the app is installed under Program Files.
-        public static readonly string AppDataFolder =
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Clothes Shop ERP");
+        // the database itself (license file, backup configuration, language,
+        // dark mode) - a single "Data" folder next to the exe itself, so
+        // it's easy to find by hand instead of buried in ProgramData.
+        public static readonly string AppDataFolder = ResolveAppDataFolder();
+
+        // Previously lived in ProgramData\Belnix (and, before the rebrand,
+        // ProgramData\Clothes Shop ERP) - copies an existing install's
+        // license.dat/backup.settings over from there the first time this
+        // runs, so a PC already activated doesn't need to reactivate. Also
+        // picks up lang.settings, which used to live loose next to the exe.
+        private static string ResolveAppDataFolder()
+        {
+            string newFolder = Path.Combine(Application.StartupPath, "Data");
+            string programData = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            string[] oldFolders =
+            {
+                Path.Combine(programData, "Belnix"),
+                Path.Combine(programData, "Clothes Shop ERP")
+            };
+            try
+            {
+                Directory.CreateDirectory(newFolder);
+                bool alreadyMigrated = File.Exists(Path.Combine(newFolder, "license.dat"))
+                                     || File.Exists(Path.Combine(newFolder, "backup.settings"));
+                if (!alreadyMigrated)
+                {
+                    foreach (string oldFolder in oldFolders)
+                    {
+                        if (!Directory.Exists(oldFolder)) continue;
+                        foreach (string file in Directory.GetFiles(oldFolder))
+                        {
+                            string dest = Path.Combine(newFolder, Path.GetFileName(file));
+                            if (!File.Exists(dest)) File.Copy(file, dest, true);
+                        }
+                    }
+                }
+
+                string oldLangFile = Path.Combine(Application.StartupPath, "lang.settings");
+                string newLangFile = Path.Combine(newFolder, "lang.settings");
+                if (!File.Exists(newLangFile) && File.Exists(oldLangFile))
+                    File.Copy(oldLangFile, newLangFile, true);
+            }
+            catch { }
+            return newFolder;
+        }
 
         static Sett()
         {
             try { Directory.CreateDirectory(AppDataFolder); } catch { }
         }
+
+        private static readonly string DarkModeSettingsPath = Path.Combine(AppDataFolder, "darkmode.settings");
+
+        public static bool LoadDarkModePreference()
+        {
+            try
+            {
+                return File.Exists(DarkModeSettingsPath) && File.ReadAllText(DarkModeSettingsPath).Trim() == "Dark";
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static void SaveDarkModePreference(bool isDark)
+        {
+            try { File.WriteAllText(DarkModeSettingsPath, isDark ? "Dark" : "Light"); } catch { }
+            DarkModeChanged?.Invoke();
+        }
+
+        // Lets a screen that draws its own fixed light/dark colors (instead of
+        // relying on the skin to repaint it) refresh itself immediately when
+        // the user toggles dark mode, even while that screen's tab is already
+        // open - see UcAbout for the one place this is used today.
+        public static event Action DarkModeChanged;
 
         // Message Aler - Icon Code
         // Star = "\uf005" ,Bell = "\uf0f3" , refrwsh = "\uf021"

@@ -129,7 +129,7 @@ namespace Clothes_Shop_ERP
                     if (remaining <= 0) continue;
 
                     CmbLine.Properties.Items.Add(
-                        $"{l.ProductVariant.Product.Name} ({l.ProductVariant.Barcode})  Remaining: {remaining} of {l.Quantity}");
+                        $"{l.ProductVariant.Product.Name} ({l.ProductVariant.Barcode})  " + string.Format(LocalizationManager.T("Shared_RemainingOfFmt"), remaining, l.Quantity));
                     _lineVariantIds.Add(l.ProductVariantId);
                     _lineUnitCosts.Add(l.UnitCost);
                     _lineMaxQty.Add(remaining);

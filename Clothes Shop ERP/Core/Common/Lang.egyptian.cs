@@ -68,6 +68,9 @@ namespace Clothes_Shop_ERP.Localization
             // ---- (New) Repeated across screens ----
             { "Shared_Success", "نجاح" },
             { "Shared_Error", "خطأ" },
+            { "Shared_QtyShortFmt", "(الكمية: {0})" },
+            { "Shared_RemainingOfFmt", "المتبقي: {0} من {1}" },
+            { "Shared_AvailableFmt", "(المتاح: {0})" },
             { "Shared_Warning", "تحذير" },
             { "Shared_NoPermissionMsg", "مالكش صلاحية تعمل الحاجة دي." },
             { "Shared_CannotDelete", "لا يمكن الحذف" },
@@ -84,6 +87,20 @@ namespace Clothes_Shop_ERP.Localization
             // ---- (New) Repeated across Add/Edit forms (Category C) ----
             { "Shared_BtnSave", "حفظ" },
             { "Shared_BtnCancel", "إلغاء" },
+            { "Shared_Info", "معلومة" },
+
+            // ==================================================
+            // ===== Payment Completion (Purchases/Sales/POS) ===
+            // ==================================================
+            { "Payment_MenuCompletePayment", "استكمال الدفع" },
+            { "Payment_CompletePaymentTitle", "استكمال الدفع" },
+            { "Payment_Total", "الإجمالي" },
+            { "Payment_PaidSoFar", "المدفوع حتى الآن" },
+            { "Payment_Due", "المتبقي" },
+            { "Payment_AmountNow", "المبلغ المدفوع الآن:" },
+            { "Payment_InvalidAmount", "المبلغ لازم يكون أكبر من صفر ولا يتخطى المتبقي" },
+            { "Payment_AlreadyFullyPaid", "الفاتورة دي متسددة بالكامل بالفعل" },
+            { "Payment_Recorded", "تم تسجيل الدفعة بنجاح" },
             { "Shared_Active", "نشط" },
             { "Shared_ColName", "الاسم:" },
             { "Shared_ColBranch", "الفرع:" },
@@ -107,7 +124,7 @@ namespace Clothes_Shop_ERP.Localization
             // ===== Login ======================================
             // ==================================================
 
-            { "Login_Title", "NOVA ERP - تسجيل الدخول" },
+            { "Login_Title", "Belnix - تسجيل الدخول" },
             { "Login_BtnLogin", "تسجيل الدخول" },
             { "Login_WelcomeBack", "مرحباً بعودتك" },
             { "Login_PleaseSignIn", "الرجاء تسجيل الدخول للمتابعة" },
@@ -376,6 +393,10 @@ namespace Clothes_Shop_ERP.Localization
             { "POS_EmptyCartTitle", "السلة فارغة" },
             { "POS_OutOfStockTitle", "نفدت الكمية" },
             { "POS_SaleCompletedTitle", "تمت عملية البيع" },
+            { "POS_MenuPartialPayment", "دفع جزئي (بيع بالأجل)" },
+            { "POS_PartialPaymentTitle", "دفع جزئي" },
+            { "POS_PartialPaymentStagedFmt", "  —  هيتدفع دلوقتي: {0:n2}" },
+            { "POS_PartialPaymentSuffixFmt", "\nمدفوع: {0:n2}   |   متبقي: {1:n2}" },
 
             // ----- Product Variants -----
             { "ProductVariants_BarcodeUsed", "هذا الباركود مستخدم بالفعل." },
@@ -704,7 +725,7 @@ namespace Clothes_Shop_ERP.Localization
             // ===== Licensing / Activation ======================
             // ==================================================
 
-            { "Activation_Title", "NOVA ERP - التفعيل مطلوب" },
+            { "Activation_Title", "Belnix - التفعيل مطلوب" },
             { "Activation_Intro", "النسخة دي لسه مش مفعّلة. ابعت كود الجهاز اللي تحت لمزوّد البرنامج عشان يديك كود التفعيل." },
             { "Activation_MachineId", "كود هذا الجهاز:" },
             { "Activation_BtnCopy", "نسخ" },
@@ -718,12 +739,30 @@ namespace Clothes_Shop_ERP.Localization
 
             { "LicenseGen_Title", "مولّد أكواد التفعيل (للمزوّد فقط)" },
             { "LicenseGen_MachineId", "كود جهاز العميل:" },
-            { "LicenseGen_SetExpiry", "ينتهي في:" },
+            { "LicenseGen_Lifetime", "مدى الحياة (بدون تاريخ انتهاء)" },
+            { "LicenseGen_HasExpiry", "له تاريخ انتهاء" },
             { "LicenseGen_BtnGenerate", "توليد الكود" },
             { "LicenseGen_ResultKey", "كود التفعيل (ابعته للعميل):" },
             { "LicenseGen_BtnCopy", "نسخ" },
             { "LicenseGen_EnterIdFirst", "الرجاء لصق كود جهاز العميل الأول." },
             { "LicenseGen_Copied", "تم نسخ كود التفعيل." },
+
+            // ==================================================
+            // ===== عن البرنامج ===================================
+            // ==================================================
+            { "Main_About", "عن البرنامج" },
+            { "About_Tagline", "نظام إدارة نقاط البيع والمخزون" },
+            { "About_LicenseInfo", "معلومات الترخيص والإصدار" },
+            { "About_Version", "الإصدار" },
+            { "About_ActivationStatus", "حالة التفعيل" },
+            { "About_Activated", "مفعّل" },
+            { "About_NotActivated", "غير مفعّل" },
+            { "About_ExpiresOnFmt", "ينتهي في {0:yyyy/MM/dd}" },
+            { "About_NoExpiry", "بدون تاريخ انتهاء" },
+            { "About_MachineId", "معرف هذا الجهاز" },
+            { "About_BtnCopy", "نسخ" },
+            { "About_Support", "للدعم الفني" },
+            { "About_SupportText", "للتواصل والدعم الفني: 01128259064" },
 
             // ==================================================
             // ===== ورديات الكاشير ===============================

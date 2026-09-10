@@ -32,7 +32,11 @@ namespace Clothes_Shop_ERP
         {
 
             InitializeComponent();
-            DarkModeToggle();
+            // Program.cs already applied the saved skin before this form was
+            // constructed - just sync this form's own bookkeeping (icon,
+            // caption via ApplyLanguage below) to match, without re-toggling.
+            DarkMode = Sett.LoadDarkModePreference();
+            barButtonItem1.ImageOptions.SvgImage = DarkMode ? Properties.Resources.icons8_sun_50 : Properties.Resources.icons8_dark_mode_50;
             ComboLanguage.EditValue = LocalizationManager.CurrentLanguage.ToString();
             ApplyLanguage();
         }
@@ -99,6 +103,7 @@ namespace Clothes_Shop_ERP
                 { "PaymentMethods", ElementPaymentMethods },
                 { "AuditLogs", ElementAuditLogs },
                 { "BackupSettings", ElementBackupSettings },
+                { "About", ElementAbout },
             };
 
             foreach (var pair in screenElements)
@@ -108,6 +113,7 @@ namespace Clothes_Shop_ERP
         }
         public void ApplyLanguage()
         {
+            this.Text = "Belnix";
             ElementDashboard.Text = LocalizationManager.T("Main_Dashboard");
             ElementInventory.Text = LocalizationManager.T("Main_Inventory");
             ElementProducts.Text = LocalizationManager.T("Main_Products");
@@ -143,6 +149,7 @@ namespace Clothes_Shop_ERP
             ElementPaymentMethods.Text = LocalizationManager.T("Main_PaymentMethods");
             ElementAuditLogs.Text = LocalizationManager.T("Main_AuditLogs");
             ElementBackupSettings.Text = LocalizationManager.T("Main_BackupSettings");
+            ElementAbout.Text = LocalizationManager.T("Main_About");
             UpdateDarkModeCaption();
             ComboLanguage.Caption = LocalizationManager.T("Main_Language");
         }
@@ -394,6 +401,12 @@ namespace Clothes_Shop_ERP
             setTabPage(frm, ElementBackupSettings.Text, ElementBackupSettings.ImageOptions.SvgImage);
         }
 
+        private void ElementAbout_Click(object sender, EventArgs e)
+        {
+            UcAbout frm = new UcAbout();
+            setTabPage(frm, ElementAbout.Text, ElementAbout.ImageOptions.SvgImage);
+        }
+
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             DarkModeToggle();
@@ -413,6 +426,7 @@ namespace Clothes_Shop_ERP
                 barButtonItem1.ImageOptions.SvgImage = Properties.Resources.icons8_sun_50;
                 DarkMode = true;
             }
+            Sett.SaveDarkModePreference(DarkMode);
             UpdateDarkModeCaption();
         }
 

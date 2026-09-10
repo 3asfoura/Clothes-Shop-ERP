@@ -48,6 +48,7 @@ namespace Clothes_Shop_ERP
             { "PaymentMethods", "Main_PaymentMethods" },
             { "AuditLogs", "Main_AuditLogs" },
             { "BackupSettings", "Main_BackupSettings" },
+            { "About", "Main_About" },
         };
 
         private static Dictionary<string, string> _levelsByScreen = new Dictionary<string, string>();

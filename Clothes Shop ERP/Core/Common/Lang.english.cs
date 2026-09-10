@@ -69,6 +69,9 @@ namespace Clothes_Shop_ERP.Localization
             // ---- (New) Repeated across screens ----
             { "Shared_Success", "Success" },
             { "Shared_Error", "Error" },
+            { "Shared_QtyShortFmt", "(Qty: {0})" },
+            { "Shared_RemainingOfFmt", "Remaining: {0} of {1}" },
+            { "Shared_AvailableFmt", "(Available: {0})" },
             { "Shared_Warning", "Warning" },
             { "Shared_NoPermissionMsg", "You don't have permission to do this." },
             { "Shared_CannotDelete", "Cannot Delete" },
@@ -85,6 +88,20 @@ namespace Clothes_Shop_ERP.Localization
             // ---- (New) Repeated across Add/Edit forms (Category C) ----
             { "Shared_BtnSave", "Save" },
             { "Shared_BtnCancel", "Cancel" },
+            { "Shared_Info", "Info" },
+
+            // ==================================================
+            // ===== Payment Completion (Purchases/Sales/POS) ===
+            // ==================================================
+            { "Payment_MenuCompletePayment", "Complete Payment" },
+            { "Payment_CompletePaymentTitle", "Complete Payment" },
+            { "Payment_Total", "Total" },
+            { "Payment_PaidSoFar", "Paid So Far" },
+            { "Payment_Due", "Due" },
+            { "Payment_AmountNow", "Amount to pay now:" },
+            { "Payment_InvalidAmount", "Amount must be greater than zero and not exceed the amount due" },
+            { "Payment_AlreadyFullyPaid", "This invoice is already fully paid" },
+            { "Payment_Recorded", "Payment recorded successfully" },
             { "Shared_Active", "Active" },
             { "Shared_ColName", "Name:" },
             { "Shared_ColBranch", "Branch:" },
@@ -108,7 +125,7 @@ namespace Clothes_Shop_ERP.Localization
             // ===== Login ======================================
             // ==================================================
 
-            { "Login_Title", "NOVA ERP - Login" },
+            { "Login_Title", "Belnix - Login" },
             { "Login_BtnLogin", "Login" },
             { "Login_WelcomeBack", "Welcome Back" },
             { "Login_PleaseSignIn", "Please sign in to continue" },
@@ -377,6 +394,10 @@ namespace Clothes_Shop_ERP.Localization
             { "POS_EmptyCartTitle", "Empty Cart" },
             { "POS_OutOfStockTitle", "Out of Stock" },
             { "POS_SaleCompletedTitle", "Sale Completed" },
+            { "POS_MenuPartialPayment", "Partial Payment (Credit Sale)" },
+            { "POS_PartialPaymentTitle", "Partial Payment" },
+            { "POS_PartialPaymentStagedFmt", "  —  paying now: {0:n2}" },
+            { "POS_PartialPaymentSuffixFmt", "\nPaid: {0:n2}   |   Due: {1:n2}" },
 
             // ----- Product Variants -----
             { "ProductVariants_BarcodeUsed", "This barcode is already used." },
@@ -705,7 +726,7 @@ namespace Clothes_Shop_ERP.Localization
             // ===== Licensing / Activation ======================
             // ==================================================
 
-            { "Activation_Title", "NOVA ERP - Activation Required" },
+            { "Activation_Title", "Belnix - Activation Required" },
             { "Activation_Intro", "This copy of the program is not activated yet. Send the computer ID below to your software provider to get a license key." },
             { "Activation_MachineId", "This Computer's ID:" },
             { "Activation_BtnCopy", "Copy" },
@@ -719,12 +740,30 @@ namespace Clothes_Shop_ERP.Localization
 
             { "LicenseGen_Title", "License Key Generator (Vendor Only)" },
             { "LicenseGen_MachineId", "Customer's Machine ID:" },
-            { "LicenseGen_SetExpiry", "Expires on:" },
+            { "LicenseGen_Lifetime", "Lifetime (no expiry)" },
+            { "LicenseGen_HasExpiry", "Has an expiry date" },
             { "LicenseGen_BtnGenerate", "Generate Key" },
             { "LicenseGen_ResultKey", "License Key (send this to the customer):" },
             { "LicenseGen_BtnCopy", "Copy" },
             { "LicenseGen_EnterIdFirst", "Please paste the customer's Machine ID first." },
             { "LicenseGen_Copied", "License key copied to the clipboard." },
+
+            // ==================================================
+            // ===== About ==========================================
+            // ==================================================
+            { "Main_About", "About" },
+            { "About_Tagline", "Point of Sale & Inventory Management System" },
+            { "About_LicenseInfo", "License & Version Info" },
+            { "About_Version", "Version" },
+            { "About_ActivationStatus", "Activation Status" },
+            { "About_Activated", "Activated" },
+            { "About_NotActivated", "Not Activated" },
+            { "About_ExpiresOnFmt", "Expires on {0:yyyy/MM/dd}" },
+            { "About_NoExpiry", "No expiry date" },
+            { "About_MachineId", "This Machine's ID" },
+            { "About_BtnCopy", "Copy" },
+            { "About_Support", "Support" },
+            { "About_SupportText", "For support: 01128259064" },
 
             // ==================================================
             // ===== Cashier Shifts ===============================

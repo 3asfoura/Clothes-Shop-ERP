@@ -22,6 +22,7 @@ namespace Clothes_Shop_ERP
         public static int CurrentBranchId;
         public static int CurrentRoleId;
         private bool _loginSucceeded;
+        private DateTime _secretGPressedAt = DateTime.MinValue;
 
         public FrmLogin()
         {
@@ -40,12 +41,24 @@ namespace Clothes_Shop_ERP
                 Application.Exit();
         }
 
-        // Hidden vendor-only shortcut (not shown anywhere in the UI, Ctrl+Alt+G):
-        // opens the license key generator. See LicenseManager.cs for how keys work.
+        // Hidden vendor-only shortcut (not shown anywhere in the UI): Ctrl+Alt+G
+        // then, within 3 seconds, Ctrl+Alt+B opens the license key generator.
+        // See LicenseManager.cs for how keys work.
         private void FrmLogin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.Alt && e.KeyCode == Keys.G)
+            {
+                _secretGPressedAt = DateTime.Now;
+                return;
+            }
+
+            if (e.Control && e.Alt && e.KeyCode == Keys.B
+                && _secretGPressedAt != DateTime.MinValue
+                && (DateTime.Now - _secretGPressedAt).TotalSeconds <= 3)
+            {
+                _secretGPressedAt = DateTime.MinValue;
                 new FrmLicenseGenerator().ShowDialog(this);
+            }
         }
 
         public void ApplyLanguage()
