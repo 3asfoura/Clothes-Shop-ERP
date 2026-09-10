@@ -30,20 +30,14 @@ namespace Clothes_Shop_ERP
             ApplyLanguage();
         }
 
-        // Closing this screen any other way than a successful login (the X
-        // button, Alt+F4, Escape) exits the whole program instead of quietly
-        // dropping into the main app unauthenticated - this dialog is also
-        // reused for the idle-lock re-auth screen, so dismissing it has to be
-        // a real "I'm done" rather than a way to slip past the lock.
+        // Closing without logging in exits the app (also guards the idle-lock re-auth screen).
         private void FrmLogin_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!_loginSucceeded)
                 Application.Exit();
         }
 
-        // Hidden vendor-only shortcut (not shown anywhere in the UI): Ctrl+Alt+G
-        // then, within 3 seconds, Ctrl+Alt+B opens the license key generator.
-        // See LicenseManager.cs for how keys work.
+        // Hidden vendor shortcut: Ctrl+Alt+G then, within 3 seconds, Ctrl+Alt+B opens the key generator.
         private void FrmLogin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.Alt && e.KeyCode == Keys.G)
@@ -96,9 +90,7 @@ namespace Clothes_Shop_ERP
             }
         }
 
-        // Remembered usernames live per-machine (not in the database - a PC in
-        // Branch A shouldn't autofill a cashier who only ever worked at Branch
-        // B), most-recently-used first, capped so the list can't grow forever.
+        // Remembered per-machine (not in the DB), most-recent first, capped at 5.
         private static List<string> GetRecentUsernames()
         {
             string raw = Properties.Settings.Default.RecentUsernames;
@@ -116,14 +108,7 @@ namespace Clothes_Shop_ERP
             Properties.Settings.Default.Save();
         }
 
-        // Icon on the username field: pick a previously-used name instead of
-        // retyping it (handy when more than one cashier shares the same PC).
-        // Each entry has a "Remove" sub-item to delete it from the list -
-        // done as a submenu rather than an inline X glyph so it's a plain
-        // ContextMenuStrip with no custom drawing. Uses a context menu (not a
-        // custom popup control) specifically because that keeps TXT_Username
-        // a normal typable ButtonEdit - the earlier PopupContainerEdit
-        // version looked fancier but silently blocked typing a new username.
+        // Pick a previously-used username; a context menu keeps the field normally typable.
         private void TXT_Username_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
         {
             var recent = GetRecentUsernames();

@@ -22,17 +22,10 @@ namespace Clothes_Shop_ERP
     {
         public static SqlConnection cn = new SqlConnection(Properties.Settings.Default.cnDB);
 
-        // One shared, well-known folder for everything the app saves outside
-        // the database itself (license file, backup configuration, language,
-        // dark mode) - a single "Data" folder next to the exe itself, so
-        // it's easy to find by hand instead of buried in ProgramData.
+        // Shared "Data" folder next to the exe for everything saved outside the database.
         public static readonly string AppDataFolder = ResolveAppDataFolder();
 
-        // Previously lived in ProgramData\Belnix (and, before the rebrand,
-        // ProgramData\Clothes Shop ERP) - copies an existing install's
-        // license.dat/backup.settings over from there the first time this
-        // runs, so a PC already activated doesn't need to reactivate. Also
-        // picks up lang.settings, which used to live loose next to the exe.
+        // Migrates license.dat/backup.settings/lang.settings from their old locations.
         private static string ResolveAppDataFolder()
         {
             string newFolder = Path.Combine(Application.StartupPath, "Data");
@@ -94,10 +87,7 @@ namespace Clothes_Shop_ERP
             DarkModeChanged?.Invoke();
         }
 
-        // Lets a screen that draws its own fixed light/dark colors (instead of
-        // relying on the skin to repaint it) refresh itself immediately when
-        // the user toggles dark mode, even while that screen's tab is already
-        // open - see UcAbout for the one place this is used today.
+        // Lets a screen with its own fixed colors (see UcAbout) refresh live when dark mode toggles.
         public static event Action DarkModeChanged;
 
         // Message Aler - Icon Code
@@ -126,9 +116,7 @@ namespace Clothes_Shop_ERP
             Sett.MsgAlert(title + "\n" + description, eDesktopAlertColor.Green, 3);
         }
 
-        // Centers both the column headers and the cell content of every column in
-        // a grid - called once per GridView so every screen in the app looks
-        // consistent instead of each one centering (or not) a little differently.
+        // Centers headers and cell content - called once per GridView for a consistent look everywhere.
         public static void CenterColumns(GridView view)
         {
             view.Appearance.HeaderPanel.TextOptions.HAlignment = HorzAlignment.Center;
@@ -136,9 +124,7 @@ namespace Clothes_Shop_ERP
                 col.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
         }
 
-        // Shared "Export" action for every grid in the app - lets the user pick
-        // Excel (for further analysis/sharing with an accountant) or PDF (for a
-        // final, unchangeable printable copy) from the same Save dialog.
+        // Shared "Export" action for every grid in the app - Excel or PDF from one Save dialog.
         public static void ExportGrid(GridControl grid, string suggestedFileName)
         {
             using (var dlg = new SaveFileDialog
@@ -153,11 +139,7 @@ namespace Clothes_Shop_ERP
                 {
                     if (dlg.FilterIndex == 1)
                     {
-                        // Default export mode writes each cell's raw bound value, not
-                        // the CustomColumnDisplayText override - so a translated grid
-                        // (Status/Action/TableName/etc.) exports the original English
-                        // instead of what's on screen. TextExportMode.Text makes it
-                        // export what's actually displayed.
+                        // TextExportMode.Text exports the translated display text, not the raw bound value.
                         var xlsxOptions = new DevExpress.XtraPrinting.XlsxExportOptions
                         {
                             TextExportMode = DevExpress.XtraPrinting.TextExportMode.Text
@@ -176,12 +158,7 @@ namespace Clothes_Shop_ERP
             }
         }
 
-        // Same root cause as the export fix above: the grid's automatic tooltip
-        // for a truncated cell reads the raw bound value, not the translated
-        // CustomColumnDisplayText - so a cell showing Arabic flips to English the
-        // moment you hover it. Routing tooltips through GetRowCellDisplayText
-        // (the same call the cell's own painting already uses) keeps them in
-        // sync with whatever language is actually on screen.
+        // Same issue as the export fix - routes tooltips through the same translated display text.
         public static void FixCellTooltips(GridView view)
         {
             var controller = new ToolTipController();

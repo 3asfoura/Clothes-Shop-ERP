@@ -29,10 +29,7 @@ namespace Clothes_Shop_ERP.modlestore
             };
             Sett.FixCellTooltips(GridViewResult);
             ApplyLanguage();
-            // Deferred to Load: PopulateColumns() (inside RunReport) needs the grid
-            // to already have a window handle to reliably generate columns - calling
-            // it directly from the constructor left the grid with zero columns until
-            // the next manual refresh, showing raw English property names meanwhile.
+            // Deferred to Load - PopulateColumns() needs a window handle to generate columns reliably.
             this.Load += (s, e) => RunReport();
         }
 

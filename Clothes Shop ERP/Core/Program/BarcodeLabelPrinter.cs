@@ -16,12 +16,7 @@ namespace Clothes_Shop_ERP
         public decimal Price { get; set; }
     }
 
-    // Prints one or more copies of a small product label (name, price, scannable
-    // barcode) on the same 58mm thermal roll the receipts use - stacked one
-    // after another like a sticker roll, since that's how small shops usually
-    // print labels for new stock. Uses DevExpress's BarCodeControl just to
-    // render the barcode image; everything else is drawn the same way as
-    // ReceiptPrinter (plain GDI+ PrintDocument).
+    // Prints product labels (name, price, barcode) on the same 58mm thermal roll as receipts.
     public static class BarcodeLabelPrinter
     {
         private const int PaperWidthHundredthsInch = 228;

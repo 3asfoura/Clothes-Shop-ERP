@@ -6,20 +6,13 @@ using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP
 {
-    // Automatic database backup. Once a day (the first time the app runs that
-    // day) it takes a native SQL Server backup (.bak) into a folder the user
-    // picks under Settings, and keeps only the most recent copies so the disk
-    // doesn't fill up. Settings live in a small local text file, the same way
-    // LocalizationManager stores the chosen language - no database table needed.
+    // Once a day, takes a native SQL Server backup (.bak) into the configured folder, keeping the last 14.
     public static class BackupManager
     {
         private const int KeepBackups = 14;
         private static readonly string SettingsFilePath = ResolveSettingsFilePath();
 
-        // Moved from the exe's own folder into Sett.AppDataFolder so it lives
-        // next to license.dat in one recoverable place - but an install that
-        // already has the old file keeps working, its settings get copied
-        // over the first time this runs rather than silently reset.
+        // Migrates an old exe-folder backup.settings into Sett.AppDataFolder.
         private static string ResolveSettingsFilePath()
         {
             string newPath = Path.Combine(Sett.AppDataFolder, "backup.settings");
@@ -64,8 +57,7 @@ namespace Clothes_Shop_ERP
             }
             catch
             {
-                // If we can't write the settings file, the next manual backup
-                // will just re-save it - not worth interrupting the user for.
+                // Not worth interrupting the user for - next backup will just re-save it.
             }
         }
 
@@ -115,11 +107,7 @@ namespace Clothes_Shop_ERP
         /// <summary>Suggests a default file name for a manual "Save Database As..." dialog.</summary>
         public static string SuggestedFileName() => $"{Sett.cn.Database}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
 
-        /// <summary>
-        /// Backs up straight to whatever exact path the user picked themselves (e.g. via a
-        /// SaveFileDialog onto a USB drive) - a one-off manual copy, independent of the
-        /// configured BackupFolder and the daily-automatic bookkeeping above.
-        /// </summary>
+        /// <summary>One-off manual backup to a user-picked path (e.g. a USB drive).</summary>
         public static bool BackupToFile(string fullPath, out string error)
         {
             error = null;
@@ -127,15 +115,11 @@ namespace Clothes_Shop_ERP
             {
                 string dbName = Sett.cn.Database;
 
-                // A dedicated connection, separate from the shared Sett.cn used
-                // everywhere else, so a backup can never collide with normal
-                // screen activity on the same connection.
+                // Dedicated connection so a backup can never collide with normal screen activity.
                 using (var conn = new SqlConnection(Sett.cn.ConnectionString))
                 {
                     conn.Open();
-                    // BACKUP DATABASE doesn't support a parameterized file path in all
-                    // SQL Server driver versions, so the path is escaped and inlined instead.
-                    string escapedPath = fullPath.Replace("'", "''");
+                    string escapedPath = fullPath.Replace("'", "''"); // BACKUP DATABASE can't take a parameterized path.
                     using (var cmd = new SqlCommand($"BACKUP DATABASE [{dbName}] TO DISK = '{escapedPath}'", conn))
                     {
                         cmd.CommandTimeout = 300;
@@ -146,14 +130,7 @@ namespace Clothes_Shop_ERP
             }
             catch (Exception ex)
             {
-                // Most common real-world cause: BACKUP DATABASE runs inside the SQL
-                // Server process itself, under its own Windows service account - not
-                // the account running this app. If the chosen folder is somewhere
-                // like Desktop/Documents under a user profile, that service account
-                // usually can't write there, even though this app can. Point the
-                // backup folder at something like C:\ClothesShopBackups instead, and
-                // grant that folder full control to the SQL Server service account
-                // (or to Everyone, for a quick local test).
+                // Common cause: the SQL Server service account can't write to the chosen folder.
                 error = ex.Message;
                 return false;
             }

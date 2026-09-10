@@ -26,11 +26,7 @@ namespace Clothes_Shop_ERP
             public decimal LineTotal => UnitPrice * Quantity;
         }
 
-        // A cart set aside mid-sale (customer stepped away, forgot their wallet...)
-        // so the cashier can serve someone else and come back to it later. Kept
-        // in memory only - static so it survives switching away from the POS tab
-        // and back, but it's cleared if the app closes (matches how a held sale
-        // works at a real till: short-lived, not a permanent record).
+        // A cart set aside mid-sale to serve someone else - in-memory only, cleared on app close.
         public class HeldSale
         {
             public DateTime HeldAt { get; set; }
@@ -49,9 +45,7 @@ namespace Clothes_Shop_ERP
         private List<int> _paymentMethodIds = new List<int>();
         private BindingList<CartLine> _cart = new BindingList<CartLine>();
 
-        // Set only when the cashier explicitly stages a partial/credit payment
-        // via the cart's right-click menu; null means "pay the full amount",
-        // which is the untouched, default checkout path.
+        // Null means "pay in full" (default); set via the cart's right-click partial-payment menu.
         private decimal? _stagedPartialPayment = null;
 
         public UcPointOfSale()
@@ -223,8 +217,7 @@ namespace Clothes_Shop_ERP
                 try
                 {
 
-                    // Safely decrement stock for every line first — if any line fails
-                    // because stock ran out, roll back everything and stop.
+                    // Decrement stock for every line first; roll back everything if any fails.
                     foreach (var line in _cart)
                     {
                         int rowsAffected = db.Database.ExecuteSqlCommand(
@@ -282,9 +275,7 @@ namespace Clothes_Shop_ERP
                         });
                     }
 
-                    // Only the amount actually collected right now becomes cash in
-                    // the till - matches how Purchase Invoices only records a
-                    // Treasury entry for the portion paid at that moment.
+                    // Only the amount actually collected becomes a Treasury entry.
                     if (paidNow > 0)
                     {
                         db.TreasuryTransactions.Add(new TreasuryEntity
@@ -428,11 +419,7 @@ namespace Clothes_Shop_ERP
             menu.Show(GridCart, e.Location);
         }
 
-        // Lets the cashier record a credit sale: pay less than the full total
-        // now, with the rest tracked as due on the invoice (same "amount owed"
-        // concept Purchase Invoices already has) - staged here rather than a
-        // permanent field on the main screen so the default, fastest checkout
-        // path (pay in full) stays completely untouched.
+        // Records a credit sale: pay less now, rest tracked as due on the invoice.
         private void StagePartialPayment()
         {
             if (_cart.Count == 0) return;
@@ -450,13 +437,7 @@ namespace Clothes_Shop_ERP
         private void BuildUi()
         {
 
-            // Auto-population from the bound type's properties is what was silently
-            // showing "Product Variant Id" etc. in English no matter what - it only
-            // (re)runs once DevExpress feels like it (typically once the grid gets a
-            // window handle), so anything set beforehand could get discarded, and
-            // there was no way to keep the internal ProductVariantId column out of
-            // it either. Declaring the exact columns wanted, with auto-population
-            // switched off, removes that ambiguity entirely.
+            // Auto-population was showing internal columns like ProductVariantId; declared explicitly instead.
             GridViewCart.OptionsBehavior.AutoPopulateColumns = false;
             GridCart.DataSource = _cart;
 
@@ -499,9 +480,7 @@ namespace Clothes_Shop_ERP
 
             GridViewCart.Columns.AddRange(new[] { colProduct, colUnitPrice, colQuantity, colLineTotal });
 
-            // The grid itself is editable so a scanned/added line's quantity can be
-            // corrected directly (e.g. scanned once but meant 3) - every other
-            // column stays locked via AllowEdit above.
+            // Editable so quantity can be corrected directly; other columns stay locked via AllowEdit above.
             GridViewCart.OptionsBehavior.Editable = true;
             GridViewCart.CellValueChanged += (s, e) =>
             {

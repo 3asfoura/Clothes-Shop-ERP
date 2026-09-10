@@ -7,40 +7,13 @@ using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP
 {
-    // Offline activation: no internet and no license server involved.
-    //
-    // How it works, in plain terms:
-    //  1. Each PC has a "Machine ID" computed from a few hardware/OS serial
-    //     numbers (processor, motherboard, system drive - via the DeviceId
-    //     library), so it's specific to that PC.
-    //  2. A "License Key" is just that Machine ID plus an optional expiry date,
-    //     signed with a secret password (HMAC-SHA256) that only lives in this
-    //     source code. Anyone with a Machine ID and that secret can produce a
-    //     valid key for it - but nobody without the secret can forge one.
-    //  3. GenerateLicenseKey() is the "vendor" side: it makes keys. It's wired
-    //     up behind the hidden Ctrl+Alt+G shortcut on the login screen (see
-    //     FrmLogin.cs) so only whoever is selling/installing the software uses
-    //     it - shops themselves only ever see Activate().
-    //  4. ValidateLicenseKey() / IsActivated() is the "client" side: it checks
-    //     a key is genuine and not expired, and remembers it in a local file.
-    //
-    // Caveat to be upfront about: the secret below lives in the compiled app,
-    // so a determined person could eventually extract it and forge keys. For
-    // a small business tool sold on trust this is a normal, accepted trade-off
-    // (the same one most small offline-activated software makes) - it stops
-    // casual copying, not a dedicated attacker. If that ever needs to be
-    // stronger, the fix is moving key generation to a small separate tool the
-    // vendor keeps privately, so the secret never ships inside the app at all.
+    // Offline activation: a license key is a Machine ID + optional expiry, signed with Secret (HMAC-SHA256).
     public static class LicenseManager
     {
         private const string Secret = "Belnix-2026-ChangeThisSecretBeforeRealDistribution";
         private static readonly string LicenseFilePath = ResolveLicenseFilePath();
 
-        // Moved from the exe's own folder into Sett.AppDataFolder so it lives
-        // next to backup.settings in one recoverable place - but an install
-        // that's already activated (license.dat next to the exe) keeps
-        // working, it gets copied over the first time this runs rather than
-        // silently losing activation.
+        // Migrates an old exe-folder license.dat into Sett.AppDataFolder so activation isn't lost.
         private static string ResolveLicenseFilePath()
         {
             string newPath = Path.Combine(Sett.AppDataFolder, "license.dat");

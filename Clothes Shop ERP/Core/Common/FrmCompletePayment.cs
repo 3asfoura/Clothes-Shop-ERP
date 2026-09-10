@@ -6,10 +6,7 @@ using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP
 {
-    // Shared "how much are you paying right now" dialog, reused for completing
-    // a partially-paid Purchase/Sales invoice and for staging a partial payment
-    // at POS checkout - same three numbers (total/paid so far/due) either way,
-    // just a different label and Treasury direction on the caller's side.
+    // Shared "how much are you paying now" dialog - used by Purchase/Sales completion and POS partial payment.
     public partial class FrmCompletePayment : DevExpress.XtraEditors.XtraForm
     {
         public decimal AmountToPay => (decimal)SpinAmount.Value;

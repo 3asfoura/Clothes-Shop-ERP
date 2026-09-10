@@ -9,9 +9,7 @@ using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP.modlestore
 {
-    // End-of-day / Z-Report: everything that happened at this branch on one
-    // calendar day - sales, returns, and every cash movement in the Treasury,
-    // broken down by where it came from or went to.
+    // End-of-day / Z-Report: sales, returns, and every Treasury cash movement for one branch/day.
     public partial class UcDayClosingReport : DevExpress.XtraEditors.XtraUserControl
     {
         private TableLayoutPanel _cardsPanel;
@@ -22,17 +20,11 @@ namespace Clothes_Shop_ERP.modlestore
             InitializeComponent();
             DtDate.DateTime = DateTime.Today;
             ApplyLanguage();
-            // DevExpress's LayoutControl won't vertically align btnRun's item with
-            // DtDate's row no matter what Padding/ControlAlignment combination is
-            // tried (its item has no caption above it, unlike lblDate's, and the
-            // engine keeps parking the control near the item's top regardless) -
-            // so just pin it to DtDate's actual row directly, every time the
-            // toolbar re-lays-out, instead of fighting the engine for it.
+            // LayoutControl won't align btnRun with DtDate's row on its own - pinned directly instead.
             btnRun.LocationChanged += (s, e) => SyncButtonToDateRow();
             btnRun.SizeChanged += (s, e) => SyncButtonToDateRow();
             SyncButtonToDateRow();
-            // Deferred to Load - see UcAuditLogs for why (PopulateColumns needs a
-            // real window handle to reliably generate columns).
+            // Deferred to Load - PopulateColumns needs a real window handle.
             this.Load += (s, e) => { BuildSummaryUi(); RunReport(); };
         }
 
@@ -43,15 +35,10 @@ namespace Clothes_Shop_ERP.modlestore
             btnRun.Height = DtDate.Height;
         }
 
-        // Same "KPI tile" look as the Dashboard cards (white tile, small gray
-        // caption, big bold colored value) so this screen reads consistently
-        // with the rest of the app instead of a plain wall of text.
+        // Same KPI-tile look as the Dashboard cards.
         private void BuildSummaryUi()
         {
-            // AutoSize instead of a fixed height: the panel's Designer-set Size
-            // gets DPI-autoscaled, but the children's heights are set in code
-            // below (not autoscaled), so a fixed height would drift out of sync
-            // with them on a different system font/DPI.
+            // AutoSize avoids drift between the Designer's DPI-scaled Size and code-set child heights.
             pnlSummaryHost.AutoSize = true;
             pnlSummaryHost.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 

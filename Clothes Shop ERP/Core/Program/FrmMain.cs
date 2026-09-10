@@ -21,10 +21,7 @@ namespace Clothes_Shop_ERP
 {
     public partial class FrmMain : DevExpress.XtraBars.FluentDesignSystem.FluentDesignForm
     {
-        // Auto-lock: re-shows the login screen after this many minutes with no
-        // mouse/keyboard activity anywhere on the PC - not just this app. Reads
-        // the same Windows-wide idle counter screensavers use (GetLastInputInfo),
-        // so it's accurate no matter which control, popup or dialog has focus.
+        // Re-shows the login screen after this many minutes of no PC-wide input activity.
         private const int IdleLockMinutes = 5;
         private bool _isLocked;
 
@@ -32,11 +29,8 @@ namespace Clothes_Shop_ERP
         {
 
             InitializeComponent();
-            // Program.cs already applied the saved skin before this form was
-            // constructed - just sync this form's own bookkeeping (icon,
-            // caption via ApplyLanguage below) to match, without re-toggling.
-            DarkMode = Sett.LoadDarkModePreference();
-            barButtonItem1.ImageOptions.SvgImage = DarkMode ? Properties.Resources.icons8_sun_50 : Properties.Resources.icons8_dark_mode_50;
+            // Non-inverting apply of the saved preference - never DarkModeToggle() here, it flips.
+            ApplySkin(Sett.LoadDarkModePreference());
             ComboLanguage.EditValue = LocalizationManager.CurrentLanguage.ToString();
             ApplyLanguage();
         }
@@ -68,9 +62,7 @@ namespace Clothes_Shop_ERP
                 _isLocked = false;
             }
         }
-        // Hides sidebar entries the current role has no access to (PermissionLevel
-        // "None"). Screens the role can at least Read stay visible here - the
-        // Read-vs-Write (read-only) restriction is enforced inside each screen.
+        // Hides sidebar entries the role has no access to; Read-vs-Write is enforced per screen.
         private void ApplyPermissions()
         {
             var screenElements = new System.Collections.Generic.Dictionary<string, DevExpress.XtraBars.Navigation.AccordionControlElement>
@@ -155,12 +147,7 @@ namespace Clothes_Shop_ERP
         }
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            // Guard the very first login the same way idle re-locks are
-            // guarded: ShowDialog() pumps messages while it's open, so the
-            // idle timer (already running from InitializeComponent) keeps
-            // ticking underneath it. Without this, taking more than
-            // IdleLockMinutes to type your password on first launch popped a
-            // second FrmLogin on top of the first - two logins back to back.
+            // Guards against a second FrmLogin popping up if the idle timer fires mid-login.
             _isLocked = true;
             new FrmLogin().ShowDialog();
             _isLocked = false;
@@ -169,11 +156,7 @@ namespace Clothes_Shop_ERP
 
             ElementDashboard_Click(this, EventArgs.Empty);
 
-            // Runs on a background thread so a slow backup never freezes the UI;
-            // BackupManager itself no-ops quietly if no folder is configured yet
-            // or a backup already ran today. Wrapped in try/catch since this is
-            // fire-and-forget - an unhandled exception here would otherwise be
-            // an unobserved task exception nobody ever finds out about.
+            // Background so a slow backup never freezes the UI; fire-and-forget.
             System.Threading.Tasks.Task.Run(() =>
             {
                 try { BackupManager.RunBackupIfDue(); } catch { }
@@ -411,28 +394,30 @@ namespace Clothes_Shop_ERP
         {
             DarkModeToggle();
         }
-        void DarkModeToggle()
+        // Sets skin/icon/DarkMode to match the given value - never inverts, never saves.
+        void ApplySkin(bool dark)
         {
-
-            if (DarkMode)
-            {
-                UserLookAndFeel.Default.SetSkinStyle(SkinSvgPalette.WXICompact.Default);
-                barButtonItem1.ImageOptions.SvgImage = Properties.Resources.icons8_dark_mode_50;
-                DarkMode = false;
-            }
-            else
+            if (dark)
             {
                 UserLookAndFeel.Default.SetSkinStyle(SkinSvgPalette.WXICompact.Darkness);
                 barButtonItem1.ImageOptions.SvgImage = Properties.Resources.icons8_sun_50;
-                DarkMode = true;
             }
+            else
+            {
+                UserLookAndFeel.Default.SetSkinStyle(SkinSvgPalette.WXICompact.Default);
+                barButtonItem1.ImageOptions.SvgImage = Properties.Resources.icons8_dark_mode_50;
+            }
+            DarkMode = dark;
+        }
+
+        void DarkModeToggle()
+        {
+            ApplySkin(!DarkMode);
             Sett.SaveDarkModePreference(DarkMode);
             UpdateDarkModeCaption();
         }
 
-        // The caption names the action the button performs, not the current
-        // state - so while dark mode is ON it reads "Light Mode" (click to
-        // switch back), and vice versa.
+        // Caption names the action (click to switch), not the current state.
         void UpdateDarkModeCaption()
         {
             barButtonItem1.Caption = DarkMode ? LocalizationManager.T("Main_LightMode") : LocalizationManager.T("Main_DarkMode");

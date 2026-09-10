@@ -4,20 +4,14 @@ using System.Linq;
 
 namespace Clothes_Shop_ERP
 {
-    // Central place that knows which screens the currently logged-in role can
-    // see/use. Loaded once at login (see FrmLogin), then read from everywhere
-    // else (FrmMain sidebar, and later the individual screens) without hitting
-    // the database again.
+    // Knows which screens the logged-in role can see/use. Loaded once at login.
     public static class PermissionManager
     {
         public const string LevelNone = "None";
         public const string LevelRead = "Read";
         public const string LevelWrite = "Write";
 
-        // Every screen that can be permission-gated, and the localization key
-        // for its display name (same keys FrmMain.ApplyLanguage uses for the
-        // sidebar), in sidebar order. Used both to hide sidebar entries and to
-        // build the per-role permission list in FrmRoleEdit.
+        // Every permission-gated screen and its sidebar localization key, in sidebar order.
         public static readonly Dictionary<string, string> AllScreens = new Dictionary<string, string>
         {
             { "Products", "Main_Products" },
@@ -60,9 +54,7 @@ namespace Clothes_Shop_ERP
 
             using (var db = new ClothesShopDBContext())
             {
-                // Safety net: the very first role ever created (lowest Id) always
-                // gets full access everywhere, so a misconfigured RolePermissions
-                // table can never lock every admin out of every screen at once.
+                // Safety net: the first role ever created always gets full access everywhere.
                 int firstRoleId = db.Roles.OrderBy(r => r.Id).Select(r => r.Id).FirstOrDefault();
                 _fullAccess = roleId == firstRoleId;
 
@@ -75,8 +67,7 @@ namespace Clothes_Shop_ERP
             }
         }
 
-        // Screens not listed for a role default to None (deny by default),
-        // matching the RolePermissions table's own DEFAULT 'None'.
+        // Screens not listed for a role default to None (deny by default).
         public static string GetLevel(string screenName)
         {
             if (_fullAccess) return LevelWrite;
@@ -87,9 +78,7 @@ namespace Clothes_Shop_ERP
 
         public static bool CanEdit(string screenName) => GetLevel(screenName) == LevelWrite;
 
-        // Any role other than the full-access one only ever sees data for the
-        // branch it logged into (FrmLogin.CurrentBranchId) in cross-branch
-        // lists/reports, so a cashier at Branch A can't browse Branch B's sales.
+        // Non-full-access roles only ever see data for their own logged-in branch.
         public static bool BranchRestricted => !_fullAccess;
     }
 }

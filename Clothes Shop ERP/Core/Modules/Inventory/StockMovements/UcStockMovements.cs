@@ -42,10 +42,7 @@ namespace Clothes_Shop_ERP.modlestore
                 gridView1.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
             }
             ApplyLanguage();
-            // Columns here are auto-populated from the anonymous projection above
-            // (no Designer-declared columns to fall back on), so centering has to
-            // be (re-)applied after every load, not just once in the constructor -
-            // at construction time the grid has no columns yet to center.
+            // Re-applied after every load since columns are auto-populated, not Designer-declared.
             Sett.CenterColumns(gridView1);
         }
         public void ApplyLanguage()

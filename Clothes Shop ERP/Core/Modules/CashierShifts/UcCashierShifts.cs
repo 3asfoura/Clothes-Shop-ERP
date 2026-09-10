@@ -12,13 +12,7 @@ using CashierShiftEntity = Clothes_Shop_ERP.DAL.CashierShifts;
 
 namespace Clothes_Shop_ERP.modlestore
 {
-    // Lets a cashier open a shift with a starting cash float, then close it at
-    // the end of the day by counting the drawer. "Expected cash" is computed
-    // from what's actually known to be cash: cash-flagged sales made by this
-    // user at this branch since the shift opened, minus cash-flagged returns,
-    // plus/minus manual treasury cash movements they made themselves. Purchase
-    // invoice payments aren't included since purchases don't track payment
-    // method - see the note in ComputeExpectedCash.
+    // Open a shift with a starting float, close it by counting the drawer against expected cash.
     public partial class UcCashierShifts : DevExpress.XtraEditors.XtraUserControl
     {
         public UcCashierShifts()
@@ -79,10 +73,7 @@ namespace Clothes_Shop_ERP.modlestore
             }
         }
 
-        // Only counts cash movements we can actually attribute reliably: cash
-        // sales/returns by this cashier, and manual treasury entries they made
-        // themselves. Cash paid to suppliers via Purchase Invoices is excluded
-        // because that flow doesn't record a payment method at all.
+        // Purchase Invoice payments are excluded - that flow doesn't record a payment method.
         private decimal ComputeExpectedCash(ClothesShopDBContext db, CashierShiftEntity shift)
         {
             decimal cashSales = db.SalesInvoices

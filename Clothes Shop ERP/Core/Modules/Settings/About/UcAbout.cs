@@ -11,22 +11,14 @@ using System.Windows.Forms;
 
 namespace Clothes_Shop_ERP.modlestore
 {
-    // Simple, static info screen - no grid, no LayoutControl. Built entirely in
-    // code (same reasoning as FrmCompletePayment): nothing here needs the
-    // Designer, and hand-built controls sidestep the LayoutControl sizing
-    // quirks documented elsewhere in this project.
+    // Simple, static info screen - built entirely in code, no Designer/LayoutControl.
     public partial class UcAbout : DevExpress.XtraEditors.XtraUserControl
     {
         private LabelControl lblActivationValue;
         private LabelControl lblExpiryValue;
         private TextEdit txtMachineId;
 
-        // DevExpress skins don't reliably repaint every plain PanelControl/
-        // LabelControl combination the same way (proven by testing: some
-        // picked up the dark skin, some didn't) - so this screen picks its own
-        // small light/dark palette instead, based on the same saved
-        // preference the rest of the app uses, and applies it explicitly
-        // everywhere. That's the only way to guarantee it's consistent.
+        // This screen draws its own fixed light/dark colors instead of relying on the skin.
         private bool _isDark;
 
         public UcAbout()
@@ -36,10 +28,7 @@ namespace Clothes_Shop_ERP.modlestore
             BuildUi();
             RefreshActivationStatus();
 
-            // Live-refresh if the user toggles dark/light mode while this tab
-            // stays open (setTabPage reuses an already-open tab rather than
-            // rebuilding it) - without this, the screen would only pick up
-            // the new theme the next time it's closed and reopened.
+            // Refreshes colors live if the user toggles dark mode while this tab stays open.
             Sett.DarkModeChanged += OnDarkModeChanged;
             this.Disposed += (s, e) => Sett.DarkModeChanged -= OnDarkModeChanged;
         }
@@ -68,8 +57,7 @@ namespace Clothes_Shop_ERP.modlestore
                 BorderStyle = BorderStyles.NoBorder
             };
             LockAppearance(pnlHeader);
-            // Same color as the login screen's Login button, for a consistent
-            // brand accent - stays fixed regardless of light/dark mode.
+            // Same fixed color as the login screen's Login button.
             pnlHeader.Appearance.BackColor = Color.FromArgb(13, 59, 120);
             pnlHeader.Appearance.Options.UseBackColor = true;
 
@@ -90,9 +78,7 @@ namespace Clothes_Shop_ERP.modlestore
             pnlHeader.Controls.Add(lblAppName);
             pnlHeader.Controls.Add(lblTagline);
 
-            // Everything below the header lives in a padded content area
-            // holding stacked "cards" - same visual language as the Dashboard
-            // / Day Closing Report KPI tiles.
+            // Padded content area holding stacked "cards", Dashboard-style.
             var pnlContent = new PanelControl
             {
                 Dock = DockStyle.Fill,
@@ -103,11 +89,7 @@ namespace Clothes_Shop_ERP.modlestore
             pnlContent.Appearance.BackColor = contentBack;
             pnlContent.Appearance.Options.UseBackColor = true;
 
-            // Dock stacking claims space in REVERSE add order (the last
-            // control added is docked first) - so the Fill content panel is
-            // added before the Top header, and within it the support card is
-            // added before the license card, so the final visual order reads
-            // top-to-bottom: header, license card, support card.
+            // Dock stacking claims space in reverse add order - last added is docked first.
             this.Controls.Add(pnlContent);
             this.Controls.Add(pnlHeader);
 
@@ -140,16 +122,7 @@ namespace Clothes_Shop_ERP.modlestore
             return card;
         }
 
-        // If the active skin changes later (the user toggles dark/light mode
-        // while this tab stays open - setTabPage reuses the existing tab
-        // instead of rebuilding it), a plain PanelControl repaints itself
-        // with the new skin's colors on its own, but this screen's labels
-        // don't - they keep whatever ForeColor was picked when the screen was
-        // built. That mismatch is what made text vanish (light text stranded
-        // on a background the skin just repainted white, or vice versa).
-        // Forcing Flat here opts this control out of that automatic
-        // repainting entirely, so its explicit colors never drift out of
-        // sync with the labels drawn on it.
+        // Stops the skin from repainting this panel out of sync with its explicit-color labels.
         private static void LockAppearance(PanelControl control)
         {
             control.LookAndFeel.UseDefaultLookAndFeel = false;
@@ -224,8 +197,7 @@ namespace Clothes_Shop_ERP.modlestore
             btnWhatsApp.Location = new Point(x, y);
             card.Controls.Add(btnWhatsApp);
 
-            // No page link yet - the icon is ready, wired up as soon as there's
-            // a URL to send Process.Start to.
+            // No page link yet - wire up once there's a URL.
             var btnFacebook = MakeIconButton(
                 MakeCircleIcon(Color.FromArgb(24, 119, 242), DrawFacebookGlyph),
                 "Facebook",
@@ -234,8 +206,7 @@ namespace Clothes_Shop_ERP.modlestore
             card.Controls.Add(btnFacebook);
         }
 
-        // Small brand-colored circular icon buttons, drawn in code (no image
-        // assets needed).
+        // Small brand-colored circular icon buttons, drawn in code.
         private static Bitmap MakeCircleIcon(Color bgColor, Action<Graphics, Rectangle> drawGlyph, int size = 40)
         {
             var bmp = new Bitmap(size, size);
@@ -261,9 +232,7 @@ namespace Clothes_Shop_ERP.modlestore
             var tip = new ToolTip();
             tip.SetToolTip(pic, toolTipText);
             pic.Click += (s, e) => onClick();
-            // PictureBox doesn't own/dispose an Image assigned via .Image, so
-            // this screen's rebuild-on-theme-change (which disposes every old
-            // control) would otherwise leak one small bitmap per icon each time.
+            // PictureBox doesn't dispose its Image, so do it ourselves to avoid a leak on rebuild.
             pic.Disposed += (s, e) => icon.Dispose();
             return pic;
         }

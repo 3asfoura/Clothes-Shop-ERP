@@ -69,16 +69,7 @@ namespace Clothes_Shop_ERP.modlestore
 
         private void gridView1_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
         {
-            //if (e.MenuType != DevExpress.XtraGrid.Views.Grid.GridMenuType.Row) return;
-            //if (e.HitInfo.InRow) gridView1.FocusedRowHandle = e.HitInfo.RowHandle;
-
-            //e.Menu.Items.Clear();
-            //e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("New", (s, ev) => AddNew()));
-            //if (e.HitInfo.InRow)
-            //{
-            //    e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Edit", (s, ev) => EditSelected()));
-            //    e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem("Delete", (s, ev) => DeleteSelected()));
-            //}
+            // Unused - right-click menus use gridControl1_MouseUp instead.
         }
         private void AddNew()
         {

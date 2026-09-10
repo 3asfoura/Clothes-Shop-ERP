@@ -54,10 +54,7 @@ namespace Clothes_Shop_ERP.Localization
             return key;
         }
 
-        // Translates a short status/type/action code that's stored in the
-        // database in English (and compared against elsewhere in the code, so
-        // the stored value itself must never change) into the current
-        // language, for display only. Unknown codes pass through unchanged.
+        // DB-stored codes stay in English (compared against elsewhere); this only translates for display.
         public static string TranslateStatusCode(string code)
         {
             switch (code)
@@ -87,9 +84,7 @@ namespace Clothes_Shop_ERP.Localization
             }
         }
 
-        // Table names logged in the audit trail are the raw C# entity/table
-        // names (see ClothesShopDBContext.SaveChanges' AuditedTables list) -
-        // translate them for display only.
+        // Raw entity/table names from the audit trail, translated for display only.
         public static string TranslateTableName(string tableName)
         {
             switch (tableName)
@@ -110,11 +105,7 @@ namespace Clothes_Shop_ERP.Localization
             }
         }
 
-        // Treasury entries the system creates automatically embed a reference
-        // (an invoice number/id) that must never be translated - only the
-        // leading English label is swapped for the current language. A
-        // manually-typed description (already whatever language the cashier
-        // wrote it in) doesn't match any of these and passes through as-is.
+        // Swaps only the leading English label; the embedded reference number is never translated.
         public static string TranslateTreasuryDescription(string description)
         {
             if (string.IsNullOrEmpty(description)) return description;

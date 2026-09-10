@@ -60,10 +60,7 @@ namespace Clothes_Shop_ERP.modlestore
             if (gridView1.Columns["NetAmount"] != null) gridView1.Columns["NetAmount"].Caption = LocalizationManager.T("SalesInvoices_ColNetAmount");
             if (gridView1.Columns["PaidAmount"] != null) gridView1.Columns["PaidAmount"].Caption = LocalizationManager.T("Purchases_ColPaidAmount");
             if (gridView1.Columns["Status"] != null) gridView1.Columns["Status"].Caption = LocalizationManager.T("Shared_Status");
-            // PopulateColumns() above rebuilds the whole Columns collection from
-            // scratch every time GetData() runs, wiping any previously-applied
-            // alignment - so centering has to be re-applied here, not just once
-            // in the constructor.
+            // Re-applied here since PopulateColumns() above rebuilds Columns and wipes alignment.
             Sett.CenterColumns(gridView1);
         }
 
@@ -75,8 +72,6 @@ namespace Clothes_Shop_ERP.modlestore
                 gridView1.FocusedRowHandle = hit.RowHandle;
 
             var menu = new ContextMenuStrip();
-           
-            menu.Show(gridControl1, e.Location);
 
             if (hit.InRow)
             {
@@ -92,6 +87,9 @@ namespace Clothes_Shop_ERP.modlestore
                 }
             }
             menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_SalesInvoices")));
+            // Show only after every item is added - showing an empty/partial menu first
+            // left this screen's popup stuck showing just the first item ever added.
+            menu.Show(gridControl1, e.Location);
         }
 
         private void CompletePayment()
@@ -211,18 +209,6 @@ namespace Clothes_Shop_ERP.modlestore
                     $"{d.ProductVariant.Product.Name} ({d.ProductVariant.Barcode})  x{d.Quantity}  @ {d.UnitPrice:n2} = {d.Total:n2}"));
 
                 XtraMessageBox.Show(message, LocalizationManager.T("SalesInvoices_DetailsTitle"));
-            }
-        }
-
-        private void gridView1_PopupMenuShowing(object sender, DevExpress.XtraGrid.Views.Grid.PopupMenuShowingEventArgs e)
-        {
-            if (e.MenuType != DevExpress.XtraGrid.Views.Grid.GridMenuType.Row) return;
-            if (e.HitInfo.InRow) gridView1.FocusedRowHandle = e.HitInfo.RowHandle;
-
-            e.Menu.Items.Clear();
-            if (e.HitInfo.InRow)
-            {
-                e.Menu.Items.Add(new DevExpress.Utils.Menu.DXMenuItem(LocalizationManager.T("Shared_MenuViewDetails"), (s, ev) => ViewDetails()));
             }
         }
     }

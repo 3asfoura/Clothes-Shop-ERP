@@ -91,11 +91,7 @@ namespace Clothes_Shop_ERP
 
             this.AcceptButton = btnActivate;
 
-            // Same hidden vendor-only shortcut as the login screen (see FrmLogin.cs) -
-            // it also needs to work here, since this screen shows up *before* login on
-            // a fresh install, which is exactly when the vendor needs to generate the
-            // very first key for that machine. Ctrl+Alt+G then, within 3 seconds,
-            // Ctrl+Alt+B opens the generator.
+            // Hidden vendor shortcut (also needed pre-login for a fresh install): Ctrl+Alt+G then B.
             this.KeyPreview = true;
             this.KeyDown += (s, e) =>
             {

@@ -32,22 +32,13 @@ namespace Clothes_Shop_ERP
         public decimal NetTotal { get; set; }
     }
 
-    // Draws and prints a simple thermal-style receipt (narrow width, monospace
-    // font) for a completed sale. Uses the normal Windows printing API
-    // (PrintDocument), so it works with any thermal printer that has a
-    // Windows driver installed - which is how the large majority of USB/network
-    // receipt printers are set up. Sends to whatever the default printer is;
-    // if that's not the receipt printer, change the Windows default printer
-    // for this PC, or use Preview() below to check output without printing.
+    // Prints a thermal-style receipt via the default Windows printer (PrintDocument).
     public static class ReceiptPrinter
     {
-        // 58mm thermal paper, in hundredths of an inch (matches PrintDocument's units).
+        // 58mm thermal paper, in hundredths of an inch.
         private const int PaperWidthHundredthsInch = 228;
         private const int MarginHundredthsInch = 6;
-        // A thermal printer feeds a continuous roll and cuts at the end of the
-        // content, not a fixed page - so the paper "height" is calculated per
-        // receipt from how many lines it actually has, plus a little slack for
-        // the cut, instead of a fixed one-size-fits-all page.
+        // Height is calculated per receipt from its actual line count, not a fixed page size.
         private const int MinPaperHeightHundredthsInch = 300;
 
         public static void Print(ReceiptData data)
@@ -61,8 +52,7 @@ namespace Clothes_Shop_ERP
             }
             catch (Exception ex)
             {
-                // A printing failure shouldn't block the sale that already went
-                // through - just tell the cashier so they can print manually/retry.
+                // A printing failure shouldn't block the sale itself.
                 Sett.MsgRed(LocalizationManager.T("Shared_Error"), ex.Message);
             }
         }
@@ -81,9 +71,7 @@ namespace Clothes_Shop_ERP
         {
             float contentWidth = PaperWidthHundredthsInch - 2 * MarginHundredthsInch;
 
-            // Dry-run the drawing against a throwaway bitmap just to measure how
-            // tall this specific receipt turns out to be (line count varies with
-            // the number of items, whether a discount line is needed, etc).
+            // Dry-run against a throwaway bitmap just to measure this receipt's height.
             float contentHeight;
             using (var bmp = new Bitmap(1, 1))
             using (var measureGraphics = Graphics.FromImage(bmp))
@@ -117,19 +105,10 @@ namespace Clothes_Shop_ERP
             const float lineHeight = 17;
             const float smallLineHeight = 13;
 
-            // Only text that actually CONTAINS Arabic needs RTL shaping (it's what
-            // fixes a label's colon sitting on the correct side of a mixed
-            // Arabic/Latin string like "Invoice: INV123"). Forcing the RTL flag on
-            // a purely Latin/numeric string (a barcode, "Card") instead breaks it -
-            // GDI+ mirrors punctuation like parentheses under a forced RTL
-            // paragraph, which is wrong for text that was never Arabic to begin with.
+            // Only text that actually contains Arabic gets RTL shaping - forcing it on pure Latin/numeric breaks it.
             bool ContainsArabic(string s) => !string.IsNullOrEmpty(s) && s.Any(c => c >= '؀' && c <= 'ۿ');
 
-            // Draws text in a box sized exactly to its own measured width and
-            // positioned at x - so the physical position (x, chosen via isRtl) is
-            // independent from the text shaping (chosen via the RTL flag, only for
-            // strings that actually contain Arabic). Mixing those two concerns in a
-            // single StringFormat is what caused text to jump to the wrong spot.
+            // Position (x) and text shaping (RTL flag) are kept independent - mixing them misplaced text.
             void DrawAt(string text, Font font, float x, float w)
             {
                 var fmt = new StringFormat
@@ -168,12 +147,7 @@ namespace Clothes_Shop_ERP
                 DrawAt(number, font, numberX, numberW);
                 y += lineHeight;
             }
-            // A label (always in the app's own language) next to a value that can be
-            // typed in ANY script (a cashier/customer name, "Card" vs "كارت"...).
-            // Concatenating them into one string and shaping the whole thing as one
-            // paragraph is what broke "Cashier: محمد" - the Arabic name pulled the
-            // English label along with it into the wrong spot. Drawing them as two
-            // adjacent, independently-shaped pieces avoids that entirely.
+            // Label and value are drawn as two independently-shaped pieces, not concatenated (broke mixed-script names).
             void LabelValue(string label, string value, Font font)
             {
                 float labelW = g.MeasureString(label, font).Width;

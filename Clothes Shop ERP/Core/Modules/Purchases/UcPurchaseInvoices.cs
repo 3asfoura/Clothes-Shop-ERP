@@ -191,7 +191,6 @@ namespace Clothes_Shop_ERP.modlestore
                 return;
             var menu = new ContextMenuStrip();
             if (PermissionManager.CanEdit("PurchaseInvoices")) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
-            menu.Show(gridControl1, e.Location);
 
             if (hit.InRow && PermissionManager.CanEdit("PurchaseInvoices"))
             {
@@ -201,6 +200,9 @@ namespace Clothes_Shop_ERP.modlestore
                     menu.Items.Add(LocalizationManager.T("Payment_MenuCompletePayment"), null, (s, ev) => CompletePayment());
             }
             menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_PurchaseInvoices")));
+            // Show only after every item is added - showing an empty/partial menu first
+            // can leave the popup stuck showing only whatever existed at Show()-time.
+            menu.Show(gridControl1, e.Location);
         }
 
         private void CompletePayment()
