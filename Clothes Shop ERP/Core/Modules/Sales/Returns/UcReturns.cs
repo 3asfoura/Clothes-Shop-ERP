@@ -61,7 +61,11 @@ namespace Clothes_Shop_ERP.modlestore
             if (form.ShowDialog() != DialogResult.OK) return;
 
             int branchId = FrmLogin.CurrentBranchId;
-            decimal total = form.UnitPrice * form.Quantity;
+            // Several items from the same invoice can now come back in one go, so this
+            // is one return header with a detail row (and its own stock movement) per
+            // item, rather than a whole separate return per item.
+            var lines = form.Lines;
+            decimal total = lines.Sum(l => l.UnitPrice * l.ReturnQty);
 
             using (var db = new ClothesShopDBContext())
             using (var transaction = db.Database.BeginTransaction())
@@ -77,49 +81,54 @@ namespace Clothes_Shop_ERP.modlestore
                         CreatedByUserId = FrmLogin.CurrentUserId
                     };
                     db.SalesReturns.Add(salesReturn);
-                    db.SaveChanges();   // generates salesReturn.Id for the detail row below
+                    db.SaveChanges();   // generates salesReturn.Id for the detail rows below
 
-                    db.SalesReturnDetails.Add(new SalesReturnDetailEntity
+                    foreach (var line in lines)
                     {
-                        SalesReturnId = salesReturn.Id,
-                        ProductVariantId = form.ProductVariantId,
-                        Quantity = form.Quantity,
-                        UnitPrice = form.UnitPrice,
-                        Total = total
-                    });
+                        decimal lineTotal = line.UnitPrice * line.ReturnQty;
 
-                    // Give the stock back
-                    var stock = db.BranchStock.FirstOrDefault(s =>
-                        s.ProductVariantId == form.ProductVariantId && s.BranchId == branchId);
-
-                    if (stock == null)
-                    {
-                        db.BranchStock.Add(new Clothes_Shop_ERP.DAL.BranchStock
+                        db.SalesReturnDetails.Add(new SalesReturnDetailEntity
                         {
-                            ProductVariantId = form.ProductVariantId,
+                            SalesReturnId = salesReturn.Id,
+                            ProductVariantId = line.ProductVariantId,
+                            Quantity = line.ReturnQty,
+                            UnitPrice = line.UnitPrice,
+                            Total = lineTotal
+                        });
+
+                        // Give the stock back
+                        var stock = db.BranchStock.FirstOrDefault(s =>
+                            s.ProductVariantId == line.ProductVariantId && s.BranchId == branchId);
+
+                        if (stock == null)
+                        {
+                            db.BranchStock.Add(new Clothes_Shop_ERP.DAL.BranchStock
+                            {
+                                ProductVariantId = line.ProductVariantId,
+                                BranchId = branchId,
+                                Quantity = line.ReturnQty,
+                                MinQuantity = 0
+                            });
+                        }
+                        else
+                        {
+                            stock.Quantity += line.ReturnQty;
+                        }
+
+                        db.StockMovements.Add(new StockMovementEntity
+                        {
+                            ProductVariantId = line.ProductVariantId,
                             BranchId = branchId,
-                            Quantity = form.Quantity,
-                            MinQuantity = 0
+                            MovementType = "Return",
+                            Quantity = line.ReturnQty,
+                            RefType = "SalesReturn",
+                            RefId = salesReturn.Id,
+                            CreatedAt = DateTime.Now,
+                            CreatedByUserId = FrmLogin.CurrentUserId
                         });
                     }
-                    else
-                    {
-                        stock.Quantity += form.Quantity;
-                    }
 
-                    db.StockMovements.Add(new StockMovementEntity
-                    {
-                        ProductVariantId = form.ProductVariantId,
-                        BranchId = branchId,
-                        MovementType = "Return",
-                        Quantity = form.Quantity,
-                        RefType = "SalesReturn",
-                        RefId = salesReturn.Id,
-                        CreatedAt = DateTime.Now,
-                        CreatedByUserId = FrmLogin.CurrentUserId
-                    });
-
-                    // Money goes back out of the till
+                    // Money goes back out of the till - one entry for the whole return
                     db.TreasuryTransactions.Add(new TreasuryEntity
                     {
                         BranchId = branchId,
@@ -140,6 +149,7 @@ namespace Clothes_Shop_ERP.modlestore
                 }
                 catch (Exception ex)
                 {
+                    ErrorReporter.Log(ex, "Sales return - save");
                     transaction.Rollback();
                     Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Returns_SaveFailed"), ex.Message));
                 }

@@ -81,6 +81,9 @@ namespace Clothes_Shop_ERP
             {
                 new ImageComboBoxItem(LocalizationManager.T("Permission_None"), PermissionManager.LevelNone, -1),
                 new ImageComboBoxItem(LocalizationManager.T("Permission_Read"), PermissionManager.LevelRead, -1),
+                // Sits between Read and Write on purpose: the cashier level - can work
+                // the screen but can't erase what's already on it.
+                new ImageComboBoxItem(LocalizationManager.T("Permission_Edit"), PermissionManager.LevelEdit, -1),
                 new ImageComboBoxItem(LocalizationManager.T("Permission_Write"), PermissionManager.LevelWrite, -1),
             });
             _grid.RepositoryItems.Add(repoCombo);

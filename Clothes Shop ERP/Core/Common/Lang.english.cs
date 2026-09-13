@@ -388,6 +388,7 @@ namespace Clothes_Shop_ERP.Localization
             { "POS_HeldSaleLabelFmt", "{0} - {1} items - {2:n2}" },
             { "POS_ResumeWillReplaceCart", "This will replace what's currently in the cart. Continue?" },
             { "POS_SaleFailed", "Could not complete the sale. Nothing was charged. {0}" },
+            { "POS_BarcodePrompt", "Scan a barcode... (for several pieces type the count, then *, then the barcode - e.g. 5*123456)" },
             { "POS_ProductNotFoundByBarcode", "No active product with barcode {0}" },
             { "POS_NotEnoughStockFor", "Not enough stock for {0}. Please refresh and try again." },
             { "POS_SaleCompletedMsg", "Invoice {0} - Total: {1:n2}" },
@@ -468,6 +469,30 @@ namespace Clothes_Shop_ERP.Localization
 
             // ----- FrmReturnEdit -----
             { "FrmReturnEdit_SearchInvoice", "Search by invoice number (to find older invoices):" },
+            { "FrmReturnEdit_LinesHint", "Type the quantity to return next to each item (leave the rest at zero):" },
+            { "FrmReturnEdit_ColRemaining", "Returnable" },
+            { "FrmReturnEdit_ColReturnQty", "Return qty" },
+            { "FrmReturnEdit_QtyTooHighFmt", "\"{0}\" - you can return at most {1}." },
+            { "FrmReturnEdit_NoQuantityTyped", "Type the quantity to return next to at least one item (in the \"Return qty\" column)." },
+
+            // ----- Bulk delete -----
+            { "Shared_ConfirmDeleteManyFmt", "{0} item(s) will be permanently deleted. This cannot be undone - continue?" },
+            { "Shared_DeletedCountFmt", "Deleted {0} item(s)." },
+            { "Shared_DeletedSomeBlockedFmt", "Deleted {0}. {1} could not be deleted because they are used by other records (invoices or stock)." },
+
+            // ----- Stock count session (scanner-based) -----
+            { "StockCount_MenuScanSession", "Scan-based stock count..." },
+            { "StockCountSession_Title", "Scan-Based Stock Count" },
+            { "StockCountSession_ScanHint", "Scan each item's barcode (you can also type qty*barcode) and press Enter:" },
+            { "StockCountSession_ColSystem", "System qty" },
+            { "StockCountSession_ColCounted", "Counted" },
+            { "StockCountSession_ColDifference", "Difference" },
+            { "StockCountSession_BtnApply", "Apply Count" },
+            { "StockCountSession_SummaryFmt", "Counted {0} of {1} item(s) - {2} differ from the system." },
+            { "StockCountSession_NothingCounted", "Nothing counted yet. Scan a barcode, or type the quantity by hand in the \"Counted\" column." },
+            { "StockCountSession_NoDifferences", "Everything counted matches the system - no adjustment needed." },
+            { "StockCountSession_ConfirmFmt", "{0} item(s) will have their stock quantity adjusted to the counted figure. Continue?" },
+            { "StockCountSession_AppliedFmt", "Count applied: {0} item(s) adjusted." },
             { "FrmReturnEdit_Invoice", "Invoice:" },
             { "FrmReturnEdit_ItemToReturn", "Item to return:" },
             { "FrmReturnEdit_QuantityToReturn", "Quantity to return:" },
@@ -622,7 +647,8 @@ namespace Clothes_Shop_ERP.Localization
             { "Roles_ColPermission", "Permission" },
             { "Permission_None", "None" },
             { "Permission_Read", "Read" },
-            { "Permission_Write", "Read and Write" },
+            { "Permission_Edit", "Add and edit (no delete)" },
+            { "Permission_Write", "Full access (incl. delete)" },
 
             // ----- Payment Methods (inline name prompt) -----
             { "PaymentMethods_NamePrompt", "Payment method name:" },
@@ -706,6 +732,19 @@ namespace Clothes_Shop_ERP.Localization
             { "ProductVariants_MenuPrintLabel", "Print Barcode Label..." },
             { "ProductVariants_PrintLabelTitle", "Print Barcode Label" },
             { "ProductVariants_LabelQtyPrompt", "How many labels?" },
+            { "BulkVariant_MenuBulkAdd", "Bulk Add (colors x sizes)..." },
+            { "BulkVariant_MenuPrintSelected", "Print labels for selected items..." },
+            { "BulkVariant_PrintSelectedTitle", "Print Selected Labels" },
+            { "BulkVariant_ConfirmPrintSelectedFmt", "This will print {2} label(s) total ({0} selected item(s) x {1} each). Continue?" },
+            { "BulkVariant_MenuPrintAllLabels", "Print ALL labels for this product..." },
+            { "BulkVariant_PrintAllLabelsTitle", "Print All Labels" },
+            { "BulkVariant_ConfirmPrintAllFmt", "This will print {2} label(s) total ({0} item(s) x {1} each) for \"{3}\". Continue?" },
+            { "BulkVariant_PrintedAllFmt", "Printed {0} label(s)." },
+            { "BulkVariant_Title", "Bulk-Add Variants" },
+            { "BulkVariant_Colors", "Colors (pick several):" },
+            { "BulkVariant_Sizes", "Sizes (pick several):" },
+            { "BulkVariant_MustSelectAll", "Please choose a product, and at least one color and one size." },
+            { "BulkVariant_ResultFmt", "Created {0} new variant(s). Skipped {1} that already existed." },
             { "Backup_FileFilter", "Backup Files (*.bak)|*.bak|All Files (*.*)|*.*" },
             { "Backup_LastBackupFmt", "Last backup: {0:g}" },
             { "Backup_NeverBackedUp", "Last backup: never" },
@@ -761,7 +800,7 @@ namespace Clothes_Shop_ERP.Localization
             { "About_ActivationStatus", "Activation Status" },
             { "About_Activated", "Activated" },
             { "About_NotActivated", "Not Activated" },
-            { "About_ExpiresOnFmt", "Expires on {0:yyyy/MM/dd}" },
+            { "About_ExpiresOnFmt", "Expires on {0:dd MMMM yyyy} ({1} days left)" },
             { "About_NoExpiry", "No expiry date" },
             { "About_MachineId", "This Machine's ID" },
             { "About_BtnCopy", "Copy" },
@@ -799,7 +838,31 @@ namespace Clothes_Shop_ERP.Localization
             { "PaymentMethods_ColIsCash", "Cash" },
             { "PaymentMethods_MenuToggleCash", "Mark/Unmark as Cash" },
             { "PaymentMethods_MarkCash", "Mark as cash" },
-            { "PaymentMethods_UnmarkCash", "Unmark as cash" }
+            { "PaymentMethods_UnmarkCash", "Unmark as cash" },
+
+            // ==================================================
+            // ===== Problem dialog & error log ==================
+            // ==================================================
+            { "Problem_CrashTitle", "Something went wrong" },
+            { "Problem_CrashBody", "Don't worry - all the details were saved to a file. Please send this file to support so we can fix it." },
+            { "Problem_CrashBodyContinue", "You can keep working. If it happens again, close the program and open it again." },
+            { "Problem_ReferenceFmt", "Problem number: {0}" },
+            { "Problem_FileLabel", "File:" },
+            { "Problem_BtnCopyFile", "Copy file" },
+            { "Problem_BtnOpenFolder", "Show file" },
+            { "Problem_FileCopied", "File copied - open WhatsApp and press Ctrl+V to send it" },
+            { "Problem_PathCopied", "File location copied" },
+            { "Problem_BtnContinue", "Keep working" },
+            { "Problem_BtnRetry", "Try again" },
+            { "Problem_BtnCloseApp", "Close program" },
+            { "Problem_DbConnectTitle", "Can't reach the database" },
+            { "Problem_DbConnectBody", "Make sure the PC that holds the data (the server) is on and connected to the network, then press \"Try again\". If it keeps happening, send this file to support." },
+            { "Problem_DbUpdateTitle", "The database update didn't finish" },
+            { "Problem_DbUpdateBody", "The program was preparing the database for the new version and ran into a problem, so it put everything back as it was - no data was affected. Please send this file to support before using the program." },
+            { "Problem_DbNewerTitle", "This PC has an older version of the program" },
+            { "Problem_DbNewerBody", "The database was updated from a PC running a newer version. Install that same new version on this PC first, so the data doesn't get damaged." },
+            { "DbUpdate_Working", "Updating the database... please don't close the program" },
+            { "About_ExpiredOnFmt", "Expired on {0:dd MMMM yyyy}" }
         };
     }
 }

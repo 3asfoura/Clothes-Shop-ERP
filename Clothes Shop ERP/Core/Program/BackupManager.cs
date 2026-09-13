@@ -92,6 +92,7 @@ namespace Clothes_Shop_ERP
             }
             catch (Exception ex)
             {
+                ErrorReporter.Log(ex, "Backup - preparing the backup folder");
                 error = ex.Message;
                 return false;
             }
@@ -130,6 +131,7 @@ namespace Clothes_Shop_ERP
             }
             catch (Exception ex)
             {
+                ErrorReporter.Log(ex, "Backup - BACKUP DATABASE");
                 // Common cause: the SQL Server service account can't write to the chosen folder.
                 error = ex.Message;
                 return false;

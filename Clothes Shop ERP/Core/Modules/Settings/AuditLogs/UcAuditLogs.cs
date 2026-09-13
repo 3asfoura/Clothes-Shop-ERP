@@ -72,6 +72,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                 GridResult.DataSource = data;
                 GridViewResult.PopulateColumns();
+            Sett.HideKeyColumns(GridViewResult);
                 if (GridViewResult.Columns["ChangedAt"] != null) GridViewResult.Columns["ChangedAt"].Caption = LocalizationManager.T("AuditLogs_ColChangedAt");
                 if (GridViewResult.Columns["TableName"] != null) GridViewResult.Columns["TableName"].Caption = LocalizationManager.T("AuditLogs_ColTable");
                 if (GridViewResult.Columns["RecordId"] != null) GridViewResult.Columns["RecordId"].Caption = LocalizationManager.T("AuditLogs_ColRecordId");

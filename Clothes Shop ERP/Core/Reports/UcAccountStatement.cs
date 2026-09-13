@@ -125,6 +125,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                 GridResult.DataSource = rows;
                 GridViewResult.PopulateColumns();
+            Sett.HideKeyColumns(GridViewResult);
                 if (GridViewResult.Columns["Reference"] != null) GridViewResult.Columns["Reference"].Caption = LocalizationManager.T("Returns_ColInvoice");
                 if (GridViewResult.Columns["InvoiceDate"] != null) GridViewResult.Columns["InvoiceDate"].Caption = LocalizationManager.T("AccountStatement_ColInvoiceDate");
                 if (GridViewResult.Columns["TotalAmount"] != null) GridViewResult.Columns["TotalAmount"].Caption = LocalizationManager.T("Shared_TotalAmount");

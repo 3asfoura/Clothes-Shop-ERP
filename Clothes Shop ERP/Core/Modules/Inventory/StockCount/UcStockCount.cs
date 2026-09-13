@@ -23,6 +23,7 @@ namespace Clothes_Shop_ERP.modlestore
             gridView1.OptionsCustomization.AllowSort = false;
             ColQuantity.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             ColQuantity.DisplayFormat.FormatString = "0.###";
+            Sett.EnableMultiSelect(gridView1);
             Sett.CenterColumns(gridView1);
             ApplyLanguage();
         }
@@ -89,6 +90,81 @@ namespace Clothes_Shop_ERP.modlestore
             GetData();
         }
 
+        // Applies a whole counting session at once: every item somebody actually
+        // counted is set to that quantity, and each change is recorded as a stock
+        // movement so the adjustment is traceable later, not a silent overwrite.
+        private void ScanSession()
+        {
+            var form = new FrmStockCountSession(LocalizationManager.T("StockCountSession_Title"));
+            if (form.ShowDialog() != DialogResult.OK) return;
+
+            var lines = form.CountedLines.Where(l => l.Counted.Value != l.SystemQty).ToList();
+            if (lines.Count == 0)
+            {
+                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), LocalizationManager.T("StockCountSession_NoDifferences"));
+                return;
+            }
+
+            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("StockCountSession_ConfirmFmt"), lines.Count),
+                LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            int branchId = FrmLogin.CurrentBranchId;
+            using (var db = new ClothesShopDBContext())
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var line in lines)
+                    {
+                        decimal counted = line.Counted.Value;
+
+                        var stock = db.BranchStock.FirstOrDefault(s =>
+                            s.ProductVariantId == line.ProductVariantId && s.BranchId == branchId);
+
+                        if (stock == null)
+                        {
+                            db.BranchStock.Add(new StockEntity
+                            {
+                                ProductVariantId = line.ProductVariantId,
+                                BranchId = branchId,
+                                Quantity = counted,
+                                MinQuantity = 0
+                            });
+                        }
+                        else
+                        {
+                            stock.Quantity = counted;
+                        }
+
+                        db.StockMovements.Add(new Clothes_Shop_ERP.DAL.StockMovements
+                        {
+                            ProductVariantId = line.ProductVariantId,
+                            BranchId = branchId,
+                            MovementType = "Manual",
+                            // Signed on purpose: negative when the count came up short of
+                            // the system, positive when there was more on the shelf.
+                            Quantity = counted - line.SystemQty,
+                            RefType = "StockCount",
+                            CreatedAt = DateTime.Now,
+                            CreatedByUserId = FrmLogin.CurrentUserId
+                        });
+                    }
+
+                    db.SaveChanges();
+                    transaction.Commit();
+                    Sett.MsgGreen(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("StockCountSession_AppliedFmt"), lines.Count));
+                    GetData();
+                }
+                catch (Exception ex)
+                {
+                    ErrorReporter.Log(ex, "Stock count - apply counting session");
+                    transaction.Rollback();
+                    Sett.MsgRed(LocalizationManager.T("Shared_Error"), ex.Message);
+                }
+            }
+        }
+
         private void EditSelected()
         {
             if (gridView1.FocusedRowHandle < 0) return;
@@ -116,22 +192,20 @@ namespace Clothes_Shop_ERP.modlestore
             GetData();
         }
 
+        // One confirmation for the whole selection (Ctrl/Shift+click to pick several),
+        // and a row the database refuses because it is still referenced elsewhere is
+        // reported at the end instead of stopping the rest of the batch.
         private void DeleteSelected()
         {
-            if (gridView1.FocusedRowHandle < 0) return;
-            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
-
-            if (XtraMessageBox.Show(LocalizationManager.T("StockCount_ConfirmDeleteEntry"), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                return;
-
-            using (var db = new ClothesShopDBContext())
+            Sett.DeleteSelectedRows(gridView1, GetData, id =>
             {
-                var stock = db.BranchStock.Where(x => x.Id == id).FirstOrDefault();
-                if (stock != null) db.BranchStock.Remove(stock);
-                db.SaveChanges();
-            }
-            Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("StockCount_EntityName")));
-            GetData();
+                using (var db = new ClothesShopDBContext())
+                {
+                    var row = db.BranchStock.FirstOrDefault(x => x.Id == id);
+                    if (row != null) db.BranchStock.Remove(row);
+                    db.SaveChanges();
+                }
+            });
         }
 
         private void UcStockCount_Load(object sender, EventArgs e)
@@ -150,12 +224,14 @@ namespace Clothes_Shop_ERP.modlestore
                 return;
             var menu = new ContextMenuStrip();
             bool canEdit = PermissionManager.CanEdit("StockCount");
+            if (canEdit) menu.Items.Add(LocalizationManager.T("StockCount_MenuScanSession"), null, (s, ev) => ScanSession());
             if (canEdit) menu.Items.Add(LocalizationManager.T("Shared_MenuNew"), null, (s, ev) => AddNew());
 
             if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
-                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
+                if (PermissionManager.CanDelete("StockCount"))
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
 
             menu.Show(gridControl1, e.Location);

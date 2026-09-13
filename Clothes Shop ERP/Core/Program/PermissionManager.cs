@@ -9,6 +9,12 @@ namespace Clothes_Shop_ERP
     {
         public const string LevelNone = "None";
         public const string LevelRead = "Read";
+        // Add and edit, but not delete - the level for a cashier who should be able to
+        // work a screen without being able to wipe historical records off it.
+        // Deliberately stored in the existing PermissionLevel column (NVARCHAR(10))
+        // rather than as a new column, so no database change is needed and older
+        // databases keep working: anything that isn't "Edit" behaves exactly as before.
+        public const string LevelEdit = "Edit";
         public const string LevelWrite = "Write";
 
         // Every permission-gated screen and its sidebar localization key, in sidebar order.
@@ -76,7 +82,15 @@ namespace Clothes_Shop_ERP
 
         public static bool CanView(string screenName) => GetLevel(screenName) != LevelNone;
 
-        public static bool CanEdit(string screenName) => GetLevel(screenName) == LevelWrite;
+        /// <summary>Can add and change records on this screen.</summary>
+        public static bool CanEdit(string screenName)
+        {
+            string level = GetLevel(screenName);
+            return level == LevelWrite || level == LevelEdit;
+        }
+
+        /// <summary>Can permanently delete records on this screen - full access only.</summary>
+        public static bool CanDelete(string screenName) => GetLevel(screenName) == LevelWrite;
 
         // Non-full-access roles only ever see data for their own logged-in branch.
         public static bool BranchRestricted => !_fullAccess;

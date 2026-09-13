@@ -65,7 +65,6 @@ namespace Clothes_Shop_ERP.modlestore
             };
             Sett.FixCellTooltips(gridView1);
             gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsCustomization.AllowSort = false;
             gridView1.OptionsBehavior.Editable = false;
         }
 

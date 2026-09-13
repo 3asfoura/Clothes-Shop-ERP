@@ -56,7 +56,10 @@ namespace Clothes_Shop_ERP.modlestore
             if (form.ShowDialog() != DialogResult.OK) return;
 
             int branchId = FrmLogin.CurrentBranchId;
-            decimal total = form.UnitCost * form.Quantity;
+            // Several items from the same invoice can now go back in one go, so this is
+            // one return header with a detail row (and its own stock movement) per item.
+            var lines = form.Lines;
+            decimal total = lines.Sum(l => l.UnitCost * l.ReturnQty);
 
             using (var db = new ClothesShopDBContext())
             using (var transaction = db.Database.BeginTransaction())
@@ -72,42 +75,48 @@ namespace Clothes_Shop_ERP.modlestore
                         CreatedByUserId = FrmLogin.CurrentUserId
                     };
                     db.PurchaseReturns.Add(purchaseReturn);
-                    db.SaveChanges();   // generates purchaseReturn.Id for the detail row below
+                    db.SaveChanges();   // generates purchaseReturn.Id for the detail rows below
 
-                    db.PurchaseReturnDetails.Add(new PurchaseReturnDetailEntity
+                    foreach (var line in lines)
                     {
-                        PurchaseReturnId = purchaseReturn.Id,
-                        ProductVariantId = form.ProductVariantId,
-                        Quantity = form.Quantity,
-                        UnitCost = form.UnitCost,
-                        Total = total
-                    });
+                        db.PurchaseReturnDetails.Add(new PurchaseReturnDetailEntity
+                        {
+                            PurchaseReturnId = purchaseReturn.Id,
+                            ProductVariantId = line.ProductVariantId,
+                            Quantity = line.ReturnQty,
+                            UnitCost = line.UnitCost,
+                            Total = line.UnitCost * line.ReturnQty
+                        });
 
-                    // Take the stock back out - it's going back to the supplier
-                    int rowsAffected = db.Database.ExecuteSqlCommand(
-                        "UPDATE BranchStock SET Quantity = Quantity - {0} WHERE ProductVariantId = {1} AND BranchId = {2} AND Quantity >= {0}",
-                        form.Quantity, form.ProductVariantId, branchId);
+                        // Take the stock back out - it's going back to the supplier. The
+                        // "Quantity >= {0}" guard is what makes this safe against another
+                        // till selling the same item at the same moment: no row updated
+                        // means the stock wasn't there, and the whole return is rolled back.
+                        int rowsAffected = db.Database.ExecuteSqlCommand(
+                            "UPDATE BranchStock SET Quantity = Quantity - {0} WHERE ProductVariantId = {1} AND BranchId = {2} AND Quantity >= {0}",
+                            line.ReturnQty, line.ProductVariantId, branchId);
 
-                    if (rowsAffected == 0)
-                    {
-                        transaction.Rollback();
-                        Sett.MsgBlue(LocalizationManager.T("POS_OutOfStockTitle"), LocalizationManager.T("PurchaseReturns_NotEnoughStock"));
-                        return;
+                        if (rowsAffected == 0)
+                        {
+                            transaction.Rollback();
+                            Sett.MsgBlue(LocalizationManager.T("POS_OutOfStockTitle"), LocalizationManager.T("PurchaseReturns_NotEnoughStock"));
+                            return;
+                        }
+
+                        db.StockMovements.Add(new StockMovementEntity
+                        {
+                            ProductVariantId = line.ProductVariantId,
+                            BranchId = branchId,
+                            MovementType = "PurchaseReturn",
+                            Quantity = -line.ReturnQty,
+                            RefType = "PurchaseReturn",
+                            RefId = purchaseReturn.Id,
+                            CreatedAt = DateTime.Now,
+                            CreatedByUserId = FrmLogin.CurrentUserId
+                        });
                     }
 
-                    db.StockMovements.Add(new StockMovementEntity
-                    {
-                        ProductVariantId = form.ProductVariantId,
-                        BranchId = branchId,
-                        MovementType = "PurchaseReturn",
-                        Quantity = -form.Quantity,
-                        RefType = "PurchaseReturn",
-                        RefId = purchaseReturn.Id,
-                        CreatedAt = DateTime.Now,
-                        CreatedByUserId = FrmLogin.CurrentUserId
-                    });
-
-                    // Money comes back from the supplier
+                    // Money comes back from the supplier - one entry for the whole return
                     db.TreasuryTransactions.Add(new TreasuryEntity
                     {
                         BranchId = branchId,
@@ -128,6 +137,7 @@ namespace Clothes_Shop_ERP.modlestore
                 }
                 catch (Exception ex)
                 {
+                    ErrorReporter.Log(ex, "Purchase return - save");
                     transaction.Rollback();
                     Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("PurchaseReturns_SaveFailed"), ex.Message));
                 }

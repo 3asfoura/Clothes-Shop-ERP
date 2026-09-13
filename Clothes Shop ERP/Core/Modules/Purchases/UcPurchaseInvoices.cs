@@ -30,7 +30,6 @@ namespace Clothes_Shop_ERP.modlestore
             };
             Sett.FixCellTooltips(gridView1);
             gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsCustomization.AllowSort = false;
             gridView1.OptionsBehavior.Editable = false;
             Sett.CenterColumns(gridView1);
             ApplyLanguage();
@@ -175,6 +174,7 @@ namespace Clothes_Shop_ERP.modlestore
                 }
                 catch (Exception ex)
                 {
+                    ErrorReporter.Log(ex, "Purchase invoice - save");
                     transaction.Rollback();
                     Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Purchases_SaveFailed"), ex.Message));
                 }
@@ -258,6 +258,7 @@ namespace Clothes_Shop_ERP.modlestore
                 }
                 catch (Exception ex)
                 {
+                    ErrorReporter.Log(ex, "Purchase invoice - record payment");
                     transaction.Rollback();
                     Sett.MsgBlue(LocalizationManager.T("Shared_Error"), ex.Message);
                 }

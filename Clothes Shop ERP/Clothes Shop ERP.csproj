@@ -331,6 +331,10 @@
     <Compile Include="ClothesShopSpecific\ProductVariants\FrmVariantEdit.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ClothesShopSpecific\ProductVariants\FrmBulkVariantAdd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core\Modules\Inventory\StockCount\FrmStockCountSession.cs" />
     <Compile Include="ClothesShopSpecific\ProductVariants\FrmVariantEdit.Designer.cs">
       <DependentUpon>FrmVariantEdit.cs</DependentUpon>
     </Compile>
@@ -523,6 +527,11 @@
     <Compile Include="Core\Program\BackupManager.cs" />
     <Compile Include="Core\Program\BarcodeLabelPrinter.cs" />
     <Compile Include="Core\Program\PermissionManager.cs" />
+    <Compile Include="Core\Program\ErrorReporter.cs" />
+    <Compile Include="Core\Program\FrmProblem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core\Program\DatabaseUpdater.cs" />
     <Compile Include="Core\Program\ReceiptPrinter.cs" />
     <Compile Include="Core\Reports\UcStockReport.cs">
       <SubType>UserControl</SubType>
@@ -633,6 +642,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Core\Reports\UcStockReport.resx">
       <DependentUpon>UcStockReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <!-- Numbered database update scripts, run automatically at startup (see Core\Program\DatabaseUpdater.cs).
+         A new NNNN_Name.sql dropped into this folder is picked up by the wildcard. -->
+    <EmbeddedResource Include="Core\DAL\Updates\*.sql">
+      <LogicalName>DbUpdates.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
     <None Include="App.config" />
     <None Include="packages.config" />

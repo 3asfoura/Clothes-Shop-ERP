@@ -24,6 +24,22 @@ namespace Clothes_Shop_ERP
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            // Before anything else creates a window - see ErrorReporter.cs.
+            ErrorReporter.Install();
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                // Errors once the main window is running go to ErrorReporter's handlers;
+                // this catches the ones while starting up (before Application.Run).
+                ErrorReporter.ReportFatal(ex, "Startup");
+            }
+        }
+
+        private static void Run()
+        {
             ////////////////////////////
             // Arabic Culture
             LocalizationManager.LoadLanguagePreference();
@@ -66,6 +82,10 @@ namespace Clothes_Shop_ERP
                 if (!activation.Activated)
                     return;
             }
+
+            // Can't reach the server, or its database needs updating for this version - see DatabaseUpdater.cs.
+            if (!DatabaseUpdater.EnsureDatabaseReady())
+                return;
 
             Application.Run(new FrmMain());
         }

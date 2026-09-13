@@ -1,144 +1,223 @@
-﻿using Clothes_Shop_ERP.DAL;
+using Clothes_Shop_ERP.DAL;
 using Clothes_Shop_ERP.Localization;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Repository;
+using DevExpress.XtraGrid;
+using DevExpress.XtraGrid.Views.Grid;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.EntityFrameworkCore;
+
 namespace Clothes_Shop_ERP
 {
+    // One row per still-returnable line of the chosen invoice. The user types a
+    // quantity against each item they want back, so a customer returning three
+    // things from one sale is one trip through this dialog, not three.
+    public class ReturnLineItem
+    {
+        public int ProductVariantId { get; set; }
+        public string Product { get; set; }
+        public decimal Remaining { get; set; }
+        public decimal ReturnQty { get; set; }
+        public decimal UnitPrice { get; set; }
+    }
+
     public partial class FrmReturnEdit : DevExpress.XtraEditors.XtraForm
     {
-        public int SalesInvoiceId => _invoiceIds[CmbInvoice.SelectedIndex];
-        public int ProductVariantId => _lineVariantIds[CmbLine.SelectedIndex];
-        public decimal UnitPrice => _lineUnitPrices[CmbLine.SelectedIndex];
-        public decimal Quantity => (decimal)SpinQuantity.Value;
+        // One selectable invoice in the picker.
+        private class InvoicePick
+        {
+            public int Id { get; set; }
+            public string Display { get; set; }
+        }
 
-        private ComboBoxEdit CmbInvoice, CmbLine;
-        private SpinEdit SpinQuantity;
-        private TextEdit TxtSearchInvoice;
-        private List<int> _invoiceIds = new List<int>();
-        private List<int> _lineVariantIds = new List<int>();
-        private List<decimal> _lineUnitPrices = new List<decimal>();
-        private List<decimal> _lineMaxQty = new List<decimal>();
+        public int SalesInvoiceId => Convert.ToInt32(CmbInvoice.EditValue);
+
+        /// <summary>Only the rows the user actually put a quantity against.</summary>
+        public List<ReturnLineItem> Lines => _lines.Where(l => l.ReturnQty > 0).ToList();
+
+        // How far back the picker reaches. Everything is loaded once and filtered as
+        // the user types, so this only needs to be larger than any realistic return
+        // window - it is not a "most recent N" cut-off the user can hit and get stuck on.
+        private const int InvoiceHistoryLimit = 2000;
+
+        private LookUpEdit CmbInvoice;
+        private GridControl GridLines;
+        private GridView GridViewLines;
+        private BindingList<ReturnLineItem> _lines = new BindingList<ReturnLineItem>();
+
         public FrmReturnEdit()
         {
             InitializeComponent();
         }
+
         public FrmReturnEdit(string title)
         {
             this.Text = title;
-            this.Width = 400;
-            this.Height = 315;
+            this.Width = 580;
+            this.Height = 425;
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            // The invoice list below only shows the 50 most recent for this branch (the
-            // common case, and cheap to load) - this search box re-queries by invoice
-            // number so an older invoice a customer wants to return against is still
-            // reachable, instead of being invisible just because it scrolled past 50.
-            var lblSearch = new LabelControl { Text = LocalizationManager.T("FrmReturnEdit_SearchInvoice"), Location = new System.Drawing.Point(20, 20) };
-            TxtSearchInvoice = new TextEdit { Location = new System.Drawing.Point(20, 40), Width = 340 };
+            // A LookUpEdit rather than a plain dropdown: the user can type straight into
+            // it and SearchMode.AutoFilter narrows the list to matching invoices as they
+            // type. That replaces both the old fixed "50 most recent" dropdown (which
+            // made an older invoice simply unreachable) and the separate search box that
+            // worked around it.
+            var lblInvoice = new LabelControl { Text = LocalizationManager.T("FrmReturnEdit_Invoice"), Location = new System.Drawing.Point(20, 20) };
+            CmbInvoice = new LookUpEdit { Location = new System.Drawing.Point(20, 40), Width = 520 };
+            CmbInvoice.Properties.DisplayMember = "Display";
+            CmbInvoice.Properties.ValueMember = "Id";
+            CmbInvoice.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.Standard;
+            CmbInvoice.Properties.SearchMode = DevExpress.XtraEditors.Controls.SearchMode.AutoFilter;
+            CmbInvoice.Properties.AutoSearchColumnIndex = 0;
+            CmbInvoice.Properties.ShowHeader = false;
+            CmbInvoice.Properties.NullText = LocalizationManager.T("FrmReturnEdit_SearchInvoice");
 
-            var lblInvoice = new LabelControl { Text = LocalizationManager.T("FrmReturnEdit_Invoice"), Location = new System.Drawing.Point(20, 75) };
-            CmbInvoice = new ComboBoxEdit { Location = new System.Drawing.Point(20, 95), Width = 340 };
-            CmbInvoice.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            var lblLines = new LabelControl { Text = LocalizationManager.T("FrmReturnEdit_LinesHint"), Location = new System.Drawing.Point(20, 75) };
 
-            var lblLine = new LabelControl { Text = LocalizationManager.T("FrmReturnEdit_ItemToReturn"), Location = new System.Drawing.Point(20, 130) };
-            CmbLine = new ComboBoxEdit { Location = new System.Drawing.Point(20, 150), Width = 340 };
-            CmbLine.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            GridLines = new GridControl { Location = new System.Drawing.Point(20, 95), Size = new System.Drawing.Size(520, 210) };
+            GridViewLines = new GridView(GridLines);
+            GridLines.MainView = GridViewLines;
+            // Off BEFORE binding: left on, DevExpress generates its own columns from the
+            // property names ("Return Qty", "Unit Price"...) and regenerates them every
+            // time the data source changes, wiping any captions set beforehand - which is
+            // why this grid kept coming out in English however the captions were applied.
+            GridViewLines.OptionsBehavior.AutoPopulateColumns = false;
+            GridLines.DataSource = _lines;
+            GridViewLines.OptionsView.ShowGroupPanel = false;
+            GridViewLines.OptionsBehavior.Editable = true;
+            ConfigureLineColumns();
 
-            var lblQty = new LabelControl { Text = LocalizationManager.T("FrmReturnEdit_QuantityToReturn"), Location = new System.Drawing.Point(20, 185) };
-            SpinQuantity = new SpinEdit { Location = new System.Drawing.Point(20, 205), Width = 340, Value = 1 };
-            SpinQuantity.Properties.MinValue = 1;
-            CmbInvoice.SelectedIndexChanged += (s, e) => LoadInvoiceLines();
-            CmbLine.SelectedIndexChanged += (s, e) =>
-            {
-                if (CmbLine.SelectedIndex >= 0)
-                    SpinQuantity.Properties.MaxValue = _lineMaxQty[CmbLine.SelectedIndex];
-            };
-            TxtSearchInvoice.EditValueChanged += (s, e) => LoadInvoices(TxtSearchInvoice.Text);
+            CmbInvoice.EditValueChanged += (s, e) => LoadInvoiceLines();
 
-            LoadInvoices(null);
+            LoadInvoices();
 
-            var btnSave = new SimpleButton { Text = LocalizationManager.T("FrmReturnEdit_BtnSaveReturn"), Location = new System.Drawing.Point(180, 240), DialogResult = DialogResult.OK };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("FrmReturnEdit_BtnSaveReturn"), Location = new System.Drawing.Point(320, 330), Width = 110, DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
-                if (CmbInvoice.SelectedIndex < 0 || CmbLine.SelectedIndex < 0)
+                // Commits the cell still being edited - without this, the quantity the
+                // user just typed isn't written back to the bound row yet and the
+                // return would silently come out short.
+                GridViewLines.PostEditor();
+                GridViewLines.UpdateCurrentRow();
+
+                if (CmbInvoice.EditValue == null)
                 {
                     XtraMessageBox.Show(LocalizationManager.T("Returns_SelectInvoiceAndItem"));
+                    this.DialogResult = DialogResult.None;
+                    return;
+                }
+                // Distinct from "no invoice picked": here the invoice is fine and the
+                // items are listed, the user just hasn't typed a quantity against any
+                // of them yet - saying "pick an invoice" there is misleading.
+                if (Lines.Count == 0)
+                {
+                    XtraMessageBox.Show(LocalizationManager.T("FrmReturnEdit_NoQuantityTyped"));
+                    this.DialogResult = DialogResult.None;
+                    return;
+                }
+                var tooMany = _lines.FirstOrDefault(l => l.ReturnQty > l.Remaining);
+                if (tooMany != null)
+                {
+                    XtraMessageBox.Show(string.Format(LocalizationManager.T("FrmReturnEdit_QtyTooHighFmt"), tooMany.Product, tooMany.Remaining));
                     this.DialogResult = DialogResult.None;
                 }
             };
 
-            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(280, 240), DialogResult = DialogResult.Cancel };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(440, 330), Width = 100, DialogResult = DialogResult.Cancel };
 
-            this.Controls.Add(lblSearch); this.Controls.Add(TxtSearchInvoice);
             this.Controls.Add(lblInvoice); this.Controls.Add(CmbInvoice);
-            this.Controls.Add(lblLine); this.Controls.Add(CmbLine);
-            this.Controls.Add(lblQty); this.Controls.Add(SpinQuantity);
+            this.Controls.Add(lblLines); this.Controls.Add(GridLines);
             this.Controls.Add(btnSave); this.Controls.Add(btnCancel);
 
-            this.AcceptButton = btnSave;
             this.CancelButton = btnCancel;
         }
 
-        // No filter = the 50 most recent invoices for this branch (fast, covers the
-        // common case). A filter searches by invoice number across ALL of this
-        // branch's invoices instead, so older ones are still reachable.
-        private void LoadInvoices(string searchFilter)
+        // Columns are declared here rather than generated, so the internal id/price
+        // fields simply never appear and the captions are the app's own translated
+        // ones. Same approach the POS cart grid already uses.
+        private void ConfigureLineColumns()
         {
-            CmbInvoice.Properties.Items.Clear();
-            _invoiceIds.Clear();
+            var colProduct = new DevExpress.XtraGrid.Columns.GridColumn
+            {
+                FieldName = "Product",
+                Caption = LocalizationManager.T("StockCount_ColProduct"),
+                Visible = true,
+                VisibleIndex = 0
+            };
+            colProduct.OptionsColumn.AllowEdit = false;
 
+            var colRemaining = new DevExpress.XtraGrid.Columns.GridColumn
+            {
+                FieldName = "Remaining",
+                Caption = LocalizationManager.T("FrmReturnEdit_ColRemaining"),
+                Visible = true,
+                VisibleIndex = 1
+            };
+            colRemaining.OptionsColumn.AllowEdit = false;
+            colRemaining.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            colRemaining.DisplayFormat.FormatString = "0.###";
+
+            var qtyEditor = new RepositoryItemSpinEdit();
+            qtyEditor.MinValue = 0;
+            qtyEditor.MaxValue = 99999;
+            qtyEditor.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            qtyEditor.DisplayFormat.FormatString = "0.###";
+            GridLines.RepositoryItems.Add(qtyEditor);
+
+            // The only editable column - everything else is there to read.
+            var colReturnQty = new DevExpress.XtraGrid.Columns.GridColumn
+            {
+                FieldName = "ReturnQty",
+                Caption = LocalizationManager.T("FrmReturnEdit_ColReturnQty"),
+                Visible = true,
+                VisibleIndex = 2,
+                ColumnEdit = qtyEditor
+            };
+
+            GridViewLines.Columns.AddRange(new[] { colProduct, colRemaining, colReturnQty });
+        }
+
+        // Loaded once; the editor filters this list itself as the user types, so there
+        // is no per-keystroke database round trip and no "recent N only" blind spot.
+        private void LoadInvoices()
+        {
+            List<InvoicePick> picks;
             using (var db = new ClothesShopDBContext())
             {
-                var query = db.SalesInvoices.Where(x => x.BranchId == FrmLogin.CurrentBranchId);
-                if (!string.IsNullOrWhiteSpace(searchFilter))
-                    query = query.Where(x => x.InvoiceNumber.Contains(searchFilter));
-
-                var invoices = query
+                picks = db.SalesInvoices
+                    .Where(x => x.BranchId == FrmLogin.CurrentBranchId)
                     .OrderByDescending(x => x.InvoiceDate)
-                    .Take(string.IsNullOrWhiteSpace(searchFilter) ? 50 : 100)
+                    .Take(InvoiceHistoryLimit)
+                    .Select(x => new { x.Id, x.InvoiceNumber, x.InvoiceDate })
+                    .ToList()
+                    .Select(x => new InvoicePick
+                    {
+                        Id = x.Id,
+                        Display = $"{x.InvoiceNumber} - {x.InvoiceDate:dd/MM/yyyy HH:mm}"
+                    })
                     .ToList();
-                foreach (var inv in invoices)
-                {
-                    CmbInvoice.Properties.Items.Add($"{inv.InvoiceNumber} - {inv.InvoiceDate:dd/MM/yyyy HH:mm}");
-                    _invoiceIds.Add(inv.Id);
-                }
             }
 
-            if (_invoiceIds.Count > 0)
-            {
-                CmbInvoice.SelectedIndex = 0;
-                LoadInvoiceLines();
-            }
+            CmbInvoice.Properties.DataSource = picks;
+            if (picks.Count > 0)
+                CmbInvoice.EditValue = picks[0].Id;   // raises EditValueChanged -> loads its lines
             else
-            {
-                CmbLine.Properties.Items.Clear();
-                _lineVariantIds.Clear();
-                _lineUnitPrices.Clear();
-                _lineMaxQty.Clear();
-            }
+                _lines.Clear();
         }
 
         private void LoadInvoiceLines()
         {
-            CmbLine.Properties.Items.Clear();
-            _lineVariantIds.Clear();
-            _lineUnitPrices.Clear();
-            _lineMaxQty.Clear();
+            _lines.Clear();
 
-            if (CmbInvoice.SelectedIndex < 0) return;
-            int invoiceId = _invoiceIds[CmbInvoice.SelectedIndex];
+            if (CmbInvoice.EditValue == null) return;
+            int invoiceId = Convert.ToInt32(CmbInvoice.EditValue);
 
             using (var db = new ClothesShopDBContext())
             {
@@ -149,7 +228,6 @@ namespace Clothes_Shop_ERP
 
                 foreach (var l in lines)
                 {
-                
                     decimal alreadyReturned = db.SalesReturns
                         .Where(r => r.SalesInvoiceId == invoiceId)
                         .SelectMany(r => r.SalesReturnDetails)
@@ -158,16 +236,19 @@ namespace Clothes_Shop_ERP
 
                     decimal remaining = l.Quantity - alreadyReturned;
 
-                    if (remaining <= 0) continue;   
+                    // Fully returned already - nothing left to offer for this item.
+                    if (remaining <= 0) continue;
 
-                    CmbLine.Properties.Items.Add(
-                        $"{l.ProductVariant.Product.Name} ({l.ProductVariant.Barcode})  " + string.Format(LocalizationManager.T("Shared_RemainingOfFmt"), remaining, l.Quantity));
-                    _lineVariantIds.Add(l.ProductVariantId);
-                    _lineUnitPrices.Add(l.UnitPrice);
-                    _lineMaxQty.Add(remaining);   
+                    _lines.Add(new ReturnLineItem
+                    {
+                        ProductVariantId = l.ProductVariantId,
+                        Product = $"{l.ProductVariant.Product.Name} ({l.ProductVariant.Barcode})",
+                        Remaining = remaining,
+                        ReturnQty = 0,
+                        UnitPrice = l.UnitPrice
+                    });
                 }
             }
-            if (CmbLine.Properties.Items.Count > 0) CmbLine.SelectedIndex = 0;
         }
     }
 }

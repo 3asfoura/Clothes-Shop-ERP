@@ -1,0 +1,17 @@
+-- ============================================================================
+-- Update 0001 - Baseline
+--
+-- Marks the schema exactly as Installer\Scripts\CreateDatabase.sql creates it.
+-- Nothing to change: running it just records "version 1" in dbo.DatabaseVersion,
+-- for new databases and for databases that existed before version tracking.
+--
+-- Template for the next update (new file, next number, e.g. 0002_AddProductNotes.sql):
+--
+--   IF COL_LENGTH('dbo.Products', 'Notes') IS NULL
+--       ALTER TABLE dbo.Products ADD Notes nvarchar(500) NULL;
+--   GO
+--   UPDATE dbo.Products SET Notes = N'' WHERE Notes IS NULL;
+--
+-- See Core\Program\DatabaseUpdater.cs for the rules.
+-- ============================================================================
+SET NOCOUNT ON;

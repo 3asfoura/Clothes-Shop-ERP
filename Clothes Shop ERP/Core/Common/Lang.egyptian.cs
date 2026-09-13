@@ -387,6 +387,7 @@ namespace Clothes_Shop_ERP.Localization
             { "POS_HeldSaleLabelFmt", "{0} - {1} صنف - {2:n2}" },
             { "POS_ResumeWillReplaceCart", "ده هيمسح اللي موجود في السلة دلوقتي. تكمل؟" },
             { "POS_SaleFailed", "تعذر إتمام عملية البيع. لم يتم خصم أي مبلغ. {0}" },
+            { "POS_BarcodePrompt", "امسح الباركود... (لو عايز أكتر من قطعة اكتب العدد ثم * ثم الباركود، مثال: 5*123456)" },
             { "POS_ProductNotFoundByBarcode", "لا يوجد منتج نشط بالباركود {0}" },
             { "POS_NotEnoughStockFor", "الكمية غير كافية لـ {0}. الرجاء التحديث والمحاولة مرة أخرى." },
             { "POS_SaleCompletedMsg", "الفاتورة {0} - الإجمالي: {1:n2}" },
@@ -467,6 +468,30 @@ namespace Clothes_Shop_ERP.Localization
 
             // ----- FrmReturnEdit -----
             { "FrmReturnEdit_SearchInvoice", "ابحث برقم الفاتورة (عشان توصل لفاتورة قديمة):" },
+            { "FrmReturnEdit_LinesHint", "اكتب الكمية اللي عايز ترجعها قدام كل صنف (سيب الباقي صفر):" },
+            { "FrmReturnEdit_ColRemaining", "المتاح للإرجاع" },
+            { "FrmReturnEdit_ColReturnQty", "الكمية المرتجعة" },
+            { "FrmReturnEdit_QtyTooHighFmt", "\"{0}\" — أقصى كمية ممكن ترجعها {1}." },
+            { "FrmReturnEdit_NoQuantityTyped", "اكتب الكمية اللي عايز ترجعها قدام صنف واحد على الأقل (في عمود \"الكمية المرتجعة\")." },
+
+            // ----- Bulk delete -----
+            { "Shared_ConfirmDeleteManyFmt", "هتمسح {0} عنصر نهائيًا. ده مش هيرجع تاني — تكمل؟" },
+            { "Shared_DeletedCountFmt", "تم حذف {0} عنصر." },
+            { "Shared_DeletedSomeBlockedFmt", "تم حذف {0}، و{1} مقدرناش نمسحهم لأنهم مستخدمين في عمليات تانية (فواتير أو مخزون)." },
+
+            // ----- Stock count session (scanner-based) -----
+            { "StockCount_MenuScanSession", "جرد بالسكانر..." },
+            { "StockCountSession_Title", "جرد بالسكانر" },
+            { "StockCountSession_ScanHint", "امسح باركود كل قطعة (تقدر كمان تكتب الكمية*الباركود) ودوس Enter:" },
+            { "StockCountSession_ColSystem", "الكمية في النظام" },
+            { "StockCountSession_ColCounted", "المعدود" },
+            { "StockCountSession_ColDifference", "الفرق" },
+            { "StockCountSession_BtnApply", "تطبيق الجرد" },
+            { "StockCountSession_SummaryFmt", "اتعد {0} صنف من {1} — منهم {2} فيهم فرق عن النظام." },
+            { "StockCountSession_NothingCounted", "لسه متعدش أي صنف. امسح الباركود، أو اكتب الكمية بإيدك في عمود \"المعدود\"." },
+            { "StockCountSession_NoDifferences", "كل الأصناف اللي اتعدت مطابقة للنظام — مفيش أي تعديل محتاج يتعمل." },
+            { "StockCountSession_ConfirmFmt", "هيتم تعديل كمية {0} صنف في المخزون على حسب الجرد. تكمل؟" },
+            { "StockCountSession_AppliedFmt", "تم تطبيق الجرد: {0} صنف اتعدلت كميته." },
             { "FrmReturnEdit_Invoice", "الفاتورة:" },
             { "FrmReturnEdit_ItemToReturn", "العنصر المراد إرجاعه:" },
             { "FrmReturnEdit_QuantityToReturn", "الكمية المراد إرجاعها:" },
@@ -621,7 +646,8 @@ namespace Clothes_Shop_ERP.Localization
             { "Roles_ColPermission", "الصلاحية" },
             { "Permission_None", "بدون صلاحية" },
             { "Permission_Read", "قراءة فقط" },
-            { "Permission_Write", "قراءة وكتابة" },
+            { "Permission_Edit", "إضافة وتعديل (من غير حذف)" },
+            { "Permission_Write", "كل الصلاحيات (بالحذف)" },
 
             // ----- Payment Methods (inline name prompt) -----
             { "PaymentMethods_NamePrompt", "اسم طريقة الدفع:" },
@@ -705,6 +731,19 @@ namespace Clothes_Shop_ERP.Localization
             { "ProductVariants_MenuPrintLabel", "طباعة ملصق باركود..." },
             { "ProductVariants_PrintLabelTitle", "طباعة ملصق باركود" },
             { "ProductVariants_LabelQtyPrompt", "عدد الملصقات؟" },
+            { "BulkVariant_MenuBulkAdd", "إضافة بالجملة (ألوان × مقاسات)..." },
+            { "BulkVariant_MenuPrintSelected", "طباعة ليبلات المحدد..." },
+            { "BulkVariant_PrintSelectedTitle", "طباعة الليبلات المحددة" },
+            { "BulkVariant_ConfirmPrintSelectedFmt", "هيتطبع {2} ليبل ({0} صنف محدد × {1} نسخة). تكمل؟" },
+            { "BulkVariant_MenuPrintAllLabels", "طباعة كل ليبلات هذا المنتج..." },
+            { "BulkVariant_PrintAllLabelsTitle", "طباعة كل الليبلات" },
+            { "BulkVariant_ConfirmPrintAllFmt", "هيتطبع {2} ليبل ({0} صنف × {1} نسخة) لمنتج \"{3}\". تكمل؟" },
+            { "BulkVariant_PrintedAllFmt", "تم طباعة {0} ليبل." },
+            { "BulkVariant_Title", "إضافة أصناف بالجملة" },
+            { "BulkVariant_Colors", "الألوان (اختار كذا لون):" },
+            { "BulkVariant_Sizes", "المقاسات (اختار كذا مقاس):" },
+            { "BulkVariant_MustSelectAll", "من فضلك اختار منتج، ولون واحد ومقاس واحد على الأقل." },
+            { "BulkVariant_ResultFmt", "تم إنشاء {0} صنف جديد. تم تخطي {1} كانوا موجودين بالفعل." },
             { "Backup_FileFilter", "ملفات النسخ الاحتياطي (*.bak)|*.bak|كل الملفات (*.*)|*.*" },
             { "Backup_LastBackupFmt", "آخر نسخة احتياطية: {0:g}" },
             { "Backup_NeverBackedUp", "آخر نسخة احتياطية: لا يوجد" },
@@ -760,7 +799,7 @@ namespace Clothes_Shop_ERP.Localization
             { "About_ActivationStatus", "حالة التفعيل" },
             { "About_Activated", "مفعّل" },
             { "About_NotActivated", "غير مفعّل" },
-            { "About_ExpiresOnFmt", "ينتهي في {0:yyyy/MM/dd}" },
+            { "About_ExpiresOnFmt", "ينتهي في {0:dd MMMM yyyy} (باقي {1} يوم)" },
             { "About_NoExpiry", "بدون تاريخ انتهاء" },
             { "About_MachineId", "معرف هذا الجهاز" },
             { "About_BtnCopy", "نسخ" },
@@ -798,7 +837,31 @@ namespace Clothes_Shop_ERP.Localization
             { "PaymentMethods_ColIsCash", "كاش" },
             { "PaymentMethods_MenuToggleCash", "تعليم/إلغاء تعليم كـ Cash" },
             { "PaymentMethods_MarkCash", "تعليم كطريقة كاش" },
-            { "PaymentMethods_UnmarkCash", "إلغاء تعليمها كطريقة كاش" }
+            { "PaymentMethods_UnmarkCash", "إلغاء تعليمها كطريقة كاش" },
+
+            // ==================================================
+            // ===== رسالة المشاكل وسجل الأخطاء ===================
+            // ==================================================
+            { "Problem_CrashTitle", "حصلت مشكلة في البرنامج" },
+            { "Problem_CrashBody", "متقلقش، كل تفاصيل المشكلة اتسجلت في ملف. ابعت الملف ده للدعم الفني عشان نقدر نحلها." },
+            { "Problem_CrashBodyContinue", "تقدر تكمّل شغلك عادي. لو المشكلة اتكررت، اقفل البرنامج وافتحه تاني." },
+            { "Problem_ReferenceFmt", "رقم المشكلة: {0}" },
+            { "Problem_FileLabel", "الملف:" },
+            { "Problem_BtnCopyFile", "نسخ الملف" },
+            { "Problem_BtnOpenFolder", "فتح مكان الملف" },
+            { "Problem_FileCopied", "الملف اتنسخ - افتح واتساب ودوس Ctrl+V عشان تبعته" },
+            { "Problem_PathCopied", "مكان الملف اتنسخ" },
+            { "Problem_BtnContinue", "كمّل شغل" },
+            { "Problem_BtnRetry", "حاول تاني" },
+            { "Problem_BtnCloseApp", "قفل البرنامج" },
+            { "Problem_DbConnectTitle", "البرنامج مش قادر يوصل لقاعدة البيانات" },
+            { "Problem_DbConnectBody", "اتأكد إن الجهاز اللي عليه البيانات (السيرفر) شغال ومتوصل بالشبكة، وبعدين دوس \"حاول تاني\". لو المشكلة فضلت، ابعت الملف ده للدعم الفني." },
+            { "Problem_DbUpdateTitle", "تحديث قاعدة البيانات ما كملش" },
+            { "Problem_DbUpdateBody", "البرنامج كان بيجهّز قاعدة البيانات للإصدار الجديد وحصلت مشكلة، فرجّع كل حاجة زي ما كانت ومفيش أي بيانات اتأثرت. ابعت الملف ده للدعم الفني قبل ما تستخدم البرنامج." },
+            { "Problem_DbNewerTitle", "البرنامج على الجهاز ده إصدار قديم" },
+            { "Problem_DbNewerBody", "قاعدة البيانات اتحدثت من جهاز عليه إصدار أحدث من البرنامج. نزّل نفس الإصدار الجديد على الجهاز ده الأول، عشان البيانات متبوظش." },
+            { "DbUpdate_Working", "جاري تحديث قاعدة البيانات... متقفلش البرنامج" },
+            { "About_ExpiredOnFmt", "انتهى في {0:dd MMMM yyyy}" }
         };
     }
 }

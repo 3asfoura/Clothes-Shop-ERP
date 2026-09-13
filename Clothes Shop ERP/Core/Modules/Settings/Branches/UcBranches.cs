@@ -21,7 +21,6 @@ namespace Clothes_Shop_ERP.modlestore
         {
             InitializeComponent();
             gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsCustomization.AllowSort = false;
             Sett.CenterColumns(gridView1);
             ApplyLanguage();
         }
@@ -207,7 +206,8 @@ namespace Clothes_Shop_ERP.modlestore
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuActivateDeactivate"), null, (s, ev) => ToggleActive());
-                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
+                if (PermissionManager.CanDelete("Branches"))
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
         }
     }

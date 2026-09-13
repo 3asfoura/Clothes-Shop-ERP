@@ -236,7 +236,8 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected_Size());
-                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected_Size());
+                if (PermissionManager.CanDelete("ColorsSizes"))
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected_Size());
             }
         }
 
@@ -256,7 +257,8 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected_Color());
-                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected_Color());
+                if (PermissionManager.CanDelete("ColorsSizes"))
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected_Color());
             }
         }
     }

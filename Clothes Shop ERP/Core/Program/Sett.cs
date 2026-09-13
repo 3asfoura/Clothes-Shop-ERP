@@ -116,6 +116,72 @@ namespace Clothes_Shop_ERP
             Sett.MsgAlert(title + "\n" + description, eDesktopAlertColor.Green, 3);
         }
 
+        // Hides the internal key columns that PopulateColumns() generates from a bound
+        // object's Id properties. They carry no meaning for the user, and - unlike
+        // every other column - they never get a translated caption, so they show up as
+        // raw English ("Id", "Product Variant Id") even with the app in Arabic.
+        // Call right after PopulateColumns(), before setting the real captions.
+        public static void HideKeyColumns(GridView view)
+        {
+            foreach (DevExpress.XtraGrid.Columns.GridColumn col in view.Columns)
+            {
+                string field = col.FieldName;
+                if (string.IsNullOrEmpty(field)) continue;
+                if (field == "Id" || field.EndsWith("Id"))
+                    col.Visible = false;
+            }
+        }
+
+        // Turns on Ctrl/Shift+click multi-selection, so several rows can be acted on at
+        // once (see DeleteSelectedRows).
+        public static void EnableMultiSelect(GridView view)
+        {
+            view.OptionsSelection.MultiSelect = true;
+            view.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+        }
+
+        // Deletes every selected row through the supplied callback, behind a SINGLE
+        // confirmation for the whole batch instead of one prompt per row. A row the
+        // database refuses (still referenced by an invoice, stock record...) is counted
+        // and reported at the end rather than aborting the rest of the batch - deleting
+        // 10 and being blocked on the 3rd shouldn't undo the other 9.
+        public static void DeleteSelectedRows(GridView view, Action refreshAfter, Action<int> deleteById)
+        {
+            var ids = view.GetSelectedRows()
+                .Where(h => h >= 0)
+                .Select(h => Convert.ToInt32(view.GetRowCellValue(h, "Id")))
+                .Distinct()
+                .ToList();
+            if (ids.Count == 0) return;
+
+            if (DevExpress.XtraEditors.XtraMessageBox.Show(
+                    string.Format(LocalizationManager.T("Shared_ConfirmDeleteManyFmt"), ids.Count),
+                    LocalizationManager.T("Common_ConfirmTitle"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+
+            int deleted = 0, blocked = 0;
+            foreach (int id in ids)
+            {
+                try
+                {
+                    deleteById(id);
+                    deleted++;
+                }
+                catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+                {
+                    blocked++;
+                }
+            }
+
+            refreshAfter?.Invoke();
+
+            if (blocked == 0)
+                MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_DeletedCountFmt"), deleted));
+            else
+                MsgRed(LocalizationManager.T("Shared_CannotDelete"), string.Format(LocalizationManager.T("Shared_DeletedSomeBlockedFmt"), deleted, blocked));
+        }
+
         // Centers headers and cell content - called once per GridView for a consistent look everywhere.
         public static void CenterColumns(GridView view)
         {
@@ -153,6 +219,7 @@ namespace Clothes_Shop_ERP
                 }
                 catch (Exception ex)
                 {
+                    ErrorReporter.Log(ex, "Exporting a grid");
                     MsgRed(LocalizationManager.T("Shared_Error"), ex.Message);
                 }
             }

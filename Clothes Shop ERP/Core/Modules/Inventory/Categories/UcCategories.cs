@@ -14,7 +14,7 @@ namespace Clothes_Shop_ERP.modlestore
         {
             InitializeComponent();
             gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsCustomization.AllowSort = false;
+            Sett.EnableMultiSelect(gridView1);
             Sett.CenterColumns(gridView1);
             ApplyLanguage();
         }
@@ -97,31 +97,20 @@ namespace Clothes_Shop_ERP.modlestore
             GetData();
         }
 
+        // One confirmation for the whole selection (Ctrl/Shift+click to pick several),
+        // and a row the database refuses because it is still referenced elsewhere is
+        // reported at the end instead of stopping the rest of the batch.
         private void DeleteSelected()
         {
-            if (gridView1.FocusedRowHandle < 0) return;
-            int id = Convert.ToInt32(gridView1.GetFocusedRowCellValue("Id"));
-            string name = gridView1.GetFocusedRowCellValue("Name").ToString();
-
-            if (XtraMessageBox.Show(string.Format(LocalizationManager.T("Common_ConfirmDelete"), name), LocalizationManager.T("Common_ConfirmTitle"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                return;
-
-            try
+            Sett.DeleteSelectedRows(gridView1, GetData, id =>
             {
                 using (var db = new ClothesShopDBContext())
                 {
-                    var category = db.Categories.Where(x => x.Id == id).FirstOrDefault();
-                    if (category == null) { Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("Shared_NoXFoundWithId"), LocalizationManager.T("Categories_EntityName"), id)); return; }
-                    db.Categories.Remove(category);
+                    var row = db.Categories.FirstOrDefault(x => x.Id == id);
+                    if (row != null) db.Categories.Remove(row);
                     db.SaveChanges();
                 }
-                Sett.MsgBlue(LocalizationManager.T("Shared_Success"), string.Format(LocalizationManager.T("Shared_XDeleted"), LocalizationManager.T("Categories_EntityName")));
-                GetData();
-            }
-            catch (Microsoft.EntityFrameworkCore.DbUpdateException)
-            {
-                Sett.MsgBlue(LocalizationManager.T("Shared_CannotDelete"), LocalizationManager.T("Categories_HasChildren"));
-            }
+            });
         }
 
         private void UcCategories_Load(object sender, EventArgs e)
@@ -146,7 +135,8 @@ namespace Clothes_Shop_ERP.modlestore
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuActivateDeactivate"), null, (s, ev) => ToggleActive());
-                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
+                if (PermissionManager.CanDelete("Categories"))
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
         }
     }

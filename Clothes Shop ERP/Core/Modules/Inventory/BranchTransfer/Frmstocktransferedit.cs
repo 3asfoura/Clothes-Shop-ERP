@@ -101,15 +101,13 @@ namespace Clothes_Shop_ERP
             GridLines = new GridControl { Location = new System.Drawing.Point(20, 125), Size = new System.Drawing.Size(540, 220) };
             GridViewLines = new GridView(GridLines);
             GridLines.MainView = GridViewLines;
+            // Off BEFORE binding: left on, DevExpress generates its own columns from the
+            // property names and regenerates them every time the data source changes,
+            // wiping any captions set beforehand.
+            GridViewLines.OptionsBehavior.AutoPopulateColumns = false;
             GridLines.DataSource = _lines;
-            if (GridViewLines.Columns["Quantity"] != null)
-            {
-                GridViewLines.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-                GridViewLines.Columns["Quantity"].DisplayFormat.FormatString = "0.###";
-                GridViewLines.Columns["Quantity"].Caption = LocalizationManager.T("StockCount_ColQuantity");
-            }
-            if (GridViewLines.Columns["ProductDisplay"] != null) GridViewLines.Columns["ProductDisplay"].Caption = LocalizationManager.T("StockCount_ColProduct");
             GridViewLines.OptionsBehavior.Editable = false;
+            ConfigureLineColumns();
 
             var btnRemoveLine = new SimpleButton { Text = LocalizationManager.T("Shared_RemoveSelectedLine"), Location = new System.Drawing.Point(20, 355), Width = 180 };
             btnRemoveLine.Click += (s, e) =>
@@ -150,6 +148,32 @@ namespace Clothes_Shop_ERP
         }
 
         // Shows only variants that actually have stock in the currently selected "From" branch.
+        // Columns are declared here rather than generated, so the internal
+        // ProductVariantId never appears and the captions are the app's own translated
+        // ones. Same approach the POS cart grid already uses.
+        private void ConfigureLineColumns()
+        {
+            var colProduct = new DevExpress.XtraGrid.Columns.GridColumn
+            {
+                FieldName = "ProductDisplay",
+                Caption = LocalizationManager.T("StockCount_ColProduct"),
+                Visible = true,
+                VisibleIndex = 0
+            };
+
+            var colQuantity = new DevExpress.XtraGrid.Columns.GridColumn
+            {
+                FieldName = "Quantity",
+                Caption = LocalizationManager.T("StockCount_ColQuantity"),
+                Visible = true,
+                VisibleIndex = 1
+            };
+            colQuantity.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            colQuantity.DisplayFormat.FormatString = "0.###";
+
+            GridViewLines.Columns.AddRange(new[] { colProduct, colQuantity });
+        }
+
         private void LoadAvailableVariants()
         {
             CmbVariant.Properties.Items.Clear();

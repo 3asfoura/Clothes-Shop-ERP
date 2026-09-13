@@ -54,6 +54,7 @@ namespace Clothes_Shop_ERP
 
                 GridResult.DataSource = stock;
                 GridViewResult.PopulateColumns();
+            Sett.HideKeyColumns(GridViewResult);
 
                 if (GridViewResult.Columns["Quantity"] != null)
                 {

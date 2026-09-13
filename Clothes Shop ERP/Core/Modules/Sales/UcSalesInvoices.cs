@@ -27,7 +27,6 @@ namespace Clothes_Shop_ERP.modlestore
             Sett.FixCellTooltips(gridView1);
             GetData();
             gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsCustomization.AllowSort = false;
             gridView1.OptionsBehavior.Editable = false;
         }
         public void GetData()
@@ -53,6 +52,7 @@ namespace Clothes_Shop_ERP.modlestore
                     .ToList();
             }
             gridView1.PopulateColumns();
+            Sett.HideKeyColumns(gridView1);
             if (gridView1.Columns["InvoiceNumber"] != null) gridView1.Columns["InvoiceNumber"].Caption = LocalizationManager.T("SalesInvoices_ColInvoiceNumber");
             if (gridView1.Columns["Customer"] != null) gridView1.Columns["Customer"].Caption = LocalizationManager.T("SalesInvoices_ColCustomer");
             if (gridView1.Columns["Branch"] != null) gridView1.Columns["Branch"].Caption = LocalizationManager.T("Shared_Branch");
@@ -145,6 +145,7 @@ namespace Clothes_Shop_ERP.modlestore
                 }
                 catch (Exception ex)
                 {
+                    ErrorReporter.Log(ex, "Sales invoice - record payment");
                     transaction.Rollback();
                     Sett.MsgBlue(LocalizationManager.T("Shared_Error"), ex.Message);
                 }

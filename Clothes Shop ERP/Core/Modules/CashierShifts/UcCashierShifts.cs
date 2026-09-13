@@ -181,6 +181,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                 GridResult.DataSource = rows;
                 GridViewResult.PopulateColumns();
+            Sett.HideKeyColumns(GridViewResult);
                 Sett.CenterColumns(GridViewResult);
                 if (GridViewResult.Columns["Cashier"] != null) GridViewResult.Columns["Cashier"].Caption = LocalizationManager.T("Shift_ColCashier");
                 if (GridViewResult.Columns["Branch"] != null) GridViewResult.Columns["Branch"].Caption = LocalizationManager.T("Shared_Branch");

@@ -19,7 +19,6 @@ namespace Clothes_Shop_ERP.modlestore
             DtTo.DateTime = DateTime.Today;
             ApplyLanguage();
             GridViewResult.OptionsView.ShowGroupPanel = false;
-            GridViewResult.OptionsCustomization.AllowSort = false;
             // Deferred to Load - see UcAuditLogs for why (PopulateColumns needs a
             // real window handle to reliably generate columns; CenterColumns has to
             // come after RunReport() too, since it needs those same columns to exist).
@@ -68,6 +67,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                 GridResult.DataSource = grouped;
                 GridViewResult.PopulateColumns();
+            Sett.HideKeyColumns(GridViewResult);
                 if (GridViewResult.Columns["Quantity"] != null)
                 {
                     GridViewResult.Columns["Quantity"].DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;

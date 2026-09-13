@@ -23,9 +23,7 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             GetDataUsers();
             GetDataRoles();
             gridView2.OptionsView.ShowGroupPanel = false;
-            gridView2.OptionsCustomization.AllowSort = false;
             dgv_RolesList.OptionsView.ShowGroupPanel = false;
-            dgv_RolesList.OptionsCustomization.AllowSort = false;
             Sett.CenterColumns(gridView2);
             Sett.CenterColumns(dgv_RolesList);
             ApplyLanguage();
@@ -365,7 +363,8 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelectedUsers());
                 menu.Items.Add(LocalizationManager.T("Shared_MenuActivateDeactivate"), null, (s, ev) => ToggleActiveUsers());
-                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelectedUsers());
+                if (PermissionManager.CanDelete("UsersRoles"))
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelectedUsers());
             }
 
             menu.Show(gridControl2, e.Location);
@@ -390,7 +389,8 @@ namespace Clothes_Shop_ERP.modlestore.Settings.Users
 
                 int focusedRoleId = Convert.ToInt32(dgv_RolesList.GetFocusedRowCellValue("Id"));
                 if (focusedRoleId != GetFirstRoleId())
-                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelectedRoles());
+                    if (PermissionManager.CanDelete("UsersRoles"))
+                        menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelectedRoles());
             }
         }
     }

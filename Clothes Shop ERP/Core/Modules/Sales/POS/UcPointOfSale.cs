@@ -70,6 +70,11 @@ namespace Clothes_Shop_ERP
             lblCustomer.Text = LocalizationManager.T("POS_Customer");
             lblPayment.Text = LocalizationManager.T("POS_PaymentMethod");
             lblDiscount.Text = LocalizationManager.T("POS_Discount");
+            // The "5*barcode" shortcut is invisible otherwise - nobody discovers it by
+            // staring at an empty box - so it's spelled out as greyed placeholder text
+            // inside the field itself, where it's read at the moment it's needed.
+            TxtBarcode.Properties.NullValuePrompt = LocalizationManager.T("POS_BarcodePrompt");
+            TxtBarcode.Properties.NullValuePromptShowForEmptyValue = true;
         }
         private void LoadLookups()
         {
@@ -332,6 +337,7 @@ namespace Clothes_Shop_ERP
                 }
                 catch (Exception ex)
                 {
+                    ErrorReporter.Log(ex, "POS - complete sale");
                     transaction.Rollback();
                     Sett.MsgBlue(LocalizationManager.T("Shared_Error"), string.Format(LocalizationManager.T("POS_SaleFailed"), ex.Message));
                 }

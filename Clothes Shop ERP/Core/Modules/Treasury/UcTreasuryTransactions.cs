@@ -29,7 +29,6 @@ namespace Clothes_Shop_ERP.modlestore
             };
             Sett.FixCellTooltips(gridView1);
             gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsCustomization.AllowSort = false;
             gridView1.OptionsBehavior.Editable = false;
             Sett.CenterColumns(gridView1);
             ApplyLanguage();
@@ -157,7 +156,8 @@ namespace Clothes_Shop_ERP.modlestore
             if (hit.InRow && canEdit)
             {
                 menu.Items.Add(LocalizationManager.T("Shared_MenuEdit"), null, (s, ev) => EditSelected());
-                menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
+                if (PermissionManager.CanDelete("Treasury"))
+                    menu.Items.Add(LocalizationManager.T("Shared_MenuDelete"), null, (s, ev) => DeleteSelected());
             }
             menu.Items.Add(LocalizationManager.T("Shared_MenuExport"), null, (s, ev) => Sett.ExportGrid(gridControl1, LocalizationManager.T("Main_TreasuryTransactions")));
         }

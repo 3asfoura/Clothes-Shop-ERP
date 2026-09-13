@@ -286,9 +286,16 @@ namespace Clothes_Shop_ERP.modlestore
                 + (activated ? LocalizationManager.T("About_Activated") : LocalizationManager.T("About_NotActivated"));
             lblActivationValue.ForeColor = activated ? Color.SeaGreen : Color.Crimson;
 
-            lblExpiryValue.Text = expiry.HasValue
-                ? string.Format(LocalizationManager.T("About_ExpiresOnFmt"), expiry.Value)
-                : LocalizationManager.T("About_NoExpiry");
+            // Month spelled out plus a days-left count: "2027/09/10" was easy to misread as this year.
+            if (!expiry.HasValue)
+                lblExpiryValue.Text = LocalizationManager.T("About_NoExpiry");
+            else
+            {
+                int daysLeft = (expiry.Value.Date - DateTime.Today).Days;
+                lblExpiryValue.Text = daysLeft >= 0
+                    ? string.Format(LocalizationManager.T("About_ExpiresOnFmt"), expiry.Value, daysLeft)
+                    : string.Format(LocalizationManager.T("About_ExpiredOnFmt"), expiry.Value);
+            }
         }
     }
 }

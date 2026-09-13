@@ -25,6 +25,9 @@ namespace Clothes_Shop_ERP
         private const int IdleLockMinutes = 5;
         private bool _isLocked;
 
+        // Written into error logs so support knows which screen the user was on.
+        internal string CurrentTabTitle => TabsControls?.SelectedTabPage?.Text;
+
         public FrmMain()
         {
 

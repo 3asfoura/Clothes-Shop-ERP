@@ -65,6 +65,7 @@ namespace Clothes_Shop_ERP.modlestore
 
                 GridResult.DataSource = perBranch;
                 GridViewResult.PopulateColumns();
+            Sett.HideKeyColumns(GridViewResult);
                 if (GridViewResult.Columns["Branch"] != null) GridViewResult.Columns["Branch"].Caption = LocalizationManager.T("Shared_Branch");
                 if (GridViewResult.Columns["TotalIn"] != null) GridViewResult.Columns["TotalIn"].Caption = LocalizationManager.T("TreasuryBalance_ColTotalIn");
                 if (GridViewResult.Columns["TotalOut"] != null) GridViewResult.Columns["TotalOut"].Caption = LocalizationManager.T("TreasuryBalance_ColTotalOut");
