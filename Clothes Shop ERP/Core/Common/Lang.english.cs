@@ -372,6 +372,7 @@ namespace Clothes_Shop_ERP.Localization
             // ----- Purchase Returns -----
             { "Main_PurchaseReturns", "Purchase Returns" },
             { "FrmPurchaseReturnEdit_Invoice", "Purchase Invoice:" },
+            { "FrmPurchaseReturnEdit_SearchSupplier", "Search by supplier name (to find older invoices):" },
             { "PurchaseReturns_NewTitle", "New Purchase Return" },
             { "PurchaseReturns_NotEnoughStock", "Not enough stock on hand to return this quantity." },
             { "PurchaseReturns_Recorded", "Return to supplier recorded. Amount: {0:n2}" },
@@ -441,6 +442,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Purchases_SavedStatus", "Invoice saved — {0}." },
             { "Purchases_AddAtLeastOneInvoiceItem", "Please add at least one item to the invoice." },
             { "Purchases_MustHaveSupplierAndBranch", "You need at least one supplier and one branch before creating a purchase invoice." },
+            { "Purchases_ScanBarcodeQuickAdd", "Or scan the item's barcode here to add it directly:" },
 
             // ----- Sales Invoices -----
             { "SalesInvoices_DetailsTitle", "Invoice Details" },
@@ -465,6 +467,7 @@ namespace Clothes_Shop_ERP.Localization
             { "FrmTreasuryEdit_Description", "Description:" },
 
             // ----- FrmReturnEdit -----
+            { "FrmReturnEdit_SearchInvoice", "Search by invoice number (to find older invoices):" },
             { "FrmReturnEdit_Invoice", "Invoice:" },
             { "FrmReturnEdit_ItemToReturn", "Item to return:" },
             { "FrmReturnEdit_QuantityToReturn", "Quantity to return:" },

@@ -29,6 +29,7 @@ namespace Clothes_Shop_ERP
         public decimal PaidNow => (decimal)SpinPaidNow.Value;
 
         private ComboBoxEdit CmbSupplier, CmbBranch, CmbVariant;
+        private TextEdit TxtBarcode;
         private SpinEdit SpinQty, SpinCost, SpinPaidNow;
         private GridControl GridLines;
         private GridView GridViewLines;
@@ -43,7 +44,7 @@ namespace Clothes_Shop_ERP
         {
             this.Text = title;
             this.Width = 620;
-            this.Height = 580;
+            this.Height = 620;
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -58,23 +59,45 @@ namespace Clothes_Shop_ERP
             CmbBranch = new ComboBoxEdit { Location = new System.Drawing.Point(310, 33), Width = 270 };
             CmbBranch.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            // ---- Add-line row: create every control first, before loading any data ----
-            var lblLine = new LabelControl { Text = LocalizationManager.T("Shared_AddItem"), Location = new System.Drawing.Point(20, 70) };
+            // ---- Quick-add by barcode: the CmbVariant dropdown below lists EVERY
+            // active variant in the whole shop with no search - fine for a handful of
+            // products, but a real scroll-hunt once there are hundreds. Scanning (or
+            // typing) a barcode here and pressing Enter adds the line directly,
+            // skipping that dropdown entirely - same pattern as the POS screen's own
+            // barcode field (TxtBarcode_KeyDown in UcPointOfSale.cs). ----
+            var lblBarcode = new LabelControl { Text = LocalizationManager.T("Purchases_ScanBarcodeQuickAdd"), Location = new System.Drawing.Point(20, 70) };
+            TxtBarcode = new TextEdit { Location = new System.Drawing.Point(20, 90), Width = 280 };
 
-            CmbVariant = new ComboBoxEdit { Location = new System.Drawing.Point(20, 90), Width = 280 };
+            // ---- Add-line row: create every control first, before loading any data ----
+            var lblLine = new LabelControl { Text = LocalizationManager.T("Shared_AddItem"), Location = new System.Drawing.Point(20, 110) };
+
+            CmbVariant = new ComboBoxEdit { Location = new System.Drawing.Point(20, 130), Width = 280 };
             CmbVariant.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
-            var lblQty = new LabelControl { Text = LocalizationManager.T("Shared_Qty"), Location = new System.Drawing.Point(310, 70) };
-            SpinQty = new SpinEdit { Location = new System.Drawing.Point(310, 90), Width = 80, Value = 1 };
+            var lblQty = new LabelControl { Text = LocalizationManager.T("Shared_Qty"), Location = new System.Drawing.Point(310, 110) };
+            SpinQty = new SpinEdit { Location = new System.Drawing.Point(310, 130), Width = 80, Value = 1 };
             SpinQty.Properties.MinValue = 1;
             SpinQty.Properties.MaxValue = 99999;
 
-            var lblCost = new LabelControl { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_UnitCost"), Location = new System.Drawing.Point(400, 70) };
-            SpinCost = new SpinEdit { Location = new System.Drawing.Point(400, 90), Width = 90 };
+            var lblCost = new LabelControl { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_UnitCost"), Location = new System.Drawing.Point(400, 110) };
+            SpinCost = new SpinEdit { Location = new System.Drawing.Point(400, 130), Width = 90 };
             SpinCost.Properties.MaxValue = 999999;
             SpinCost.Properties.DisplayFormat.FormatString = "n2";
 
-            var btnAddLine = new SimpleButton { Text = LocalizationManager.T("POS_BtnAddManual"), Location = new System.Drawing.Point(500, 90), Width = 80 };
+            var btnAddLine = new SimpleButton { Text = LocalizationManager.T("POS_BtnAddManual"), Location = new System.Drawing.Point(500, 130), Width = 80 };
+
+            void AddLine(int variantId, string displayText, decimal qty, decimal cost)
+            {
+                _lines.Add(new PurchaseLineItem
+                {
+                    ProductVariantId = variantId,
+                    ProductDisplay = displayText,
+                    Quantity = qty,
+                    UnitCost = cost
+                });
+                RefreshTotal();
+            }
+
             btnAddLine.Click += (s, e) =>
             {
                 if (CmbVariant.SelectedIndex < 0)
@@ -82,14 +105,40 @@ namespace Clothes_Shop_ERP
                     XtraMessageBox.Show(LocalizationManager.T("Shared_SelectProductFirst"));
                     return;
                 }
-                _lines.Add(new PurchaseLineItem
+                AddLine(_variantIds[CmbVariant.SelectedIndex], CmbVariant.Text, (decimal)SpinQty.Value, (decimal)SpinCost.Value);
+            };
+
+            TxtBarcode.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode != Keys.Enter) return;
+                // This dialog's AcceptButton is btnSave - without marking Enter as
+                // handled here, it would also bubble up and submit/close the whole
+                // invoice right after scanning just one item.
+                e.Handled = true;
+                string code = TxtBarcode.Text.Trim();
+                TxtBarcode.Text = "";
+                if (string.IsNullOrEmpty(code)) return;
+
+                using (var db = new ClothesShopDBContext())
                 {
-                    ProductVariantId = _variantIds[CmbVariant.SelectedIndex],
-                    ProductDisplay = CmbVariant.Text,
-                    Quantity = (decimal)SpinQty.Value,
-                    UnitCost = (decimal)SpinCost.Value
-                });
-                RefreshTotal();
+                    var variant = db.ProductVariants
+                        .Include(x => x.Product).ThenInclude(p => p.Category)
+                        .FirstOrDefault(v => v.Barcode == code
+                            && v.IsActive == true
+                            && v.Product.IsActive == true
+                            && v.Product.Category.IsActive == true);
+
+                    if (variant == null)
+                    {
+                        Sett.MsgBlue(LocalizationManager.T("POS_NotFoundTitle"), string.Format(LocalizationManager.T("POS_ProductNotFoundByBarcode"), code));
+                        return;
+                    }
+
+                    // Defaults the cost to the variant's last-known purchase cost (matches the
+                    // common case of re-ordering the same item), same as the price auto-fill
+                    // already done for the manual dropdown path in FrmVariantEdit.
+                    AddLine(variant.Id, $"{variant.Product.Name} - {variant.Barcode}", (decimal)SpinQty.Value, variant.CostPrice);
+                }
             };
 
             // ---- Now that every combo box exists, it's safe to load data into them ----
@@ -124,7 +173,7 @@ namespace Clothes_Shop_ERP
             }
 
             // ---- Lines grid ----
-            GridLines = new GridControl { Location = new System.Drawing.Point(20, 125), Size = new System.Drawing.Size(560, 220) };
+            GridLines = new GridControl { Location = new System.Drawing.Point(20, 165), Size = new System.Drawing.Size(560, 220) };
             GridViewLines = new GridView(GridLines);
             GridLines.MainView = GridViewLines;
             GridLines.DataSource = _lines;
@@ -139,7 +188,7 @@ namespace Clothes_Shop_ERP
             if (GridViewLines.Columns["Total"] != null) GridViewLines.Columns["Total"].Caption = LocalizationManager.T("Shared_ColTotal");
             GridViewLines.OptionsBehavior.Editable = false;
 
-            var btnRemoveLine = new SimpleButton { Text = LocalizationManager.T("Shared_RemoveSelectedLine"), Location = new System.Drawing.Point(20, 355), Width = 180 };
+            var btnRemoveLine = new SimpleButton { Text = LocalizationManager.T("Shared_RemoveSelectedLine"), Location = new System.Drawing.Point(20, 395), Width = 180 };
             btnRemoveLine.Click += (s, e) =>
             {
                 if (GridViewLines.FocusedRowHandle < 0) return;
@@ -154,24 +203,24 @@ namespace Clothes_Shop_ERP
             LblTotal = new LabelControl
             {
                 Text = string.Format(LocalizationManager.T("FrmPurchaseInvoiceEdit_TotalFmt"), 0),
-                Location = new System.Drawing.Point(420, 358),
+                Location = new System.Drawing.Point(420, 398),
                 Font = new System.Drawing.Font("Segoe UI", 10, System.Drawing.FontStyle.Bold)
             };
 
             // ---- Payment ----
-            var lblPaid = new LabelControl { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_AmountPaidNow"), Location = new System.Drawing.Point(20, 400) };
-            SpinPaidNow = new SpinEdit { Value = 0, Location = new System.Drawing.Point(20, 420), Width = 200 };
+            var lblPaid = new LabelControl { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_AmountPaidNow"), Location = new System.Drawing.Point(20, 440) };
+            SpinPaidNow = new SpinEdit { Value = 0, Location = new System.Drawing.Point(20, 460), Width = 200 };
             SpinPaidNow.Properties.MaxValue = 9999999;
             SpinPaidNow.Properties.DisplayFormat.FormatString = "n2";
 
             var lblPaidHint = new LabelControl
             {
                 Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_PaidHint"),
-                Location = new System.Drawing.Point(230, 425),
+                Location = new System.Drawing.Point(230, 465),
                 ForeColor = System.Drawing.Color.Gray
             };
 
-            var btnSave = new SimpleButton { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_BtnSaveInvoice"), Location = new System.Drawing.Point(340, 460), Width = 120, DialogResult = DialogResult.OK };
+            var btnSave = new SimpleButton { Text = LocalizationManager.T("FrmPurchaseInvoiceEdit_BtnSaveInvoice"), Location = new System.Drawing.Point(340, 500), Width = 120, DialogResult = DialogResult.OK };
             btnSave.Click += (s, e) =>
             {
                 if (CmbSupplier.SelectedIndex < 0 || CmbBranch.SelectedIndex < 0)
@@ -187,10 +236,11 @@ namespace Clothes_Shop_ERP
                 }
             };
 
-            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(470, 460), Width = 100, DialogResult = DialogResult.Cancel };
+            var btnCancel = new SimpleButton { Text = LocalizationManager.T("Shared_BtnCancel"), Location = new System.Drawing.Point(470, 500), Width = 100, DialogResult = DialogResult.Cancel };
 
             this.Controls.Add(lblSupplier); this.Controls.Add(CmbSupplier);
             this.Controls.Add(lblBranch); this.Controls.Add(CmbBranch);
+            this.Controls.Add(lblBarcode); this.Controls.Add(TxtBarcode);
             this.Controls.Add(lblLine);
             this.Controls.Add(CmbVariant);
             this.Controls.Add(lblQty); this.Controls.Add(SpinQty);

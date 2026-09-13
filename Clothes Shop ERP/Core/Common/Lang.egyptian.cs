@@ -371,6 +371,7 @@ namespace Clothes_Shop_ERP.Localization
             // ----- Purchase Returns -----
             { "Main_PurchaseReturns", "مرتجع المورد" },
             { "FrmPurchaseReturnEdit_Invoice", "فاتورة الشراء:" },
+            { "FrmPurchaseReturnEdit_SearchSupplier", "ابحث باسم المورد (عشان توصل لفاتورة قديمة):" },
             { "PurchaseReturns_NewTitle", "مرتجع مورد جديد" },
             { "PurchaseReturns_NotEnoughStock", "الكمية المتوفرة في المخزون غير كافية لإرجاع هذه الكمية." },
             { "PurchaseReturns_Recorded", "تم تسجيل مرتجع المورد. المبلغ: {0:n2}" },
@@ -440,6 +441,7 @@ namespace Clothes_Shop_ERP.Localization
             { "Purchases_SavedStatus", "تم حفظ الفاتورة — {0}." },
             { "Purchases_AddAtLeastOneInvoiceItem", "الرجاء إضافة عنصر واحد على الأقل إلى الفاتورة." },
             { "Purchases_MustHaveSupplierAndBranch", "لازم تضيف مورد وفرع على الأقل قبل ما تعمل فاتورة مشتريات." },
+            { "Purchases_ScanBarcodeQuickAdd", "أو امسح باركود الصنف هنا عشان يتضاف على طول:" },
 
             // ----- Sales Invoices -----
             { "SalesInvoices_DetailsTitle", "تفاصيل الفاتورة" },
@@ -464,6 +466,7 @@ namespace Clothes_Shop_ERP.Localization
             { "FrmTreasuryEdit_Description", "الوصف:" },
 
             // ----- FrmReturnEdit -----
+            { "FrmReturnEdit_SearchInvoice", "ابحث برقم الفاتورة (عشان توصل لفاتورة قديمة):" },
             { "FrmReturnEdit_Invoice", "الفاتورة:" },
             { "FrmReturnEdit_ItemToReturn", "العنصر المراد إرجاعه:" },
             { "FrmReturnEdit_QuantityToReturn", "الكمية المراد إرجاعها:" },
